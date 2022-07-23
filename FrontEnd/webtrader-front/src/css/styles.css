@@ -1,0 +1,4 @@
+@import 'mainPage/mainPage.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

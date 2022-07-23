@@ -1,0 +1,1 @@
+export const GET_INITIAL_STOCK = "GET_INITIAL_STOCK"
