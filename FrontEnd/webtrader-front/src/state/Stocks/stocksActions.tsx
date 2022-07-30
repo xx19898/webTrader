@@ -1,41 +1,41 @@
 import { RootState } from "../../store";
+
 //Zod iz used for typing the data we get from api's
 import {z} from "zod";
 import axios from 'axios';
-/*
-1)Intraday:
-function symbol interval
-2)Daily
-function symbol 
-3)Weekly 
-function symbol
-4)Weekly adjusted
-function symbol
-5)Monthly
-function symbol
-6)Monthly Adjusted
-function symbol
-*/
+import { processListOfSymbols } from "../../utility/csvUtility";
+import { symbolListSchema } from "./stocksZodSchemas";
+
 export type IStockFunction = {
     function: string,
     symbol: string,
     interval: string,
 }
 
-const stockData = z.object({
-    
-})
+
+
+
+
 
 //TODO CONTINUE WRITING A QUERY TO GET LIST OF ALL SYMBOLS
-export const getSymbols <T> = (val:T) => {
-    axios({
-        method
-
+//url: https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=demo
+//TODO PARSE CSV DATA FROM THE URL INTO JAVASCRIPT OBJECTS USING JQUERY-CSV PACKAGE
+export const getSymbols  = () => {
+    axios.request<Object>({
+        method:'get',
+        url:'https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=demo'
+    }).then( (response) => {
+        console.log(response);
+        const processedResponse = processListOfSymbols(response.data.toString());
+        console.log(processedResponse);
+        symbolListSchema.parse(processedResponse);
+        return processedResponse;
+        
     })
 }
 
 export const getStockData = (stockInfo: IStockFunction) => {
-    axios({
+    axios.request({
         method: 'get',
         url:'https://localhost:8000/stocks/initialStockData',
         data:stockInfo

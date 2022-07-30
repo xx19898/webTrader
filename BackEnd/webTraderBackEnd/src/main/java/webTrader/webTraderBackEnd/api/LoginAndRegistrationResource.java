@@ -29,7 +29,7 @@ public class LoginAndRegistrationResource {
 	@PostMapping(path="/register")
 	public @ResponseBody ResponseEntity<String> register(@RequestBody User newUser){
 		userService.createNewUser(newUser);
-		return new ResponseEntity<String>(String.format("User %s has successfully been created,HttpStatus.OK",newUser.getUsername()),HttpStatus.OK);
+		return new ResponseEntity<String>(String.format("User %s has successfully been created",newUser.getUsername()),HttpStatus.OK);
 		
 	}
 

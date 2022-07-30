@@ -1,8 +1,8 @@
 import { takeEvery } from "redux-saga/effects";
-import { GET_INITIAL_STOCK } from "./stocksActionTypes";
-import { stockHandlerSaga } from "./stocksHandlerSaga";
+import { stockActionTypes } from "./stocksActionTypes";
+import { getSymbolsHandlerSaga, stockHandlerSaga } from "./stocksHandlerSaga";
 
 export function* stocksWatcherSaga(){
-    yield takeEvery(GET_INITIAL_STOCK,stockHandlerSaga);
-    
+    yield takeEvery(stockActionTypes.GET_INITIAL_STOCK,stockHandlerSaga);
+    yield takeEvery(stockActionTypes.GET_SYMBOLS,getSymbolsHandlerSaga);
 }

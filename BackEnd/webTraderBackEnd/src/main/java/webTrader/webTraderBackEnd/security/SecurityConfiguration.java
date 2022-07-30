@@ -77,6 +77,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		  .disable()
 	      .authorizeRequests()
 	      .antMatchers("/admin/**").hasRole("ADMIN")
+	      .antMatchers("/stocks/initialStockData").permitAll()
+	      .antMatchers("stocks/initialStockData").anonymous()
 	      .antMatchers("/users/all").permitAll()
 	      .antMatchers("/login").anonymous()
 	      .antMatchers("/login").permitAll()

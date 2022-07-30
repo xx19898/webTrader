@@ -3,7 +3,7 @@ import "../css/mainPage/mainPage.css";
 import "../css/styles.css";
 import {RegisterIcon} from "../icons/registerIcon";
 import { LoginIcon } from "../icons/loginIcon";
-import { StocksViewer } from "../shared/stocksViewer";
+import { StocksViewer } from "../sharedComponents/stocksViewer";
 
 
 export const MainPage  = () =>
@@ -22,8 +22,6 @@ manage your portfolio.
     <div className="mt-[51px] bg-primary/30  rounded-md w-auto ">
         <p className="indent-3 font-poppins text-white text-lg">
         As an unauthenticated guest you can only browse the <span className="text-primary font-bold">stocks</span>. To make operations such as buy, sell and view your portfolio please log in or sign up.
-
-
         </p>
     </div>
     <div className="mt-[21px] bg-secondary-2 h-20 w-auto rounded-lg flex items-center content-between justify-around">
@@ -39,7 +37,7 @@ manage your portfolio.
 
     <div className = "mt-[21px] bg-secondary-2 h-60 mb-4 rounded-lg flex flex-col justify-start items-center text-lg">
     <h1 className="font-bold">Stock Viewer</h1> 
-    <StocksViewer name="hey"/>
+    <StocksViewer/>
     </div>
     
     </div>

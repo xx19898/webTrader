@@ -1,18 +1,15 @@
 package webTrader.webTraderBackEnd.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
+
 import java.util.List;
 
 import java.util.Optional;
-import java.util.function.Supplier;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +21,6 @@ import webTrader.webTraderBackEnd.domain.User;
 import webTrader.webTraderBackEnd.exceptions.User.UserAlreadyExistsException;
 import webTrader.webTraderBackEnd.exceptions.User.UserNotFoundException;
 import webTrader.webTraderBackEnd.repo.RoleRepo;
-import webTrader.webTraderBackEnd.repo.UserInsertRepository;
 import webTrader.webTraderBackEnd.repo.UserRepo;
 
 
