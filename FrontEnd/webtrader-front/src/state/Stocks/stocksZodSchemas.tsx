@@ -37,5 +37,4 @@ export const symbolListSchema = z.array(z.object({
     assetType:z.string(),
     delistingData: z.optional(z.nullable(z.string())),
     status: z.enum(["Active","Inactive"]),
-
 }))
