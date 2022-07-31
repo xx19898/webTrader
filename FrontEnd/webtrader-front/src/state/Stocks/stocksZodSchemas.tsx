@@ -24,6 +24,8 @@ export const stockDataSchema= z.object({
     }))))
 });
 
+export type IStockDataType = z.infer<typeof stockDataSchema>;
+
 const dateSchema = z.preprocess((arg) => {
     if(typeof arg == "string" || arg instanceof Date) return new Date(arg);
 },z.date());

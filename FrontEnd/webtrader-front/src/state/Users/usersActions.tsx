@@ -1,5 +1,6 @@
 import {RootState} from "../../store";
 import axios from 'axios';
+import { BASE_URL } from "../../utility/urls";
 
 export interface IUser{
     password: String,
@@ -11,7 +12,7 @@ export interface IUser{
 export const logIn = (user: IUser) => {
     axios({
         method: 'get',
-        url:'https://localhost:8000',
+        url:'${BASE_URL}',
         data:user
     }).then(
         (response) => {

@@ -2,15 +2,25 @@
 
 import { useEffect } from "react"
 import { Chart } from "react-chartjs-2"
-import { stockActionTypes } from "../state/Stocks/stocksActionTypes"
+import { stockActionTypes } from "../../state/Stocks/stocksActionTypes"
 import { useDispatch } from "react-redux"
-import { AppDispatch } from "../store"
+import { AppDispatch } from "../../store"
 
-interface StockViewerProps{
-    name: String
-}
+/*
+1) Intraday
+   required: function, symbol, interval
+2) Daily
+   required: function, symbol
+3) Weekly 
+   required: function, symbol
+4) Monthly  
+   required: function, symbol
+5) Monthly Adjusted
+   required: function, symbol
 
 
+
+*/
 
  export const StocksViewer = () : JSX.Element => {
     const dispatch = useDispatch();
@@ -20,7 +30,7 @@ interface StockViewerProps{
     return(
 
         <div>
-        <h1>Hello</h1>
+            <Chart type={"line"} datasets: />
         </div>
     )
 

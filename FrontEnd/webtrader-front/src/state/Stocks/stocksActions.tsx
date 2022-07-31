@@ -4,13 +4,17 @@ import { RootState } from "../../store";
 import {z} from "zod";
 import axios from 'axios';
 import { processListOfSymbols } from "../../utility/csvUtility";
-import { symbolListSchema } from "./stocksZodSchemas";
+import { IStockDataType, stockDataSchema, symbolListSchema } from "./stocksZodSchemas";
+import { BASE_URL } from "../../utility/urls";
+import { connect, Connect } from "react-redux";
 
-export type IStockFunction = {
+export type IStockQueryParameters = {
     function: string,
     symbol: string,
     interval: string,
 }
+
+
 
 
 
@@ -33,17 +37,56 @@ export const getSymbols  = () => {
         
     })
 }
+interface IStockDataSingleUnit{
+    [functionName : string] : {
+     [dataIndex:string]: {
+        "1. open": number,
+        "2. high": number,
+        "3. low": number,
+        "4. close": number,
+        "5. volume": number }
+    }[]}
 
-export const getStockData = (stockInfo: IStockFunction) => {
-    axios.request({
+
+
+interface IStockDataApiResponseMetaPart{
+    "Meta Data":{
+        "1. Information" : string,
+        "2. Symbol": string,
+        "3. Last Refreshed": string,
+        "4. Output Size" : string,
+        "5. Time Zone" : string,
+    },
+}
+
+type IStockDataApiResponse = IStockDataApiResponseMetaPart
+ & IStockDataSingleUnit;
+
+export const getStockData = (stockInfo: IStockQueryParameters) => {
+    axios.request<IStockDataSingleUnit>({
         method: 'get',
-        url:'https://localhost:8000/stocks/initialStockData',
+        url:'${BASE_URL}stocks/initialStockData',
         data:stockInfo
     }).then(
         (response) => {
+            stockDataSchema.parse(response.data);
+            setNewCurrentStock(response.data.functionName);
+
             return response
         })
         .catch( err => {
             console.log(err)
         })
+}
+//TODO: CONTINUE HERE
+export const setNewCurrentStock = (newStockData: IDataset,currentStockDataState: IStockViewerChartData) => {
+    const newStockDataState = {... currentStockDataState};
+    return newStockDataState.datasets = [ ... newStockDataState.datasets, ]
+    //TODO: have to implement getting access to state in the handler saga with the 'select' function
+
+
+
+    
+
+
 }
