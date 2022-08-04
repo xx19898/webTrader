@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../../store';
 
 interface IUserState{
     loggedUser: String | null,
@@ -11,7 +12,8 @@ export const userSlice = createSlice({
     name: 'users',
     initialState,
     reducers:{
-        setLoggedInUser: (state,action: PayloadAction<IUserState>) => {
+        SET_NEW_LOGGED_USER: () => {
+            console.log("hello");
             
         }
     }

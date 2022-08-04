@@ -2,7 +2,7 @@ import { RootState } from "../../store";
 
 //Zod iz used for typing the data we get from api's
 import {z} from "zod";
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { processListOfSymbols } from "../../utility/csvUtility";
 import { IStockDataType, stockDataSchema, symbolListSchema } from "./stocksZodSchemas";
 import { BASE_URL } from "../../utility/urls";
@@ -45,7 +45,7 @@ interface IStockDataSingleUnit{
         "3. low": number,
         "4. close": number,
         "5. volume": number }
-    }[]}
+    }}
 
 
 
@@ -59,34 +59,37 @@ interface IStockDataApiResponseMetaPart{
     },
 }
 
+
+
 type IStockDataApiResponse = IStockDataApiResponseMetaPart
  & IStockDataSingleUnit;
 
 export const getStockData = (stockInfo: IStockQueryParameters) => {
-    axios.request<IStockDataSingleUnit>({
+    return axios.request<IStockDataApiResponse>({
         method: 'get',
         url:'${BASE_URL}stocks/initialStockData',
         data:stockInfo
     }).then(
         (response) => {
             stockDataSchema.parse(response.data);
-            setNewCurrentStock(response.data.functionName);
 
-            return response
+            return response.data;
         })
         .catch( err => {
-            console.log(err)
+            console.log();
+            throw err;
         })
 }
-//TODO: CONTINUE HERE
-export const setNewCurrentStock = (newStockData: IDataset,currentStockDataState: IStockViewerChartData) => {
-    const newStockDataState = {... currentStockDataState};
-    return newStockDataState.datasets = [ ... newStockDataState.datasets, ]
-    //TODO: have to implement getting access to state in the handler saga with the 'select' function
 
-
-
+export const fromApiDataToDatasetFormat = (apiStockData:IStockDataApiResponse) => {
+    const datasetFormatObject: IDataset = {
+        label: apiStockData[1],
+        data: [],
+        fill: false,
+        borderColor: "",
+        tension: 0
+    }
     
 
-
 }
+

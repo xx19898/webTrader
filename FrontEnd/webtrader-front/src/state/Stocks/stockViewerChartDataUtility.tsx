@@ -7,12 +7,12 @@ type IDataset = {
 }
 
 type IStockViewerChartData = {
-    labels: Date[] | null,
-    datasets: IDataset[],
+    labels: Date[],
+    datasets: IDataset[] ,
 }
 
 // getting random rgb for every chart dataset to differentiate between the lines
-function random_rgb() {
+function random_rgb(){
     var o = Math.round, r = Math.random, s = 255;
     return 'rgb(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ')';
 }

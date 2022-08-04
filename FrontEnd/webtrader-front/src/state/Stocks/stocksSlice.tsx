@@ -1,5 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import { stockTypes } from './stockTypes';
+import {GET_INITIAL_STOCK, UPDATE_CURRENT_STOCKS} from './stocksActionTypes';
+import { RootState } from '../../store';
+
 
 type ISingleStockInfo = {
     open: number,
@@ -16,23 +19,22 @@ interface ILastViewedStockInfo{
     } | null,
 }
 
-interface IStocksState{
-    lastViewedStockInfo: ILastViewedStockInfo | null
+
+const stockInitialState: IStockViewerChartData = {
+    labels: [],
+    datasets: []
 }
 
-const initialState: IStocksState = {
-    lastViewedStockInfo: null,
-
-}
 
 export const stockSlice = createSlice({
     name:'stocks',
-    initialState,
+    initialState:stockInitialState,
     reducers:{
-        //CONTINUE HERE WITH FULFILLING THE
-        // SAGA STUFF FOR FETCHING THE STOCK DATA
-        // AND SETTING A LIMIT OF 5 REQS PER MINUTE
-    }
-
-
+        UPDATE_CURRENT_STOCKS: (state, action: PayloadAction<IDataset>) => {
+            const updatedState = {...state, datasets: [...state.datasets, action.payload]};
+            state = updatedState;
+        }}
 })
+
+
+
