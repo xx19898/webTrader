@@ -21,9 +21,8 @@ export type IStockQueryParameters = {
 
 
 
-//TODO CONTINUE WRITING A QUERY TO GET LIST OF ALL SYMBOLS
-//url: https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=demo
-//TODO PARSE CSV DATA FROM THE URL INTO JAVASCRIPT OBJECTS USING JQUERY-CSV PACKAGE
+
+
 export const getSymbols  = () => {
     axios.request<Object>({
         method:'get',
@@ -81,14 +80,19 @@ export const getStockData = (stockInfo: IStockQueryParameters) => {
         })
 }
 
+//TODO: CONTINUE HERE
 export const fromApiDataToDatasetFormat = (apiStockData:IStockDataApiResponse) => {
     const datasetFormatObject: IDataset = {
-        label: apiStockData[1],
-        data: [],
-        fill: false,
-        borderColor: "",
+        label: apiStockData["Meta Data"]["2. Symbol"],
+        data: Object.values(apiStockData[Object.keys(apiStockData)[0]]).map((dataKey)=> {
+            return dataKey["4. close"];
+        }),
+        fill: true,
+        borderColor: random_rgb(),
         tension: 0
     }
+
+    return datasetFormatObject;
     
 
 }
