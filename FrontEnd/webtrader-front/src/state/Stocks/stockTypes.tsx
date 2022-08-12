@@ -1,4 +1,4 @@
-export enum stockTypes {
+export enum stockActionTypes {
     INTRADAY = "Intraday",
     DAILY = "Daily",
     DAILY_ADJUSTED = "Daily Adjusted",

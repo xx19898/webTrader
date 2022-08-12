@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 import { Chart } from "react-chartjs-2"
-import { stockActionTypes } from "../../state/Stocks/stocksActionTypes"
+import { GET_DATA_FOR_A_STOCK,GET_SYMBOLS,GET_INITIAL_STOCK } from "../../state/Stocks/stocksActionTypes"
 import { useDispatch } from "react-redux"
 import { AppDispatch } from "../../store"
 
@@ -25,12 +25,12 @@ import { AppDispatch } from "../../store"
  export const StocksViewer = () : JSX.Element => {
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch({type:stockActionTypes.GET_SYMBOLS})
+        dispatch({type:GET_SYMBOLS});
     })
     return(
 
         <div>
-            <Chart type={"line"} datasets: />
+            hello
         </div>
     )
 

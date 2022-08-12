@@ -40,3 +40,5 @@ export const symbolListSchema = z.array(z.object({
     delistingData: z.optional(z.nullable(z.string())),
     status: z.enum(["Active","Inactive"]),
 }))
+
+export type IStockSymbolList = z.infer<typeof symbolListSchema>

@@ -5,45 +5,39 @@ import {z} from "zod";
 import axios, { AxiosResponse } from 'axios';
 import { processListOfSymbols } from "../../utility/csvUtility";
 import { IStockDataType, stockDataSchema, symbolListSchema } from "./stocksZodSchemas";
-import { BASE_URL } from "../../utility/urls";
+import { BASE_URL } from "../../constants/urls";
 import { connect, Connect } from "react-redux";
 
 export type IStockQueryParameters = {
-    function: string,
+    function: ,
     symbol: string,
     interval: string,
 }
 
-
-
-
-
-
-
-
-
-
-export const getSymbols  = () => {
-    axios.request<Object>({
-        method:'get',
-        url:'https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=demo'
-    }).then( (response) => {
-        console.log(response);
-        const processedResponse = processListOfSymbols(response.data.toString());
-        console.log(processedResponse);
-        symbolListSchema.parse(processedResponse);
-        return processedResponse;
-        
-    })
+interface ISymbolList{
+    name: string,
+    date: Date, 
+    delistingDate: Date | null | string,
+    status: string,
 }
-interface IStockDataSingleUnit{
+
+export const getSymbols  = async () => {
+    const response = await axios.request<ISymbolList>({
+        method: 'get',
+        url: 'https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=demo'
+    });
+    const processedResponse = processListOfSymbols(response.data.toString());
+    symbolListSchema.parse(processedResponse);
+    return processedResponse;
+}
+interface IStockDataApiResponseSingleDateUnit{
     [functionName : string] : {
      [dataIndex:string]: {
         "1. open": number,
         "2. high": number,
         "3. low": number,
         "4. close": number,
-        "5. volume": number }
+        "5. volume": number } 
     }}
 
 
@@ -60,13 +54,13 @@ interface IStockDataApiResponseMetaPart{
 
 
 
-type IStockDataApiResponse = IStockDataApiResponseMetaPart
- & IStockDataSingleUnit;
+export type IStockDataApiResponse = IStockDataApiResponseMetaPart
+ & IStockDataApiResponseSingleDateUnit;
 
 export const getStockData = (stockInfo: IStockQueryParameters) => {
     return axios.request<IStockDataApiResponse>({
         method: 'get',
-        url:'${BASE_URL}stocks/initialStockData',
+        url:'${BASE_URL}stocks/',
         data:stockInfo
     }).then(
         (response) => {
@@ -80,20 +74,4 @@ export const getStockData = (stockInfo: IStockQueryParameters) => {
         })
 }
 
-//TODO: CONTINUE HERE
-export const fromApiDataToDatasetFormat = (apiStockData:IStockDataApiResponse) => {
-    const datasetFormatObject: IDataset = {
-        label: apiStockData["Meta Data"]["2. Symbol"],
-        data: Object.values(apiStockData[Object.keys(apiStockData)[0]]).map((dataKey)=> {
-            return dataKey["4. close"];
-        }),
-        fill: true,
-        borderColor: random_rgb(),
-        tension: 0
-    }
-
-    return datasetFormatObject;
-    
-
-}
 

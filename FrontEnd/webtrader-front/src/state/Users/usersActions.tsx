@@ -1,6 +1,6 @@
 import {RootState} from "../../store";
 import axios from 'axios';
-import { BASE_URL } from "../../utility/urls";
+import { BASE_URL } from "../../constants/urls";
 
 export interface IUser{
     password: String,

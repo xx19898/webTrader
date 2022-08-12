@@ -34,7 +34,6 @@ public class StockRequest {
 		 
 		String responseBody = httpClient.execute(httpget,responseHandler);
 		return responseBody;
-		
 	}
 
 }

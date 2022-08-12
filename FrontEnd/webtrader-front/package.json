@@ -13,6 +13,7 @@
     "@types/react-dom": "^18.0.5",
     "axios": "^0.27.2",
     "chart.js": "^3.8.0",
+    "delta-e": "^0.0.8",
     "gsap": "^3.10.4",
     "jquery-csv": "^1.0.21",
     "react": "^18.1.0",
@@ -59,6 +60,7 @@
     ]
   },
   "devDependencies": {
+    "@types/delta-e": "^0.0.0",
     "autoprefixer": "^10.4.7",
     "cssnano": "^5.1.12",
     "postcss": "^8.4.14",
