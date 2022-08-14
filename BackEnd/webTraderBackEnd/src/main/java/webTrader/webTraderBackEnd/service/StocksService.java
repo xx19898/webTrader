@@ -8,5 +8,4 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 
 public interface StocksService{
 	String getInitialStockData() throws ClientProtocolException, IOException;
-
 }

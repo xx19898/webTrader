@@ -14,10 +14,7 @@ public class StockServiceImpl implements StocksService{
 	@Override
 	public String getInitialStockData() throws ClientProtocolException, IOException{
 		String responseData = StockRequest.getStockData();
-		return responseData; 
-		
-		
-		
+		return responseData;
 	}
 
 }
