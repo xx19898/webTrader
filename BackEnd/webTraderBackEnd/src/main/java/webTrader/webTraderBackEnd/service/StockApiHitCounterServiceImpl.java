@@ -21,7 +21,12 @@ public class StockApiHitCounterServiceImpl implements StockApiHitCounterService{
 	
 	@Override
 	public void incrementStockApiHitCount(int numberOfHits) throws HitCounterError {
-		if(numberOfHits > 5) {throw new HitCounterError(HttpStatus.CONFLICT,"Sorry, but api cannot process that amount of requests right now");}
+		if(numberOfHits > 5) {
+			throw new HitCounterError(HttpStatus.CONFLICT,"Sorry, but api cannot process that amount of requests right now");
+		}
+		if(StockApiHitCounterStack.size() >= 5) {
+			throw new HitCounterError(HttpStatus.CONFLICT,"Sorry, the hit counter counter stack is already full");
+		}
 		for(int i = 0;i < numberOfHits;i++) {
 			StockApiHitCounterStack.push( LocalTime.now() );
 		}

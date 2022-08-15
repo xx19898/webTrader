@@ -35,7 +35,6 @@ class StockApiHitCounterTest {
 		}
 		assertTrue("Stock Api Hit Counter does not get incremented on hit",underTest.numberOfTimesStockApiBeenHitDuringLastMinute() > 0);	 
 	}
-	
 	@Test
 	void itShouldNotAcceptMoreThanFiveSimultaneousHits() {
 		Exception exception = assertThrows(HitCounterError.class,() -> { underTest.incrementStockApiHitCount(6); });
@@ -43,11 +42,20 @@ class StockApiHitCounterTest {
 		String actualMessage = exception.getMessage();
 		assertTrue(actualMessage.contains(expectedMessage));
 	}
-	
-	//TODO: implement the test, implement the functionality
 	@Test
 	void itShouldNotLetAnyHitCounterBeAddedWhenThereAlreadyIsFiveHits() {
-		
+		try {
+			underTest.incrementStockApiHitCount(5);
+		} catch (HitCounterError e) {
+			e.printStackTrace();
+		}
+		Exception exception = assertThrows(HitCounterError.class,() -> {underTest.incrementStockApiHitCount(1);});
+		String expectedMessage = "Sorry, the hit counter counter stack is already full";
+		String actualMessage = exception.getMessage();
+		assertTrue(actualMessage.contains(expectedMessage));
 	}
+	
+	//TODO: next write a test for making sure that the apihit timestamp gets deleted from the stack after one minute is passed and 
+	// implement the functionality on the main class
 
 }
