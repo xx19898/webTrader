@@ -14,8 +14,13 @@ repositories {
 }
 
 dependencies {
+    //Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	testCompileOnly 'org.projectlombok:lombok:1.18.24'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+	
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
     implementation 'com.auth0:java-jwt:3.19.1'
@@ -25,7 +30,14 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.awaitility:awaitility:4.2.0'
+	//JUnit 5
+	
 }
+apply plugin: "eclipse"
+
+
 
 tasks.named('test') {
 	useJUnitPlatform()

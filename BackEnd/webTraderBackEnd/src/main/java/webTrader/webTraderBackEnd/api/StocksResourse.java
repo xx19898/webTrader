@@ -34,7 +34,7 @@ public class StocksResourse{
 	{
 		if(!function.equals("TIME_SERIES_INTRADAY") && interval.isPresent()) return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 		
-		if(interval.isPresent()) //make a call to the api for TIME_SERIES_INTRADAY with the chosen interval
+		return null;//if(interval.isPresent()) //make a call to the api for TIME_SERIES_INTRADAY with the chosen interval
 		
 	    //make a call to the api for another type of function, without the interval.
 		

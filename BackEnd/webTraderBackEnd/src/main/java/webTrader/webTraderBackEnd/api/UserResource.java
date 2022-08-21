@@ -39,7 +39,7 @@ public class UserResource {
   }
 
   @GetMapping(path="/all")
-  public @ResponseBody ResponseEntity<List<User>> getAllUsers() {
+  public @ResponseBody ResponseEntity<List<User>> getAllUsers(){
     // This returns a JSON or XML with the users
 	  List<User> users = userService.getUsers();
 	  

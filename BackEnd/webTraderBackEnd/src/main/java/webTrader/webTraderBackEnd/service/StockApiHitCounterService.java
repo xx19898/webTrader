@@ -4,6 +4,7 @@ import webTrader.webTraderBackEnd.exceptions.Api.HitCounterError;
 
 public interface StockApiHitCounterService {
 	void incrementStockApiHitCount(int numberOfHits) throws HitCounterError;
-	int numberOfTimesStockApiBeenHitDuringLastMinute();
-
+	int numberOfTimesStockApiBeenHitDuringLastTimePeriod();
+	int getSizeOfStack();
+	int timesApiCanBeHitDuringTheTimeLimit();
 }
