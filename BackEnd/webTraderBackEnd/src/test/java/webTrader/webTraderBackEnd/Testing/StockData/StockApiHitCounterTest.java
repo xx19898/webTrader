@@ -72,7 +72,6 @@ class StockApiHitCounterTest {
 	@Test void itShouldAutomaticallyDeleteDatesFromHitCounterStackAfterTheyExpire() {
 		try {
 			underTest.incrementStockApiHitCount(2);
-			
 		} catch (HitCounterError e) {
 			e.printStackTrace();
 		}
