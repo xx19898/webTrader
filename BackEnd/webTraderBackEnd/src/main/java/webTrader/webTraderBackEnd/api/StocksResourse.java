@@ -30,13 +30,14 @@ public class StocksResourse{
 	
 	@GetMapping(path="/getStockInfo")
 	public @ResponseBody ResponseEntity<String> getStockInfo
-	(@RequestParam String function, @RequestParam List<String> symbol, @RequestParam Optional<String> interval)
-	{
-		if(!function.equals("TIME_SERIES_INTRADAY") && interval.isPresent()) return new ResponseEntity<String>(
+	(@RequestParam String function, @RequestParam List<String> symbol, @RequestParam Optional<String> interval){
+		if((!function.equals("TIME_SERIES_INTRADAY") && interval.isPresent()
+				|| 
+			(function.equals("TIME_SERIES_INTRADAY") && !interval.isPresent()))) return new ResponseEntity<String>(
 				"You've mentioned the interval but your function of choice is not \"intraday\". Please check your request",HttpStatus.BAD_REQUEST);
 		//make a call to the api for TIME_SERIES_INTRADAY with the chosen interval
 		if(interval.isPresent()) {
-			
+			return stockService.
 		}
 		
 	    //make a call to the api for another type of function, without the interval.
