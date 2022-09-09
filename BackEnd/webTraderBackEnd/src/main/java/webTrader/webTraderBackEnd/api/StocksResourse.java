@@ -1,10 +1,11 @@
 package webTrader.webTraderBackEnd.api;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import org.apache.http.client.ClientProtocolException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,37 +15,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import webTrader.webTraderBackEnd.service.StockServiceImpl;
+import webTrader.webTraderBackEnd.service.StocksRequestService;
+import webTrader.webTraderBackEnd.service.StockRequestProcessing.StockRequestHandlerChainException;
 
 @RestController
 @RequestMapping(path="/stocks")
 public class StocksResourse{
 	@Autowired 
-	private StockServiceImpl stockService;
-	
-	@GetMapping(path="/initialStockData")
-	public @ResponseBody ResponseEntity<String> getInitialStockData() throws ClientProtocolException, IOException{
-		String stockData = stockService.getInitialStockData();
-		return new ResponseEntity<String>(stockData,HttpStatus.OK);
-	}
+	private StocksRequestService stockService;
 	
 	@GetMapping(path="/getStockInfo")
-	public @ResponseBody ResponseEntity<String> getStockInfo
-	(@RequestParam String function, @RequestParam List<String> symbol, @RequestParam Optional<String> interval){
-		if((!function.equals("TIME_SERIES_INTRADAY") && interval.isPresent()
-				|| 
-			(function.equals("TIME_SERIES_INTRADAY") && !interval.isPresent()))) return new ResponseEntity<String>(
-				"You've mentioned the interval but your function of choice is not \"intraday\". Please check your request",HttpStatus.BAD_REQUEST);
-		//make a call to the api for TIME_SERIES_INTRADAY with the chosen interval
-		if(interval.isPresent()) {
-			return stockService.
+	public @ResponseBody ResponseEntity<JSONObject> getStockInfo
+	(@RequestParam String function, @RequestParam List<String> symbols, @RequestParam Optional<String> interval) throws StockRequestHandlerChainException{
+		Map<String,String> stockRequestParameters = new HashMap<>();
+		stockRequestParameters.put("functionName", function);
+		interval.ifPresent(intervl -> stockRequestParameters.put("interval", intervl));
+        //TODO: MAKE AN ARRAY OUT OF LIST<STRING> SYMBOLS TO EVADE THE 500 EXCEPTION
+        String[] theSymbolsArray = symbols.stream().toArray(String[]::new);
+		JSONObject theStockData = stockService.getStockData(theSymbolsArray, stockRequestParameters);
+		ResponseEntity<JSONObject> response = new ResponseEntity<JSONObject>(theStockData,HttpStatus.OK);
+		return response;
 		}
-		
-	    //make a call to the api for another type of function, without the interval.
-		
-		
-		
-		
 	}
 
-}
+

@@ -1,73 +1,74 @@
-package webTrader.webTraderBackEnd.HttpRequests;
-import java.io.IOException;
+package webTrader.webTraderBackEnd.service;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import org.apache.http.client.ClientProtocolException;
-import org.json.JSONArray;
-import org.json.JSONException;
+import java.util.stream.Collectors;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import webTrader.webTraderBackEnd.service.StockApiHitCounterService;
+
+import webTrader.webTraderBackEnd.HttpRequests.HTTPCallable;
+import webTrader.webTraderBackEnd.service.StockRequestProcessing.StockRequest;
+import webTrader.webTraderBackEnd.service.StockRequestProcessing.StockRequestHandlerChain;
+import webTrader.webTraderBackEnd.service.StockRequestProcessing.StockRequestHandlerChainException;
 import webTrader.webTraderBackEnd.utility.JSONStockDataObject;
 
 
 @Service
-public class StockRequestServiceImpl {
+public class StocksRequestServiceImpl implements StocksRequestService {
 	
 	@Autowired 
 	StockApiHitCounterService apiHitCounter;
 	
-	@Autowired 
-	HTTPCallable httpClient;
+	@Autowired
+	JSONStockDataObject jsonHelper;
 	
-	UriBuildingStrategy uriBuilder;
+	@Autowired
+	StockRequestHandlerChain stockRequestHandlerChain;
 	
-	public StockRequestServiceImpl(StockApiHitCounterService apiHitCounter, HTTPCallable httpClient) {
+	public StocksRequestServiceImpl(StockApiHitCounterService apiHitCounter, HTTPCallable httpClient){
 		this.apiHitCounter = apiHitCounter;
-		this.httpClient = httpClient;
 	}
 	
-	private void setUriBuildingStrategy(UriBuildingStrategy uriBuildingStrategy) {
-		this.uriBuilder = uriBuildingStrategy;
+	@Override
+	public JSONObject getStockData(String[] symbols,Map<String, String> otherParams) throws StockRequestHandlerChainException{
+		System.out.print("got it");
+		List<JSONObject> stockDataList = getTheStockDataInDiscreteJSONObjects(symbols, otherParams);
+		JSONObject finalStockData = jsonHelper.composeAnStockDataObjectFromMultipleDataObjects(stockDataList);
+		return finalStockData;
 	}
 	
-	//TODO: change from jsonObject to jsonArray
-	public JSONObject getStockData(Map<String,JSONArray> paramsMap) {
-		JSONArray functionNameJSON = paramsMap.get("functionName");
-		String functionNameString = functionNameJSON.toString();
-		functionNameString.equals("TIME_SERIES_INTRADAY") ? getStockDataWithIntradayAsAFunction(functionNameString,)
+	private Map<String,String> uniteSymbolAndOtherParamsInOneMap(String symbol,Map<String,String> otherParams) {
+		Map<String, String> paramsMap  = new HashMap<String,String>();
+		paramsMap.putAll(otherParams);
+		paramsMap.put("symbolName", symbol);
+		return paramsMap;
 	}
-		
-	//Makes a request to AlphaVantage server and receives the data related the stocks
-	private JSONObject getStockDataWithIntradayAsAFunction(String functionName, String[] symbols, String interval) throws ClientProtocolException, IOException {
-		setUriBuildingStrategy(new IntradayUriBuildingStrategy(functionName, symbols[0], interval));	
-		return composeAnStockJSONObjectFromDifferentStockDataJSONObjects(symbols);
-	}
-	
-	private JSONObject composeAnStockJSONObjectFromDifferentStockDataJSONObjects(String[] symbols){
-		ArrayList<JSONObject> partStockDataObjects = new ArrayList<JSONObject>();
+
+	private List<JSONObject> getTheStockDataInDiscreteJSONObjects(String[] symbols,Map<String,String> otherParams) throws StockRequestHandlerChainException{
+		ArrayList<CompletableFuture<JSONObject>> pendingPartStockDataObjects = new ArrayList<CompletableFuture<JSONObject>>();
 		JSONStockDataObject composedStockDataObjects = new JSONStockDataObject();
 		
-		for(String symbol : symbols) {
-			uriBuilder.changeSymbol(symbol);
-			CompletableFuture.supplyAsync(
-					() -> httpClient.fetchStockDataHttpRequest(uriBuilder.formUri()))
-					.thenApply(result -> {
-						return (JSONObject) result;
-					})
-					.thenAccept(jsonObject -> {
-						partStockDataObjects.add(jsonObject);
-					});	
+		for(String symbol : symbols){
+			StockRequest newRequest = new StockRequest(uniteSymbolAndOtherParamsInOneMap(symbol, otherParams));
+			pendingPartStockDataObjects.add(stockRequestHandlerChain.passARequest(newRequest));
 		}
 		
-		composedStockDataObjects.composeAnStockDataObjectFromMultipleDataObjects(partStockDataObjects);
-		return composedStockDataObjects.getComposedDataObject();
+		CompletableFuture<Void> allStockDataObjectsAreDownloaded = CompletableFuture.
+				allOf(pendingPartStockDataObjects.toArray
+						(new CompletableFuture[pendingPartStockDataObjects.size()]));
+		
+		CompletableFuture<List<JSONObject>> listOfStockDataObjects = allStockDataObjectsAreDownloaded.thenApply(listOfFinishedFutures ->
+		pendingPartStockDataObjects.stream().
+				map(future -> future.join()).
+				collect(Collectors.<JSONObject>toList())
+	    );
+		
+		List<JSONObject> partStockDataObjects = listOfStockDataObjects.join();
+		
+		return partStockDataObjects;
 	}
-	
-	private JSONObject getNonIntradayStockData(String functionName, String[] symbols) throws ClientProtocolException, IOException {
-		setUriBuildingStrategy(new NonIntradayUriBuildingStrategy(functionName, symbols[0]));
-		return composeAnStockJSONObjectFromDifferentStockDataJSONObjects(symbols);
-	}		
 }

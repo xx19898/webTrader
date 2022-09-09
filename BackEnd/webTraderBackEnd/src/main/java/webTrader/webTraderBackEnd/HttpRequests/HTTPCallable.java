@@ -1,7 +1,7 @@
 package webTrader.webTraderBackEnd.HttpRequests;
 
-import java.util.concurrent.CompletableFuture;
+import org.json.JSONObject;
 
 public interface HTTPCallable {
-	public Object fetchStockDataHttpRequest(String uri);
+	public JSONObject fetchStockDataHttpRequest(String uri);
 }

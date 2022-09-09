@@ -7,10 +7,9 @@ import webTrader.webTraderBackEnd.security.ApiKeys;
 
 public class NonIntradayUriBuildingStrategy implements UriBuildingStrategy{
 	Map<String,String> paramMap;
-	public NonIntradayUriBuildingStrategy(String functionName, String symbol) {
+	public NonIntradayUriBuildingStrategy(Map<String,String> requestParamMap) {
 		paramMap = new HashMap<String,String>();
-		paramMap.put("functionName",functionName);
-		paramMap.put("symbolName", symbol);	
+		paramMap.putAll(requestParamMap);
 	}
 	@Override
 	public String formUri() {
