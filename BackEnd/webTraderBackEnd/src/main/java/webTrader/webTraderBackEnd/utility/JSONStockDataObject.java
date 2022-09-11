@@ -16,7 +16,7 @@ public class JSONStockDataObject implements StockDataObject<JSONObject>{
     private void addPartStockDataObject(JSONObject mainJsonObject,JSONObject partStockDataObject) {
     	try {
 			JSONObject MetaDataJSONObject = partStockDataObject.getJSONObject("Meta Data");
-			String symbolName = partStockDataObject.getString("2. Symbol");
+			String symbolName = MetaDataJSONObject.getString("2. Symbol");
 			mainJsonObject.put(symbolName, partStockDataObject);
 		} catch (JSONException e) {
 			logger.error(e.getMessage());

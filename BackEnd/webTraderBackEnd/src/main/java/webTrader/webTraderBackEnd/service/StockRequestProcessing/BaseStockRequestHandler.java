@@ -1,13 +1,14 @@
 package webTrader.webTraderBackEnd.service.StockRequestProcessing;
 
+import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import webTrader.webTraderBackEnd.HttpRequests.HTTPCallable;
 import webTrader.webTraderBackEnd.HttpRequests.UriBuildingStrategy;
-import webTrader.webTraderBackEnd.service.StockApiHitCounterService;
 
 abstract class BaseStockRequestHandler implements StockRequestHandler{
 	protected StockRequestType typeOfRequestThatCanBeProcessed;
@@ -45,8 +46,24 @@ abstract class BaseStockRequestHandler implements StockRequestHandler{
 		this.uriBuilder = newUriBuildingStrategy;
 	}
 	
-	protected CompletableFuture<JSONObject> fetchStockData(String uri) {
+	protected CompletableFuture<JSONObject> fetchStockData(String uri){
 		return CompletableFuture.supplyAsync(
-				() -> httpClient.fetchStockDataHttpRequest(uriBuilder.formUri()));
+				() -> {
+					try{
+						return httpClient.fetchStockDataHttpRequest(uriBuilder.formUri());
+					}catch (IOException e){
+						return createSpecialJSONObjectForWhenIOExceptionIsCaught(uri);
+					}
+				});
+	}
+	
+	private JSONObject createSpecialJSONObjectForWhenIOExceptionIsCaught(String uri) {
+		try{
+			return new JSONObject("Server was unable to get at data for " + uri + " due to the IOException");
+		}catch (JSONException e1) {
+			e1.printStackTrace();
+			return new JSONObject();
+		}
+		
 	}
 }
