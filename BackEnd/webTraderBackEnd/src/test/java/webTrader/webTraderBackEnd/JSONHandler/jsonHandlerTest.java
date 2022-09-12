@@ -4,54 +4,68 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jsonHandling.JSONHandler;
-import jsonHandling.JacksonJSONHandler;
+import domain.alphavantageApi.IntradayStockApiResponse;
+import domain.alphavantageApi.NotIntradayNotAdjustedApiResponse;
+import webTraderBackEnd.jsonHandling.JacksonStockDataJSONHandler;
 
+@Import(JacksonStockDataJSONHandler.class)
+@ExtendWith(SpringExtension.class)
 public class jsonHandlerTest{
+	@Autowired
+	JacksonStockDataJSONHandler jsonParser;
 	
 	@Test
-	void testThatABasicKeyValuePairCanBeParsed() throws JsonMappingException, JsonProcessingException, JSONException {
-		String keyValuePair = "{name:John}";
-		JSONHandler jsonHandler = new JacksonJSONHandler(keyValuePair);
-		Map<String,Object> parsedKeyValPair = jsonHandler.parseString();
-		System.out.println(parsedKeyValPair);
-		assertEquals("John", parsedKeyValPair.get("name"));
-	}
-	
-	@Test
-	void testThatRealNestedObjectsCanBeParsed() throws JSONException, IOException{
+	void testThatUsualTimeseriesObjectsCanBeParsed() throws JSONException, IOException{
 		URL url = getClass().getResource("testSampleJsonAsString");
 		File file = new File(url.getPath());
 		
 		BufferedReader br
         = new BufferedReader(new FileReader(file));
+		StringBuilder resultString = new StringBuilder();
 
-	    String st;
-	    while ((st = br.readLine()) != null);
-	    
-	    JSONHandler jsonHandler = new JacksonJSONHandler(st);
-	    Map<String,Object> parsedJSONObject = jsonHandler.parseString();
-	     metaData = parsedJSONObject.getJSONObject("Meta Data");
-	    System.out.println(metaData);
-	    String symbol = (String) metaData.get("2. Symbol");
+	    String line;
+	    while ((line = br.readLine()) != null) {
+	    	resultString.append(line).append("\n");
+	    };
+	   // System.out.println(resultString.toString());
+	    NotIntradayNotAdjustedApiResponse apiResponse = jsonParser.parseNonIntradayApiResponse(resultString.toString());
+	    String symbol = apiResponse.getMetaData().getSymbol();
 	    System.out.println(symbol);
 	    assertEquals("IBM",symbol);
-        
-	    
-	    
-		
 	}
+	
+	@Test
+	void testThatIntradayStockJSONObjectsCanBeParsed() throws FileNotFoundException,JSONException, IOException {
+		URL url = getClass().getResource("testSampleIntradayData");
+		File file = new File(url.getPath());
+		
+		BufferedReader br
+        = new BufferedReader(new FileReader(file));
+		StringBuilder resultString = new StringBuilder();
 
+	    String line;
+	    while ((line = br.readLine()) != null) {
+	    	resultString.append(line).append("\n");
+	    };
+	    
+	    IntradayStockApiResponse apiResponse = jsonParser.parseIntradayApiResponse(resultString.toString());
+	    String symbol = apiResponse.getMetaData().getSymbol();
+	    System.out.println(symbol);
+	    ObjectMapper objMapper = new ObjectMapper();
+	    assertEquals("IBM",symbol);
+	}
 }
