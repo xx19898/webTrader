@@ -21,9 +21,6 @@ public class IntradayStockRequestHandler extends BaseStockRequestHandler{
 
 	@Override
 	public CompletableFuture<JSONObject> executeStockRequest(StockRequest stockRequest){
-		System.out.println("intraday caught*******");
-		System.out.println(stockRequest.typeOfRequest());
-		
 		setUriBuildingStrategy(new IntradayUriBuildingStrategy(stockRequest.requestParameters()));
 		String uriForFetchingStockData = super.uriBuilder.formUri();
 		return super.fetchStockData(uriForFetchingStockData);

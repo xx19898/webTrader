@@ -1,11 +1,12 @@
-package domain.alphavantageApi;
+package domain.alphavantageApi.adjustedClasses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import domain.alphavantageApi.baseClasses.BaseSingleDataEntry;
 import lombok.Data;
 
 @Data
-public class AdjustedSingleDataEntry extends BaseSingleDataEntry{
+public class WeeklyAndMonthlySingleDataEntry extends BaseSingleDataEntry{
 	@JsonProperty("5. adjusted close")
 	Double adjustedClose;
 	

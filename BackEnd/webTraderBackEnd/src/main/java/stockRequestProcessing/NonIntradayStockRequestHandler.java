@@ -20,7 +20,7 @@ public class NonIntradayStockRequestHandler extends BaseStockRequestHandler{
 
 	@Override
 	public CompletableFuture<JSONObject> executeStockRequest(StockRequest stockRequest) {
-		if(super.httpClient == null) {
+		if(super.httpClient == null){
 		System.out.println("fug");
 		}
 		super.setUriBuildingStrategy(new NonIntradayUriBuildingStrategy(stockRequest.requestParameters()));

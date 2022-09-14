@@ -1,6 +1,8 @@
-package domain.alphavantageApi;
+package domain.alphavantageApi.intradayClasses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import domain.alphavantageApi.baseClasses.BaseMetaDataPart;
 
 public class IntradayMetaDataPart extends BaseMetaDataPart{
 	

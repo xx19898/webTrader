@@ -1,4 +1,4 @@
-package domain.alphavantageApi;
+package domain.alphavantageApi.baseClasses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -14,8 +14,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import jsonHandling.StockDataJSONHandler;
 import lombok.NoArgsConstructor;
-import webTraderBackEnd.jsonHandling.StockDataJSONHandler;
 
 @Component
 @NoArgsConstructor
