@@ -14,11 +14,13 @@ public class IntradayUriBuildingStrategy implements UriBuildingStrategy {
 	
 	@Override
 	public String formUri() {
-		return String.format("https://www.alphavantage.co/query?function=$1s&symbol=$2s&interval=$3s&apikey=$4s",
-				new Object[]{
-						paramMap.get("functionName"),paramMap.get("symbolName"),paramMap.get("intervalName"),
+		String uri =  String.format("https://www.alphavantage.co/query?function=%1$s&symbol=%2$s&interval=%3$s&apikey=%4$s",
+				(new Object[]{
+						paramMap.get("function"),paramMap.get("symbol"),paramMap.get("interval"),
 						ApiKeys.getAlphaVantageKey()
-						});
+						}));
+		System.out.println(uri);
+		return uri;
 	}
 	
 	@Override

@@ -1,42 +1,38 @@
 package httpRequests;
 
 import java.io.IOException;
+
 import org.apache.http.HttpEntity;
-import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import jsonHandling.StockDataJSONHandler;
 import lombok.NoArgsConstructor;
+import stockRequestProcessing.StockRequest;
 
 @Component
 @NoArgsConstructor
 public class HttpClientService implements HTTPCallable{
-	@Autowired
-	StockDataJSONHandler jsonParser;
 	
 	@Override
-	public JSONObject fetchStockDataHttpRequest(String uri) throws IOException {
-		System.out.println("hello");
-        System.out.println(uri);
+	public String fetchStockDataHttpRequest(String uri) throws IOException{
 		CloseableHttpClient httpClient = HttpClients.createDefault();
-		ResponseHandler <JSONObject> responseHandler = response -> {
+		ResponseHandler <String> responseHandler = response -> {
 			int status = response.getStatusLine().getStatusCode();
-			if(status >= 200 && status < 300) {
+			if(status >= 200 && status < 300){
 				HttpEntity entity = response.getEntity();
 				String serverResponse = EntityUtils.toString(entity);
+				return serverResponse;
 			}else{
 				throw new ClientProtocolException("Unexpected response status: " + status);
 			}
-			throw new ClientProtocolException("Something went wrong with the function!");
 			
 		};
 		try{

@@ -21,11 +21,11 @@ import utility.StockApiTimeSeries;
 public class JacksonStockDataJSONHandler implements StockDataJSONHandler{
 	ObjectMapper objectMapper;
 	
-	public JacksonStockDataJSONHandler() {
+	public JacksonStockDataJSONHandler(){
 		this.objectMapper = new ObjectMapper();
 	}
 	
-	private <T> StockApiResponse parse (String jsonString, Class<T> className ) throws JsonMappingException, JsonProcessingException{
+	private <T> StockApiResponse parse(String jsonString, Class<T> className ) throws JsonMappingException, JsonProcessingException{
 		StockApiResponse parsedData = (StockApiResponse) this.objectMapper.readValue(jsonString, className);
 		return parsedData;
 	}

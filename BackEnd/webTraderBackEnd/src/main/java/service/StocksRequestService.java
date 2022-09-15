@@ -9,5 +9,5 @@ import org.json.JSONObject;
 import stockRequestProcessing.StockRequestHandlerChainException;
 
 public interface StocksRequestService{
-	JSONObject getStockData(String[] symbols,Map<String,String> otherParams) throws StockRequestHandlerChainException;
+	String getStockData(String[] symbols,Map<String,String> otherParams) throws StockRequestHandlerChainException;
 }

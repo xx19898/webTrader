@@ -22,10 +22,8 @@ abstract class BaseStockRequestHandler implements StockRequestHandler{
 	}
 	
 	@Override
-	public CompletableFuture<JSONObject> processStockRequest(StockRequest stockRequest) throws StockRequestHandlerChainException{
-		System.out.println(stockRequest.typeOfRequest());
-		if(stockRequest.typeOfRequest().equals(this.typeOfRequestThatCanBeProcessed)) {
-			System.out.println(typeOfRequestThatCanBeProcessed);
+	public CompletableFuture<String> processStockRequest(StockRequest stockRequest) throws StockRequestHandlerChainException, IOException{
+		if(stockRequest.typeOfRequest().equals(this.typeOfRequestThatCanBeProcessed)){
 			return executeStockRequest(stockRequest);
 		}else{
 			if(nextHandler != null){
@@ -38,32 +36,23 @@ abstract class BaseStockRequestHandler implements StockRequestHandler{
 	}
 	
 	@Override
-	public void setNext(StockRequestHandler nextHandler) {
+	public void setNext(StockRequestHandler nextHandler){
 		this.nextHandler = nextHandler;
 	}
 	
-	protected void setUriBuildingStrategy(UriBuildingStrategy newUriBuildingStrategy) {
+	protected void setUriBuildingStrategy(UriBuildingStrategy newUriBuildingStrategy){
 		this.uriBuilder = newUriBuildingStrategy;
 	}
 	
-	protected CompletableFuture<JSONObject> fetchStockData(String uri){
-		return CompletableFuture.supplyAsync(
+	protected CompletableFuture<String> fetchStockData(String uri) throws IOException{
+		CompletableFuture<String> apiResponse = CompletableFuture.supplyAsync(
 				() -> {
-					try{
+					try {
 						return httpClient.fetchStockDataHttpRequest(uriBuilder.formUri());
-					}catch (IOException e){
-						return createSpecialJSONObjectForWhenIOExceptionIsCaught(uri);
+					}catch (IOException e) {
+						throw new RuntimeException();
 					}
 				});
-	}
-	
-	private JSONObject createSpecialJSONObjectForWhenIOExceptionIsCaught(String uri) {
-		try{
-			return new JSONObject("Server was unable to get at data for " + uri + " due to the IOException");
-		}catch (JSONException e1) {
-			e1.printStackTrace();
-			return new JSONObject();
-		}
-		
+		return apiResponse;
 	}
 }

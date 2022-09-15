@@ -35,9 +35,9 @@ public class StocksRequestServiceImpl implements StocksRequestService {
 	}
 	
 	@Override
-	public JSONObject getStockData(String[] symbols,Map<String, String> otherParams) throws StockRequestHandlerChainException{
+	public String getStockData(String[] symbols,Map<String, String> otherParams) throws StockRequestHandlerChainException{
 		System.out.print("got it");
-		List<JSONObject> stockDataList = getTheStockDataInDiscreteJSONObjects(symbols, otherParams);
+		List<String> stockDataList = getTheStockDataInDiscreteJSONObjects(symbols, otherParams);
 		JSONObject finalStockData = jsonHelper.composeAnStockDataObjectFromMultipleDataObjects(stockDataList);
 		return finalStockData;
 	}
@@ -49,8 +49,8 @@ public class StocksRequestServiceImpl implements StocksRequestService {
 		return paramsMap;
 	}
 
-	private List<JSONObject> getTheStockDataInDiscreteJSONObjects(String[] symbols,Map<String,String> otherParams) throws StockRequestHandlerChainException{
-		ArrayList<CompletableFuture<JSONObject>> pendingPartStockDataObjects = new ArrayList<CompletableFuture<JSONObject>>();
+	private List<String> getTheStockDataInDiscreteJSONObjects(String[] symbols,Map<String,String> otherParams) throws StockRequestHandlerChainException{
+		ArrayList<CompletableFuture<String>> pendingPartStockDataObjects = new ArrayList<CompletableFuture<String>>();
 		JSONStockDataObject composedStockDataObjects = new JSONStockDataObject();
 		
 		for(String symbol : symbols){
@@ -60,15 +60,18 @@ public class StocksRequestServiceImpl implements StocksRequestService {
 		
 		CompletableFuture<Void> allStockDataObjectsAreDownloaded = CompletableFuture.
 				allOf(pendingPartStockDataObjects.toArray
-						(new CompletableFuture[pendingPartStockDataObjects.size()]));
+						(new CompletableFuture[pendingPartStockDataObjects.size()])
+						);
 		
-		CompletableFuture<List<JSONObject>> listOfStockDataObjects = allStockDataObjectsAreDownloaded.thenApply(listOfFinishedFutures ->
+		
+		
+		CompletableFuture<List<String>> listOfStockDataObjects = allStockDataObjectsAreDownloaded.thenApply(listOfFinishedFutures ->
 		pendingPartStockDataObjects.stream().
 				map(future -> future.join()).
-				collect(Collectors.<JSONObject>toList())
+				collect(Collectors.<String>toList())
 	    );
 		
-		List<JSONObject> partStockDataObjects = listOfStockDataObjects.join();
+		List<String> partStockDataObjects = listOfStockDataObjects.join();
 		
 		return partStockDataObjects;
 	}

@@ -20,7 +20,7 @@ public class IntradayStockApiResponse implements StockApiResponse{
 	//TODO:Make it so that the name the object will be serialized under is "time series" not the data. Maybe with help of map or custom serialization
 
 	@Override
-	public StockApiResponse getData() {
+	public StockApiResponse getData(){
 		return this;
 	}
 }

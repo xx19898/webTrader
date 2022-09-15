@@ -7,8 +7,9 @@ public class StockRequest implements IStockRequest{
 	private final Map<String,String> parameters;
 	
 	public StockRequest(Map<String,String> paramsMap){
-		String functionName = paramsMap.get("functionName");
-		if(functionName.equals("intraday")) {
+		System.out.println(paramsMap.get("function"));
+		String functionName = paramsMap.get("function");
+		if(functionName.equals("TIME_SERIES_INTRADAY")){
 			this.type = StockRequestType.INTRADAY;
 		}else{
 			this.type = StockRequestType.NON_INTRADAY;
@@ -16,14 +17,14 @@ public class StockRequest implements IStockRequest{
 		this.parameters = paramsMap;
 	}
 	
-	@Override 
-	public StockRequestType typeOfRequest(){
-		return type;
-	}
-	
 	@Override
-	public Map<String, String> requestParameters() {
+	public Map<String, String> requestParameters(){
 		return this.parameters;
+	}
+
+	@Override
+	public StockRequestType typeOfRequest(){
+		return this.type;
 	}
 
 }

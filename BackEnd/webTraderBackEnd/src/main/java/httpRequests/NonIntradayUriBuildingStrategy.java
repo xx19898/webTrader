@@ -14,13 +14,13 @@ public class NonIntradayUriBuildingStrategy implements UriBuildingStrategy{
 	@Override
 	public String formUri() {
 		String uri = String.format("https://www.alphavantage.co/query?function=%1$s&symbol=%2$s&apikey=%3$s",
-				(new Object[] {paramMap.get("functionName"),paramMap.get("symbolName"),ApiKeys.getAlphaVantageKey()}));
+				(new Object[] {paramMap.get("function"),paramMap.get("symbol"),ApiKeys.getAlphaVantageKey()}));
 		System.out.println(uri);
 		return uri;
 	}
 	@Override
 	public void changeSymbol(String newSymbol) {
-		paramMap.remove("symbolName");
-		paramMap.put("symbolName", newSymbol);
+		paramMap.remove("symbol");
+		paramMap.put("symbol", newSymbol);
 	}
 }
