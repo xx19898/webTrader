@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import stockRequestProcessing.IntradayStockRequestHandler;
-import stockRequestProcessing.StockRequest;
-import stockRequestProcessing.StockRequestHandlerChain;
-import stockRequestProcessing.StockRequestHandlerChainException;
+import webTraderBackEnd.httpRequests.HttpClientService;
+import webTraderBackEnd.stocksRequests.stockRequestProcessing.IntradayStockRequestHandler;
+import webTraderBackEnd.stocksRequests.stockRequestProcessing.StockRequest;
+import webTraderBackEnd.stocksRequests.stockRequestProcessing.StockRequestHandlerChain;
+import webTraderBackEnd.stocksRequests.stockRequestProcessing.StockRequestHandlerChainException;
+import webTraderBackEnd.stocksRequests.uriBuildingStrategy.NonIntradayUriBuildingStrategy;
 
 @Import(value={HttpClientService.class,StockRequestHandlerChain.class,IntradayStockRequestHandler.class,NonIntradayUriBuildingStrategy.class})
 @ExtendWith(SpringExtension.class)

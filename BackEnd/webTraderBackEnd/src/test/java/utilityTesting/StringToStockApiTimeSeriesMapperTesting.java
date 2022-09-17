@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import utility.StockApiTimeSeries;
-import utility.StringToStockApiTimeSeriesMapper;
+import webTraderBackEnd.stocksRequests.utility.StockApiTimeSeries;
+import webTraderBackEnd.stocksRequests.utility.StringToStockApiTimeSeriesMapper;
 
 @ExtendWith(SpringExtension.class)
 @Import(StringToStockApiTimeSeriesMapper.class)

@@ -16,14 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import domain.alphavantageApi.DailyApiResponse;
-import domain.alphavantageApi.StockApiResponse;
-import domain.alphavantageApi.StockDataWeeklyAndMonthlyApiResponse;
-import domain.alphavantageApi.adjustedClasses.AdjustedMonthlyApiResponse;
-import domain.alphavantageApi.intradayClasses.IntradayStockApiResponse;
-import jsonHandling.JacksonStockDataJSONHandler;
-import jsonHandling.StockDataJSONHandler;
-import utility.StockApiTimeSeries;
+import webTraderBackEnd.jsonHandling.JacksonStockDataJSONHandler;
+import webTraderBackEnd.jsonHandling.StockDataJSONHandler;
+import webTraderBackEnd.stocksRequests.domain.alphavantageApi.DailyApiResponse;
+import webTraderBackEnd.stocksRequests.domain.alphavantageApi.StockApiResponse;
+import webTraderBackEnd.stocksRequests.domain.alphavantageApi.StockDataWeeklyAndMonthlyApiResponse;
+import webTraderBackEnd.stocksRequests.domain.alphavantageApi.adjustedClasses.AdjustedMonthlyApiResponse;
+import webTraderBackEnd.stocksRequests.domain.alphavantageApi.intradayClasses.IntradayStockApiResponse;
+import webTraderBackEnd.stocksRequests.utility.StockApiTimeSeries;
 
 @Import(JacksonStockDataJSONHandler.class)
 @ExtendWith(SpringExtension.class)

@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import stockRequestProcessing.StockRequestHandlerChain;
+import webTraderBackEnd.httpRequests.HttpClientService;
+import webTraderBackEnd.stocksRequests.stockRequestProcessing.StockRequestHandlerChain;
 
 @Import(value={HttpClientService.class,StockRequestHandlerChain.class})
 @ExtendWith(SpringExtension.class)

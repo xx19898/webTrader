@@ -18,8 +18,8 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import exceptions.Api.HitCounterError;
-import stockApiHitCounter.StockApiHitCounterServiceImpl;
+import webTraderBackEnd.stocksRequests.exceptions.HitCounterError;
+import webTraderBackEnd.stocksRequests.stockApiHitCounter.StockApiHitCounterServiceImpl;
 
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.awaitility.Awaitility;
