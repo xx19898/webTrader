@@ -28,7 +28,6 @@ import { AppDispatch } from "../../store"
         dispatch({type:GET_SYMBOLS});
     })
     return(
-
         <div>
             hello
         </div>

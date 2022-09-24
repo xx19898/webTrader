@@ -2,7 +2,7 @@ import { getStockData, getSymbols, IStockQueryParameters} from "./stocksActions"
 import {put, call, SagaReturnType, CallEffect, PutEffect} from 'redux-saga/effects'
 import * as stocksActionTypes from "./stocksActionTypes";
 import { AnyAction } from "redux";
-import { IStockSymbolList } from "./stocksZodSchemas";
+import { IStockSymbolList, stockDataApiResponse } from "./stocksZodSchemas";
 
 
 type StocksServiceResponse = SagaReturnType<typeof getStockData>
@@ -22,12 +22,16 @@ Generator<CallEffect<StocksServiceResponse> | PutEffect<AnyAction>,
 {
     try{
     const response: StocksServiceResponse = yield call(getStockData, props.stockParams);
+    //validate received data against the zod scheme
+    stockDataApiResponse.parse(response)
     //Updating the state
     put({type:stocksActionTypes.UPDATE_CURRENT_STOCKS, payload:response.data})
     }
     catch(e){
         console.log((e as Error).message);
     }
+
+    //TODO: CONTINUE HERE, WATCH VID ON TDD WITH REACT AND WRITE A TEST
 }
 
 export function* getSymbolsHandlerSaga():

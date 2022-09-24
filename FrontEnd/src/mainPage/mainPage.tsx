@@ -11,7 +11,6 @@ export const MainPage  = () =>
     return(
     
     <div className="ml-2 mr-2 flex-col items-center justify-center h-screen mt-14">
-
     <h1 className="text-white font-poppins text-xl text-left font-bold">Welcome to the</h1>
     <h2 className=" text-white underline decoration-primary font-poppins text-xl text-left font-bold ">WebTrader</h2>
     <h3 className="text-white font-poppins text-xl text-left font-bold ">application</h3>

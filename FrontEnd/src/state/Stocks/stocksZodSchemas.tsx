@@ -1,5 +1,119 @@
 import {z} from 'zod';
 
+
+
+const MetadataBasePart = z.object({
+    "1. Information": z.string(),
+    "2. Symbol": z.string(),
+    "3. Last Refreshed": z.string(),
+});
+
+const IntradayMetadataPart = z.object({
+    "4. Interval": z.string(),
+    "5. Output Size": z.string(),
+    "6. Time Zone": z.string(),
+});
+
+const metaDataIntraday = MetadataBasePart.merge(IntradayMetadataPart);
+export type MetadataIntraday = z.infer<typeof metaDataIntraday>;
+
+const DailyMetadataPart = z.object({
+    "4. Output Size": z.string(),
+    "5. Time Zone": z.string(),
+})
+
+const metaDataDaily = MetadataBasePart.merge(DailyMetadataPart);
+export type MetaDataDaily = z.infer<typeof metaDataDaily>;
+
+const metaDailyAdjustedPart = z.object({
+    "4. Output Size": z.string(),
+    "5. Time Zone": z.string()
+})
+
+const metaDataDailyAdjusted = metaDailyAdjustedPart.merge(MetadataBasePart);
+export type MetaDataDailyAdjusted = z.infer<typeof metaDataDailyAdjusted>;
+
+const metaDataWeeklyAndMonthlyPart = z.object({
+    "4. Time Zone": z.string(),
+})
+
+const metaDataWeeklyAndMonthly = metaDataWeeklyAndMonthlyPart.merge(MetadataBasePart);
+export type MetaDataWeeklyAndMonthly = z.infer<typeof metaDataWeeklyAndMonthly>;
+
+const singleDataUnitBase = z.object({
+    "1. open": z.number(),
+    "2. high": z.number(),
+    "3. low": z.number(),
+    "4. close": z.number(),
+})
+
+const singleDataUnitDailyIntradayWeeklyAndMonthlyPart = z.object({
+    "5. volume": z.number()
+})
+
+export const singleDataUnitDailyIntradayWeeklyAndMonthly = singleDataUnitDailyIntradayWeeklyAndMonthlyPart.merge(singleDataUnitBase);
+export type SingleDataUnitDailyAndIntraday = z.infer<typeof singleDataUnitDailyIntradayWeeklyAndMonthly>;
+
+const singleDataUnitDailyAdjustedPart = z.object({
+    "5. adjusted close": z.number(),
+    "6. volume": z.number(),
+    "7. dividend amount": z.number(),
+    "8. split coefficient": z.number(),
+})
+
+export const singleDataUnitDailyAdjusted = singleDataUnitBase.merge(singleDataUnitDailyAdjustedPart);
+export type SingleDataUnitDailyAdjusted = z.infer<typeof singleDataUnitDailyAdjusted>;
+
+export const singleDataUnitWeeklyAdjustedPart = z.object({
+    "5. adjusted close": z.number(),
+    "6. volume": z.number(),
+    "7. dividend amount": z.number(),
+})
+
+export const singleDataUnitWeeklyAdjusted = singleDataUnitWeeklyAdjustedPart.merge(singleDataUnitBase);
+export type SingleDataUnitWeeklyAdjusted = z.infer<typeof singleDataUnitWeeklyAdjusted>;
+
+const singleDataUnitMonthlyAdjustedPart = z.object({
+    "5. adjusted close": z.number(),
+    "6. volume": z.number(),
+    "7. dividend amount": z.number(),
+})
+
+export const singleDataUnitMonthlyAdjusted = singleDataUnitMonthlyAdjustedPart.merge(singleDataUnitBase);
+export type SingleDataUnitMonthlyAdjusted = z.infer<typeof singleDataUnitMonthlyAdjusted>;
+
+
+
+export const stockDataForSingleSymbol = z.object({
+    "Meta Data":z.union([metaDataDaily,metaDataIntraday,metaDataWeeklyAndMonthly,metaDataDailyAdjusted]),
+    functionName: 
+    z.record(
+        z.enum(["Weekly Time Series",
+                "Monthly Time Series",
+                "Time Series (Daily)",
+                "Time Series (5min)",
+                "Time Series (1min)",
+                "Time Series (15min)",
+                "Time Series (30min)",
+                "Time Series (60min)"],
+        z.array(
+            z.record(z.date(),z.union([singleDataUnitDailyIntradayWeeklyAndMonthly,
+                singleDataUnitDailyAdjusted,
+                singleDataUnitWeeklyAdjusted,
+                singleDataUnitMonthlyAdjusted])
+        )))),
+});
+
+export const stockDataApiResponse = z.object({
+    symbolName:z.record(z.string(),stockDataForSingleSymbol),   
+});
+
+export type stockDataApiResponse = z.infer<typeof stockDataApiResponse>;
+
+export type stockDataForSingleSymbol = z.infer<typeof stockDataForSingleSymbol>;
+
+
+
 export const stockDataSchema= z.object({
     "Meta Data":z.object({
         "1. Information":z.string(),
@@ -15,7 +129,10 @@ export const stockDataSchema= z.object({
     "Time Series (1min)",
     "Time Series (15min)",
     "Time Series (30min)",
-    "Time Series (60min)"]),z.array(z.record(z.date(),z.object({
+    "Time Series (60min)"]),z.array(
+        z.record(
+            z.date(),z.object(
+                {
         "1. open": z.number(),
             "2. high": z.number(),
             "3. low": z.number(),
