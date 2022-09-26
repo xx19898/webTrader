@@ -1,6 +1,6 @@
 import { getDeltaE00 } from "delta-e";
-import { IStockDataApiResponse } from "./stocksActions";
-import { IAdditionalStockData, IDataset, IDatasetAndFullData, ISingleStockInfo } from "./stocksSlice";
+import { Dataset } from "./stocksSlice";
+import { CommonMetaData, stockDataApiResponse, StockDataApiResponse, StockDataForSingleSymbol, stockDataForSingleSymbol } from "./stocksZodSchemas";
 
 export const MIN_DIST_BETWEEN_COLORS = 10;
 
@@ -25,44 +25,56 @@ export function getValuesOutOfRgbString(rgbString : String) {
     return finalRgbValueArr;
 }
 
-export const fromApiDataToDatasetFormat = (apiStockData:IStockDataApiResponse,datasetsAlreadyInState: IDatasetAndFullData[]) => {
-    var randomRgbForNewLine = "";
-    var randomRgbForNewLineNotUsedInOtherDatasetsChecked = false;
-    while(!randomRgbForNewLineNotUsedInOtherDatasetsChecked){
-        randomRgbForNewLine = random_rgb();
-        var simularitiesNotFound = false;
-        datasetsAlreadyInState.map( datasetInfo => {
-            const datasetsBorderColorValues = getValuesOutOfRgbString(datasetInfo.dataset.borderColor);
-            const randomRgbForNewLineValues = getValuesOutOfRgbString(randomRgbForNewLine);
-               if(MIN_DIST_BETWEEN_COLORS >
-                (getDeltaE00({L:datasetsBorderColorValues[0],A:datasetsBorderColorValues[1],B:datasetsBorderColorValues[2]}
-                ,{L:randomRgbForNewLineValues[0],A:randomRgbForNewLineValues[1],B:randomRgbForNewLineValues[2]})))
-                {
-                    simularitiesNotFound = false;
-                } 
-        })
-        if (simularitiesNotFound) randomRgbForNewLineNotUsedInOtherDatasetsChecked = true;
-    }
-    const additionalData: IAdditionalStockData = {};
-    const data: number[] = [];
+const getRandomRgbColorAndCheckItIsNotUsedInOtherDatasets = (datasetsAlreadyInState:IDatasetAndFullData[]) => 
+{
+        var randomRgbForNewLine = "";
+        var randomRgbForNewLineNotUsedInOtherDatasetsChecked = false;
+        const getRandomRgbColor = () => {
+        while(!randomRgbForNewLineNotUsedInOtherDatasetsChecked){
+            randomRgbForNewLine = random_rgb();
+            var simularitiesNotFound = false;
+            datasetsAlreadyInState.map( datasetInfo => {
+                const datasetsBorderColorValues = getValuesOutOfRgbString(datasetInfo.dataset.borderColor);
+                const randomRgbForNewLineValues = getValuesOutOfRgbString(randomRgbForNewLine);
+                if(MIN_DIST_BETWEEN_COLORS >
+                    (getDeltaE00({L:datasetsBorderColorValues[0],A:datasetsBorderColorValues[1],B:datasetsBorderColorValues[2]}
+                    ,{L:randomRgbForNewLineValues[0],A:randomRgbForNewLineValues[1],B:randomRgbForNewLineValues[2]})))
+                    {
+                        simularitiesNotFound = false;
+                    } 
+            })
+            if (simularitiesNotFound) randomRgbForNewLineNotUsedInOtherDatasetsChecked = true;
+        }
+        }
+        return randomRgbForNewLine;
+}
+export const fromApiDataToDatasetFormat = (apiStockData:StockDataApiResponse,datasetsAlreadyInState: Dataset[]) => {
+    let newDatasets: Dataset[] = []; 
 
-    Object.keys(apiStockData[Object.keys(apiStockData)[1]]).forEach( date => {
-        additionalData[date] = apiStockData[Object.keys(apiStockData)[1]][date];
-        data.push( apiStockData[Object.keys(apiStockData)[1]][date]["4. close"]);
+    for(const key in apiStockData){
+        console.log(apiStockData[key]["Meta Data"]);
+    }
+    Object.values(apiStockData).forEach( dataOnCertainSymbol => {
+        let newDataset: Dataset = {
+            metadata: dataOnCertainSymbol["Meta Data"],
+            borderColor: getRandomRgbColorAndCheckItIsNotUsedInOtherDatasets([...datasetsAlreadyInState]),
+            data: dataOnCertainSymbol["functionName"],
+
+        };
+
     })
+    
+
+
+//    Object.keys(apiStockData[Object.keys(apiStockData)[1]]).forEach( date => {
+//        additionalData[date] = apiStockData[Object.keys(apiStockData)[1]][date];
+//       data.push( apiStockData[Object.keys(apiStockData)[1]][date]["4. close"]);
+//    })
 
 
 
     //TODO: redo this so that on types are ok and additionaldata is getting populated on the same iteration as data(maybe in a loop outside of the object by creating two arrays)
-    const datasetFormatObject: IDatasetAndFullData = {
-        dataset:{
-            label: apiStockData["Meta Data"]["2. Symbol"],  
-            data: data,
-            borderColor: randomRgbForNewLine,
-            tension: 0
-        },
-        fullData: additionalData,
-    }
+    
     return datasetFormatObject;
 }
 

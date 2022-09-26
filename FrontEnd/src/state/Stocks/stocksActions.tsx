@@ -1,20 +1,11 @@
 import axios from 'axios';
+import { BASE_URL } from '../../constants/urls';
 import { processListOfSymbols } from "../../utility/csvUtility";
-import { stockDataSchema, symbolListSchema } from "./stocksZodSchemas";
-import { stockActionTypes } from "./stockTypes";
+import { IStockQueryParamsIntraday, IStockQueryParamsNonIntraday , ISymbolList, stockFunctionTypes } from './stocksRequestTypes';
+import { concatListOfSymbols } from './stocksUtility';
+import { StockDataApiResponse, stockDataSchema, symbolListSchema } from "./stocksZodSchemas";
 
-export type IStockQueryParameters = {
-    function: stockActionTypes,
-    symbol: string,
-    interval: string,
-}
 
-interface ISymbolList{
-    name: string,
-    date: Date, 
-    delistingDate: Date | null | string,
-    status: string,
-}
 
 export const getSymbols  = async () => {
     const response = await axios.request<ISymbolList>({
@@ -26,42 +17,24 @@ export const getSymbols  = async () => {
     return processedResponse;
 }
 
-interface IStockDataApiResponseSingleDateUnit{
-    [functionName : string] : {
-     [dataIndex:string]: {
-        "1. open": number,
-        "2. high": number,
-        "3. low": number,
-        "4. close": number,
-        "5. volume": number } 
-    }}
 
-
-
-interface IStockDataApiResponseMetaPart{
-    "Meta Data":{
-        "1. Information" : string,
-        "2. Symbol": string,
-        "3. Last Refreshed": string,
-        "4. Output Size" : string,
-        "5. Time Zone" : string,
-    },
-}
-
-
-
-export type IStockDataApiResponse = IStockDataApiResponseMetaPart
- & IStockDataApiResponseSingleDateUnit;
-
-export const getStockData = (stockInfo: IStockQueryParameters) => {
-    return axios.request<IStockDataApiResponse>({
+export const getStockData = (queryParams: IStockQueryParamsIntraday | IStockQueryParamsNonIntraday) => {
+    const symbolsAsOneString = concatListOfSymbols(queryParams.symbols)
+    return axios.request<StockDataApiResponse>({
         method: 'get',
-        url:'${BASE_URL}stocks/',
-        data:stockInfo
+        url: 'interval' in queryParams ? 
+        `${BASE_URL}stocks/
+        ?function=${(queryParams.function)}
+        &symbols=${symbolsAsOneString},
+        &interval=${(queryParams.interval)}`
+        :
+        `${BASE_URL}stocks/
+        ?function=${(queryParams.function)}
+        &symbols=${symbolsAsOneString}`
+        
     }).then(
         (response) => {
             stockDataSchema.parse(response.data);
-
             return response.data;
         })
         .catch( err => {

@@ -40,6 +40,9 @@ const metaDataWeeklyAndMonthlyPart = z.object({
 const metaDataWeeklyAndMonthly = metaDataWeeklyAndMonthlyPart.merge(MetadataBasePart);
 export type MetaDataWeeklyAndMonthly = z.infer<typeof metaDataWeeklyAndMonthly>;
 
+//COMMON TYPE FOR ALL METADATA
+export type CommonMetaData = MetadataIntraday | MetaDataDaily | MetaDataDailyAdjusted | MetaDataWeeklyAndMonthly;
+
 const singleDataUnitBase = z.object({
     "1. open": z.number(),
     "2. high": z.number(),
@@ -52,7 +55,7 @@ const singleDataUnitDailyIntradayWeeklyAndMonthlyPart = z.object({
 })
 
 export const singleDataUnitDailyIntradayWeeklyAndMonthly = singleDataUnitDailyIntradayWeeklyAndMonthlyPart.merge(singleDataUnitBase);
-export type SingleDataUnitDailyAndIntraday = z.infer<typeof singleDataUnitDailyIntradayWeeklyAndMonthly>;
+export type SingleDataUnitDailyIntradayWeeklyAndMonthly = z.infer<typeof singleDataUnitDailyIntradayWeeklyAndMonthly>;
 
 const singleDataUnitDailyAdjustedPart = z.object({
     "5. adjusted close": z.number(),
@@ -82,7 +85,8 @@ const singleDataUnitMonthlyAdjustedPart = z.object({
 export const singleDataUnitMonthlyAdjusted = singleDataUnitMonthlyAdjustedPart.merge(singleDataUnitBase);
 export type SingleDataUnitMonthlyAdjusted = z.infer<typeof singleDataUnitMonthlyAdjusted>;
 
-
+//COMMON TYPE FOR ALL TYPES OF DATA FOR SINGLE TIME PERIOD
+export type CommonDataForSingleTimeUnit = SingleDataUnitDailyIntradayWeeklyAndMonthly | SingleDataUnitDailyAdjusted | SingleDataUnitWeeklyAdjusted | SingleDataUnitMonthlyAdjusted;
 
 export const stockDataForSingleSymbol = z.object({
     "Meta Data":z.union([metaDataDaily,metaDataIntraday,metaDataWeeklyAndMonthly,metaDataDailyAdjusted]),
@@ -104,13 +108,11 @@ export const stockDataForSingleSymbol = z.object({
         )))),
 });
 
-export const stockDataApiResponse = z.object({
-    symbolName:z.record(z.string(),stockDataForSingleSymbol),   
-});
+export type StockDataForSingleSymbol = z.infer<typeof stockDataForSingleSymbol>
 
-export type stockDataApiResponse = z.infer<typeof stockDataApiResponse>;
+export const stockDataApiResponse = z.record(z.string(),stockDataForSingleSymbol)
 
-export type stockDataForSingleSymbol = z.infer<typeof stockDataForSingleSymbol>;
+export type StockDataApiResponse = z.infer<typeof stockDataApiResponse>;
 
 
 

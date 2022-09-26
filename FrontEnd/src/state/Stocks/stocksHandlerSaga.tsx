@@ -2,7 +2,7 @@ import { getStockData, getSymbols, IStockQueryParameters} from "./stocksActions"
 import {put, call, SagaReturnType, CallEffect, PutEffect} from 'redux-saga/effects'
 import * as stocksActionTypes from "./stocksActionTypes";
 import { AnyAction } from "redux";
-import { IStockSymbolList, stockDataApiResponse } from "./stocksZodSchemas";
+import { IStockSymbolList, StockDataApiResponse, stockDataApiResponse } from "./stocksZodSchemas";
 
 
 type StocksServiceResponse = SagaReturnType<typeof getStockData>
@@ -16,16 +16,17 @@ type IGetSymbols = {
 }
 
 export function* stockDataHandlerSaga(props: IStockDataHandler):
-Generator<CallEffect<StocksServiceResponse> | PutEffect<AnyAction>,
+Generator<CallEffect<StockDataApiResponse> | PutEffect<AnyAction>,
                      void,
                      StocksServiceResponse>                                                                                                                                
 {
     try{
-    const response: StocksServiceResponse = yield call(getStockData, props.stockParams);
+    const response: StockDataApiResponse = yield call(getStockData, props.stockParams);
     //validate received data against the zod scheme
+    
     stockDataApiResponse.parse(response)
     //Updating the state
-    put({type:stocksActionTypes.UPDATE_CURRENT_STOCKS, payload:response.data})
+    put({type:stocksActionTypes.UPDATE_CURRENT_STOCKS, payload:response})
     }
     catch(e){
         console.log((e as Error).message);
