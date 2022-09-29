@@ -1,6 +1,6 @@
 import { getDeltaE00 } from "delta-e";
-import { Dataset } from "./stocksSlice";
-import { CommonMetaData, stockDataApiResponse, StockDataApiResponse, StockDataForSingleSymbol, stockDataForSingleSymbol } from "./stocksZodSchemas";
+import { createDataset, Dataset } from "./stocksSlice";
+import { CommonMetaData, DataEntryNames, DATA_ENTRY_NAMES, stockDataApiResponse, StockDataApiResponse, StockDataForSingleSymbol, stockDataForSingleSymbol } from "./stocksZodSchemas";
 
 export const MIN_DIST_BETWEEN_COLORS = 10;
 
@@ -14,7 +14,7 @@ export function random_rgb(){
 
 
 
-export function getValuesOutOfRgbString(rgbString : String) {
+export function getValuesOutOfRgbString(rgbString : String){
     const rgbStringSplittedWithoutFirstBracket = rgbString.split("("); 
     rgbStringSplittedWithoutFirstBracket.shift();
     var rgbStringSplittedbyCommas = rgbStringSplittedWithoutFirstBracket[0].split(",");
@@ -25,7 +25,7 @@ export function getValuesOutOfRgbString(rgbString : String) {
     return finalRgbValueArr;
 }
 
-const getRandomRgbColorAndCheckItIsNotUsedInOtherDatasets = (datasetsAlreadyInState:IDatasetAndFullData[]) => 
+const getRandomRgbColor = (datasetsAlreadyInState:Dataset[]) => 
 {
         var randomRgbForNewLine = "";
         var randomRgbForNewLineNotUsedInOtherDatasetsChecked = false;
@@ -51,30 +51,23 @@ const getRandomRgbColorAndCheckItIsNotUsedInOtherDatasets = (datasetsAlreadyInSt
 export const fromApiDataToDatasetFormat = (apiStockData:StockDataApiResponse,datasetsAlreadyInState: Dataset[]) => {
     let newDatasets: Dataset[] = []; 
 
-    for(const key in apiStockData){
-        console.log(apiStockData[key]["Meta Data"]);
-    }
     Object.values(apiStockData).forEach( dataOnCertainSymbol => {
-        let newDataset: Dataset = {
-            metadata: dataOnCertainSymbol["Meta Data"],
-            borderColor: getRandomRgbColorAndCheckItIsNotUsedInOtherDatasets([...datasetsAlreadyInState]),
-            data: dataOnCertainSymbol["functionName"],
-
-        };
-
+        console.log(dataOnCertainSymbol)
+        const dataEntryName = Object.keys(dataOnCertainSymbol).find(key => {
+             return Object.values(DATA_ENTRY_NAMES).some((dataEntryName) => key === dataEntryName)
+        })
+        if(dataEntryName === undefined){
+            throw new TypeError("Time Series Key was not found");
+        }
+        
+        const borderColorForNewDataset = getRandomRgbColor(datasetsAlreadyInState);
+        const metaData =  dataOnCertainSymbol["Meta Data"];
+        const data = dataOnCertainSymbol[dataEntryName];
+        const newDataset = createDataset({data:data,metadata:metaData,borderColor:borderColorForNewDataset})
+        newDatasets.push(newDataset);
     })
+
     
-
-
-//    Object.keys(apiStockData[Object.keys(apiStockData)[1]]).forEach( date => {
-//        additionalData[date] = apiStockData[Object.keys(apiStockData)[1]][date];
-//       data.push( apiStockData[Object.keys(apiStockData)[1]][date]["4. close"]);
-//    })
-
-
-
-    //TODO: redo this so that on types are ok and additionaldata is getting populated on the same iteration as data(maybe in a loop outside of the object by creating two arrays)
-    
-    return datasetFormatObject;
+    return newDatasets;
 }
 
