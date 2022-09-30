@@ -2,12 +2,14 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import createSagaMiddleware from '@redux-saga/core';
 import { userSlice } from './state/Users/usersSlice';
 import {rootWatcherSaga} from './rootSaga';
+import { stockSlice } from './state/Stocks/stocksSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 
 export const store = configureStore({
     reducer: {
         users: userSlice.reducer,
+        stocks : stockSlice.reducer,
     },
     middleware: [...getDefaultMiddleware({thunk:false}),sagaMiddleware]
 

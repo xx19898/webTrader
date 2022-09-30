@@ -6,7 +6,7 @@ import { CommonDataForSingleTimeUnit, CommonMetaData, StockDataApiResponse, Stoc
 
 export type Dataset = {
     metadata: CommonMetaData,
-    data: StockDataForSingleSymbol,
+    data: StockDataForSingleSymbolDataPart,
     fill?: boolean,
     borderColor: string,
     tension: number,
@@ -39,20 +39,18 @@ export function createDataset({
 export type IStockState = {
     datasets: Dataset[],
 }
-const stockInitialState: IStockState = {
+const StockInitialState: IStockState = {
     datasets: []
 }
 
 
 export const stockSlice = createSlice({
     name:'stocks',
-    initialState:stockInitialState,
+    initialState:StockInitialState,
     reducers:{
-        UPDATE_CURRENT_STOCKS: (state, action: PayloadAction<StockDataApiResponse>) => {
-            const copyOfCurrentDatasets = [...state.datasets];
-            const updatedState = {...state, datasets: [...state.datasets, fromApiDataToDatasetFormat(action.payload,copyOfCurrentDatasets)]};
-            state = updatedState;
-            console.log({state});
+        UPDATE_CURRENT_STOCKS: (state, action: PayloadAction<Dataset[]>) => {
+            const updatedState = {...state, datasets: [...state.datasets, action.payload]};
+            state.datasets = [...state.datasets].concat(action.payload)
         }}
 })
 
