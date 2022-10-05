@@ -50,24 +50,28 @@ const getRandomRgbColor = (datasetsAlreadyInState:Dataset[]) =>
 }
 export const fromApiDataToDatasetFormat = (apiStockData:StockDataApiResponse,datasetsAlreadyInState: Dataset[]) => {
     let newDatasets: Dataset[] = []; 
-
     Object.values(apiStockData).forEach( dataOnCertainSymbol => {
-        console.log(dataOnCertainSymbol)
         const dataEntryName = Object.keys(dataOnCertainSymbol).find(key => {
              return Object.values(DATA_ENTRY_NAMES).some((dataEntryName) => key === dataEntryName)
         })
         if(dataEntryName === undefined){
             throw new TypeError("Time Series Key was not found");
-        }
-        
+        }  
         const borderColorForNewDataset = getRandomRgbColor(datasetsAlreadyInState);
         const metaData =  dataOnCertainSymbol["Meta Data"];
         const data = dataOnCertainSymbol[dataEntryName];
         const newDataset = createDataset({data:data,metadata:metaData,borderColor:borderColorForNewDataset})
         newDatasets.push(newDataset);
     })
-
-    
     return newDatasets;
 }
+
+export const deleteOlderVersionsOfStockData = (params:{newDatasets: Dataset[],oldDatasets: Dataset[]}) => {
+    const listOfNewSymbols: String[] = params.newDatasets.map(dataset => dataset.metadata["2. Symbol"]);
+    const renewedOldDatasets = params.oldDatasets.filter(dataset => 
+        listOfNewSymbols.every( newSymbol =>
+            !(newSymbol  === dataset.metadata["2. Symbol"])
+            ))
+    return renewedOldDatasets;
+} 
 

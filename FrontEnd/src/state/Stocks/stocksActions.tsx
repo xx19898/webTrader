@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { BASE_URL } from '../../constants/urls';
-import { processListOfSymbols } from "../../utility/csvUtility";
+import { BASE_URL} from '../../constants/urls';
+import { processListOfSymbols} from "../../utility/csvUtility";
 import { IStockQueryParamsIntraday, IStockQueryParamsNonIntraday , ISymbolList, stockFunctionTypes } from './stocksRequestTypes';
-import { concatListOfSymbols } from './stocksUtility';
-import { StockDataApiResponse, stockDataSchema, symbolListSchema } from "./stocksZodSchemas";
+import { concatListOfSymbols} from './stocksUtility';
+import { stockDataApiResponse, StockDataApiResponse, symbolListSchema} from "./stocksZodSchemas";
 
 
 
@@ -34,7 +34,7 @@ export const getStockData = (queryParams: IStockQueryParamsIntraday | IStockQuer
         
     }).then(
         (response) => {
-            stockDataSchema.parse(response.data);
+            stockDataApiResponse.parse(response.data);
             return response.data;
         })
         .catch( err => {

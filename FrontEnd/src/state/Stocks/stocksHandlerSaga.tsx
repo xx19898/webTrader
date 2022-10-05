@@ -6,6 +6,7 @@ import { IStockSymbolList, StockDataApiResponse, stockDataApiResponse } from "./
 import { fromApiDataToDatasetFormat } from "./stockViewerChartDataUtility";
 import { RootState } from "../../store";
 import { Dataset } from "./stocksSlice";
+import { stat } from "fs";
 
 
 type StocksServiceResponse = SagaReturnType<typeof getStockData>
@@ -19,18 +20,16 @@ type IGetSymbols = {
 }
 const datasetsSelector = (state:RootState) => state.stocks.datasets 
 export function* stockDataHandlerSaga(props: IStockDataHandler):
-Generator<CallEffect<StockDataApiResponse> | SelectEffect|PutEffect<AnyAction>,
+Generator<CallEffect<StockDataApiResponse> | PutEffect<AnyAction>,
                      void,
                      StocksServiceResponse>                                                                                                                                
 {
     try{
     const response: StockDataApiResponse = yield call(getStockData, props.stockParams);
     //validate received data against the zod scheme
-    const data = yield select(datasetsSelector);
-    stockDataApiResponse.parse(response)
-    
+    const validatedResponse = stockDataApiResponse.parse(response); 
     //Updating the state
-    put({type:stocksActionTypes.UPDATE_CURRENT_STOCKS, payload:data})
+    put({type:stocksActionTypes.UPDATE_CURRENT_STOCKS, payload:validatedResponse})
     }
     catch(e){
         console.log((e as Error).message);

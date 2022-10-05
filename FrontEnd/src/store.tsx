@@ -8,13 +8,15 @@ const sagaMiddleware = createSagaMiddleware();
 
 export const store = configureStore({
     reducer: {
-        users: userSlice.reducer,
+        users: userSlice.reducer, 
         stocks : stockSlice.reducer,
     },
     middleware: [...getDefaultMiddleware({thunk:false}),sagaMiddleware]
 
 })
 sagaMiddleware.run(rootWatcherSaga)
+
+
 
 //Return type of the root state
 export type RootState = ReturnType<typeof store.getState>

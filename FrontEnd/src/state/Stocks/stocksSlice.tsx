@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {GET_INITIAL_STOCK, UPDATE_CURRENT_STOCKS} from './stocksActionTypes';
 import { RootState } from '../../store';
-import { fromApiDataToDatasetFormat} from './stockViewerChartDataUtility';
+import { deleteOlderVersionsOfStockData, fromApiDataToDatasetFormat} from './stockViewerChartDataUtility';
 import { CommonDataForSingleTimeUnit, CommonMetaData, StockDataApiResponse, StockDataForSingleSymbol, StockDataForSingleSymbolDataPart, StockDataForSingleSymbolDataPartDeeperObject } from './stocksZodSchemas';
 
 export type Dataset = {
@@ -18,7 +18,7 @@ export function createDataset({
     data,
     fill = true,
     borderColor,
-    tension=1}
+    tension = 1}
     :
     {
         metadata: CommonMetaData,
@@ -37,8 +37,9 @@ export function createDataset({
 }
 
 export type IStockState = {
-    datasets: Dataset[],
+    datasets: Array<Dataset>,
 }
+
 const StockInitialState: IStockState = {
     datasets: []
 }
@@ -48,11 +49,14 @@ export const stockSlice = createSlice({
     name:'stocks',
     initialState:StockInitialState,
     reducers:{
-        UPDATE_CURRENT_STOCKS: (state, action: PayloadAction<Dataset[]>) => {
-            const updatedState = {...state, datasets: [...state.datasets, action.payload]};
-            state.datasets = [...state.datasets].concat(action.payload)
+        UPDATE_CURRENT_STOCKS: (state, action: PayloadAction<StockDataApiResponse>) => {
+            const newDatasets: Dataset[] = fromApiDataToDatasetFormat(action.payload,state.datasets);
+            const renewedOldDatasets = deleteOlderVersionsOfStockData({newDatasets: newDatasets,oldDatasets:state.datasets})
+            state.datasets = renewedOldDatasets.concat(newDatasets);
         }}
 })
+
+
 
 
 
