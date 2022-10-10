@@ -34,7 +34,7 @@ const getRandomRgbColor = (datasetsAlreadyInState:Dataset[]) =>
             randomRgbForNewLine = random_rgb();
             var simularitiesNotFound = false;
             datasetsAlreadyInState.map( datasetInfo => {
-                const datasetsBorderColorValues = getValuesOutOfRgbString(datasetInfo.dataset.borderColor);
+                const datasetsBorderColorValues = getValuesOutOfRgbString(datasetInfo.borderColor);
                 const randomRgbForNewLineValues = getValuesOutOfRgbString(randomRgbForNewLine);
                 if(MIN_DIST_BETWEEN_COLORS >
                     (getDeltaE00({L:datasetsBorderColorValues[0],A:datasetsBorderColorValues[1],B:datasetsBorderColorValues[2]}
@@ -57,7 +57,8 @@ export const fromApiDataToDatasetFormat = (apiStockData:StockDataApiResponse,dat
         if(dataEntryName === undefined){
             throw new TypeError("Time Series Key was not found");
         }  
-        const borderColorForNewDataset = getRandomRgbColor(datasetsAlreadyInState);
+//        const borderColorForNewDataset = getRandomRgbColor(datasetsAlreadyInState);
+        const borderColorForNewDataset = "red";
         const metaData =  dataOnCertainSymbol["Meta Data"];
         const data = dataOnCertainSymbol[dataEntryName];
         const newDataset = createDataset({data:data,metadata:metaData,borderColor:borderColorForNewDataset})

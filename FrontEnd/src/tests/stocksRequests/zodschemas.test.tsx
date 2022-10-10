@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import { string, z } from "zod";
-import {singleDataUnitDailyIntradayWeeklyAndMonthly, stockDataForSingleSymbol, stockDataForSingleSymbolDataPart} from "../../state/Stocks/stocksZodSchemas"
+import {singleDataUnitDailyIntradayWeeklyAndMonthly, stockDataApiResponse, stockDataForSingleSymbol, stockDataForSingleSymbolDataPart} from "../../state/Stocks/stocksZodSchemas"
+import { testData } from "../state/stocks/apiResponse";
 
 const fullJson = {
     "Meta Data": {
@@ -91,6 +92,10 @@ const x = z.object({"1. open": madeType,
     expect(new Promise(() => {
         schema.parse(xs)
     })).resolves.not.toThrowError()
+  })
+
+  test('whole json stock data object is correct',() => {
+    expect(new Promise(() => stockDataApiResponse.parse(testData))).resolves.not.toThrowError();
   })
 
 

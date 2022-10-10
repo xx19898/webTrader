@@ -18,28 +18,28 @@ export const getSymbols  = async () => {
 }
 
 
-export const getStockData = (queryParams: IStockQueryParamsIntraday | IStockQueryParamsNonIntraday) => {
+export type IStockQueryParams =  IStockQueryParamsIntraday | IStockQueryParamsNonIntraday
+
+export const getStockData = (queryParams: IStockQueryParams) => {
     const symbolsAsOneString = concatListOfSymbols(queryParams.symbols)
-    return axios.request<StockDataApiResponse>({
+    const axiosConfig = {
         method: 'get',
         url: 'interval' in queryParams ? 
-        `${BASE_URL}stocks/
-        ?function=${(queryParams.function)}
-        &symbols=${symbolsAsOneString},
-        &interval=${(queryParams.interval)}`
+        `${BASE_URL}stocks/getStockData?function=${(queryParams.function)}&symbols=${symbolsAsOneString},&interval=${(queryParams.interval)}`
         :
-        `${BASE_URL}stocks/
-        ?function=${(queryParams.function)}
-        &symbols=${symbolsAsOneString}`
+        `${BASE_URL}stocks/getStockData?function=${(queryParams.function)}&symbols=${symbolsAsOneString}`
         
-    }).then(
+    }
+    const axiosPromise = axios.request<StockDataApiResponse>(axiosConfig).then(
         (response) => {
-            stockDataApiResponse.parse(response.data);
-            return response.data;
+            return stockDataApiResponse.parse(response.data);
         })
         .catch( err => {
             console.log();
             throw err;
-        })}
+        })
+        return axiosPromise
+
+    }
 
 

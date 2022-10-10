@@ -1,3 +1,4 @@
+import { stockFunctionTypes } from "./stocksRequestTypes";
 
 
 export const concatListOfSymbols = (listOfSymbols:string[]) : string => {
