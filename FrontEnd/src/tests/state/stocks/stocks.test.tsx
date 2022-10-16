@@ -10,6 +10,7 @@ import { stockDataHandlerSaga } from "../../../state/Stocks/stocksHandlerSaga";
 import { assert } from "console";
 import { stockFunctionTypes } from "../../../state/Stocks/stocksRequestTypes";
 import { combineReducers } from "@reduxjs/toolkit";
+import { stockDataApiResponse } from "../../../state/Stocks/stocksZodSchemas";
 
 
 const expectedFinalState:IStockState = {
@@ -70,7 +71,11 @@ const expectedFinalState:IStockState = {
             }
         }
     ],
+    currentTimeSeries:stockFunctionTypes.DAILY,
+    labels:[],
+    symbols:[]
 }
+// ELIMINATE THE ERRORS, RUN THE TESTS
 const mockedApiResponse = {
     "IBM": {
 		"Time Series (Daily)": {
@@ -134,9 +139,11 @@ const mockedApiResponse = {
     describe('fetching data from backend api',() => {
         test('fetchStockData method works properly', async () => {
             const backEndResponse = await getStockData({function:stockFunctionTypes.DAILY,symbols:["AA"]})
-            
-            
+            const metaData = backEndResponse["AA"]["Meta Data"]
+            const symbol = metaData["2. Symbol"]
+            expect(symbol).toBe("AA")
         })
+    
 
         test('stocksHandlerSaga should put same result as the fetchStockData method',async () => {
             const props = {stockParams:{function:stockFunctionTypes.DAILY,symbols:["AA"]},type:GET_STOCK_DATA}
@@ -147,10 +154,17 @@ const mockedApiResponse = {
             .put({type:UPDATE_CURRENT_STOCKS,payload:backEndResponse})
             .run()
         })
+        
+
 //This wont pass, but ignore it for now since it can depend on  me not understanding redux test plan properly
         test('stockswatchersaga should fetch the requested data from the api, process it and save it in the store',() => {
             const props = {stockParams:{function:stockFunctionTypes.DAILY, symbols:["AA","IBM"]},type:GET_STOCK_DATA}
-            const _initialState = () => ({datasets:[]});
+            const _initialState = () => ({
+                datasets:[],
+                labels:[],
+                currentTimeSeries:stockFunctionTypes.DAILY,
+                symbols:[]
+            });
             return expectSaga(stockDataHandlerSaga,props)
             .withReducer(
                 combineReducers({
@@ -163,6 +177,7 @@ const mockedApiResponse = {
             .run()  
         })
     })
+
 
 
 

@@ -25,7 +25,6 @@ Generator<CallEffect<StockDataApiResponse> | PutEffect<AnyAction>,
 {
     try{
     const response: StockDataApiResponse = yield call(getStockData, props.stockParams);
-    console.log(response);
     //Updating the state
     yield put({type:stocksActionTypes.UPDATE_CURRENT_STOCKS, payload:response})
     }

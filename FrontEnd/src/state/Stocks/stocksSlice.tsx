@@ -1,8 +1,9 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {GET_INITIAL_STOCK, UPDATE_CURRENT_STOCKS} from './stocksActionTypes';
+import {GET_INITIAL_STOCK, GET_SYMBOLS, UPDATE_CURRENT_STOCKS} from './stocksActionTypes';
 import { RootState } from '../../store';
-import { deleteOlderVersionsOfStockData, fromApiDataToDatasetFormat} from './stockViewerChartDataUtility';
-import { CommonDataForSingleTimeUnit, CommonMetaData, StockDataApiResponse, StockDataForSingleSymbol, StockDataForSingleSymbolDataPart, StockDataForSingleSymbolDataPartDeeperObject } from './stocksZodSchemas';
+import { deleteOlderVersionsOfStockData, fromApiDataToDatasetFormat, getLabelsFromApiData} from './stockViewerChartDataUtility';
+import { CommonDataForSingleTimeUnit, CommonMetaData, IStockSymbolList, StockDataApiResponse, StockDataForSingleSymbol, StockDataForSingleSymbolDataPart, StockDataForSingleSymbolDataPartDeeperObject } from './stocksZodSchemas';
+import { stockFunctionTypes } from './stocksRequestTypes';
 
 export type Dataset = {
     metadata: CommonMetaData,
@@ -37,11 +38,17 @@ export function createDataset({
 }
 
 export type IStockState = {
-    datasets: Array<Dataset>,
+    datasets: Dataset[],
+    labels: string[],
+    currentTimeSeries: stockFunctionTypes,
+    symbols: IStockSymbolList
 }
 
 const StockInitialState: IStockState = {
-    datasets: []
+    datasets: [],
+    labels:[],
+    currentTimeSeries: stockFunctionTypes.DAILY,
+    symbols: [],
 }
 
 
@@ -52,9 +59,16 @@ export const stockSlice = createSlice({
         UPDATE_CURRENT_STOCKS: (state, action: PayloadAction<StockDataApiResponse>) => {
             const newDatasets: Dataset[] = fromApiDataToDatasetFormat(action.payload,state.datasets);
             const renewedOldDatasets = deleteOlderVersionsOfStockData({newDatasets: newDatasets,oldDatasets:state.datasets})
+            const newLabels = getLabelsFromApiData({apiData:action.payload});
             state.datasets = renewedOldDatasets.concat(newDatasets);
-        }}
+        },
+        UPDATE_SYMBOL_LIST: (state, action: PayloadAction<IStockSymbolList>) => {
+            state.symbols = action.payload;
+        },
+    }
 })
+
+
 
 
 

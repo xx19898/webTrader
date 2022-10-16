@@ -36,7 +36,7 @@ module.exports = {
                 {
                     test: /\.tsx?$/,
                     exclude:[
-                      './src/tests/'
+                      path.join(__dirname,'./src/tests/')
                     ],
                     use: [
                       {

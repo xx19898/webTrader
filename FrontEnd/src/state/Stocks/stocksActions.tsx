@@ -39,7 +39,6 @@ export const getStockData = (queryParams: IStockQueryParams) => {
             throw err;
         })
         return axiosPromise
-
     }
 
 

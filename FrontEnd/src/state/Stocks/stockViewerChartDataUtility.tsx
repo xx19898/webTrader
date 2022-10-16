@@ -48,7 +48,7 @@ const getRandomRgbColor = (datasetsAlreadyInState:Dataset[]) =>
         }
         return randomRgbForNewLine;
 }
-export const fromApiDataToDatasetFormat = (apiStockData:StockDataApiResponse,datasetsAlreadyInState: Dataset[]) => {
+export const fromApiDataToDatasetFormat = (apiStockData:StockDataApiResponse,datasetsAlreadyInState:Dataset[]) => {
     let newDatasets: Dataset[] = []; 
     Object.values(apiStockData).forEach( dataOnCertainSymbol => {
         const dataEntryName = Object.keys(dataOnCertainSymbol).find(key => {
@@ -57,8 +57,7 @@ export const fromApiDataToDatasetFormat = (apiStockData:StockDataApiResponse,dat
         if(dataEntryName === undefined){
             throw new TypeError("Time Series Key was not found");
         }  
-//        const borderColorForNewDataset = getRandomRgbColor(datasetsAlreadyInState);
-        const borderColorForNewDataset = "red";
+        const borderColorForNewDataset = getRandomRgbColor(datasetsAlreadyInState);
         const metaData =  dataOnCertainSymbol["Meta Data"];
         const data = dataOnCertainSymbol[dataEntryName];
         const newDataset = createDataset({data:data,metadata:metaData,borderColor:borderColorForNewDataset})
@@ -74,5 +73,16 @@ export const deleteOlderVersionsOfStockData = (params:{newDatasets: Dataset[],ol
             !(newSymbol  === dataset.metadata["2. Symbol"])
             ))
     return renewedOldDatasets;
-} 
+}
+
+export const getLabelsFromApiData = (props:{apiData:Object}) => {
+    const validatedStockData = stockDataApiResponse.parse(props.apiData);
+    const dataOnFirstStockInArray = Object.values(validatedStockData)[0];
+    const dataEntry = Object.keys(dataOnFirstStockInArray).find( key => Object.values(DATA_ENTRY_NAMES).some( dataEntry => dataEntry === key))
+    if(dataEntry){
+        return Object.keys(dataOnFirstStockInArray[dataEntry])
+    }else{
+        throw Error('Time Series Entry was not found on the stock data')
+    }
+}
 
