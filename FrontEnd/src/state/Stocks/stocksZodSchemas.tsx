@@ -152,16 +152,19 @@ export const stockDataApiResponse = z.record(z.string(),stockDataForSingleSymbol
 
 export type StockDataApiResponse = z.infer<typeof stockDataApiResponse>;
 
-
-export const symbolListSchema = z.array(z.object({
+export const symbolInfo = z.object({
     symbol:z.string(),
     name:z.string(),
     exchange:z.string(),
-    ipoDate: dateSchema,
+    ipoDate: z.string(),
     assetType:z.string(),
     delistingData: z.optional(z.nullable(z.string())),
     status: z.enum(["Active","Inactive"]),
-}))
+})
+export type SymbolInfo = z.infer<typeof symbolInfo>
+
+export const symbolListSchema = z.array(symbolInfo)
+export type SymbolListSchema = z.infer<typeof symbolListSchema>
 
 export type IStockSymbolList = z.infer<typeof symbolListSchema>
 

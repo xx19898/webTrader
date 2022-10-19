@@ -1,5 +1,4 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {GET_INITIAL_STOCK, GET_SYMBOLS, UPDATE_CURRENT_STOCKS} from './stocksActionTypes';
 import { RootState } from '../../store';
 import { deleteOlderVersionsOfStockData, fromApiDataToDatasetFormat, getLabelsFromApiData} from './stockViewerChartDataUtility';
 import { CommonDataForSingleTimeUnit, CommonMetaData, IStockSymbolList, StockDataApiResponse, StockDataForSingleSymbol, StockDataForSingleSymbolDataPart, StockDataForSingleSymbolDataPartDeeperObject } from './stocksZodSchemas';
@@ -68,7 +67,7 @@ export const stockSlice = createSlice({
     }
 })
 
-
+export const {UPDATE_CURRENT_STOCKS,UPDATE_SYMBOL_LIST} = stockSlice.actions;
 
 
 

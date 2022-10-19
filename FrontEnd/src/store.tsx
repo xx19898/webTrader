@@ -11,7 +11,7 @@ export const store = configureStore({
         users: userSlice.reducer, 
         stocks : stockSlice.reducer,
     },
-    middleware: [...getDefaultMiddleware({thunk:false}),sagaMiddleware]
+    middleware: [sagaMiddleware]
 
 })
 sagaMiddleware.run(rootWatcherSaga)

@@ -13,8 +13,9 @@ export const getSymbols  = async () => {
         url: 'https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=demo'
     });
     const processedResponse = processListOfSymbols(response.data.toString());
-    symbolListSchema.parse(processedResponse);
-    return processedResponse;
+    const validatedSymbolList = symbolListSchema.parse(processedResponse);
+    //validatedSymbolList.forEach(e => console.log(e.name))
+    return validatedSymbolList;
 }
 
 

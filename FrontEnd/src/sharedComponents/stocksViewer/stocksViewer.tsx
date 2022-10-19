@@ -25,17 +25,17 @@ import { DropDownTextMenu } from "../dropdownMenu"
 
 */
 
- export const StocksViewer = (props:StocksViewerProps) => {
+ const StocksViewer = (props:StocksViewerProps) => {
     const dispatch = useDispatch()
     const [chosenSymbol,setChosenSymbol] = useState("")
     useEffect(() => {
         dispatch({type:GET_SYMBOLS});
+        console.log("dispatched get symbols")
     },[])
     return(
         <>
-        <h1 className="text-xl">Stock Viewer</h1>
         <form className="flex flex-col align-stretch justify-center">
-        <DropDownTextMenu dataToVisualise={props.symbols.map(symbol => symbol.name)} passUpTheChosenValue={setChosenSymbol} />
+        <DropDownTextMenu dataToVisualise={props.symbols} passUpTheChosenValue={setChosenSymbol} />
         </form>
 
         </>
@@ -43,8 +43,8 @@ import { DropDownTextMenu } from "../dropdownMenu"
 }
 
 
-const mapStateToProps = (props:{state:RootState}) => {
-   return props.state.stocks;
+const mapStateToProps = (state:RootState) => {
+   return state.stocks;
 }
 const mapDispatchToProps = (dispatch:AppDispatch) => {
    return {

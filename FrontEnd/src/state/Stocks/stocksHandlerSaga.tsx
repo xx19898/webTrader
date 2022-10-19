@@ -4,6 +4,7 @@ import * as stocksActionTypes from "./stocksActionTypes";
 import { AnyAction } from "redux";
 import { IStockSymbolList, StockDataApiResponse, stockDataApiResponse } from "./stocksZodSchemas";
 import { RootState } from "../../store";
+import { UPDATE_SYMBOL_LIST } from "./stocksSlice";
 
 
 type StocksServiceResponse = SagaReturnType<typeof getStockData>
@@ -34,10 +35,12 @@ Generator<CallEffect<StockDataApiResponse> | PutEffect<AnyAction>,
 }
 
 export function* getSymbolsHandlerSaga():
- Generator<CallEffect<IStockSymbolList>, void,IStockSymbolList>
+ Generator<CallEffect<IStockSymbolList> | PutEffect<{type:string,payload:IStockSymbolList}>, void,IStockSymbolList>
 {
     const response: IStockSymbolList = yield call(getSymbols);
-    put({type:stocksActionTypes.UPDATE_SYMBOL_LIST, payload: response})
+    console.log("downloaded!")
+    console.log(response.length)
+    yield put(UPDATE_SYMBOL_LIST(response))
 }
 
 
