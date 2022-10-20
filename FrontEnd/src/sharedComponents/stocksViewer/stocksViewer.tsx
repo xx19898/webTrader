@@ -7,7 +7,7 @@ import { connect, ConnectedProps, useDispatch } from "react-redux"
 import { AppDispatch, RootState } from "../../store"
 import { IStockState } from "../../state/Stocks/stocksSlice"
 import { IStockQueryParams } from "../../state/Stocks/stocksActions"
-import { DropDownTextMenu } from "../dropdownMenu"
+import { DropDownTextMenu } from "../dropdownMenu/dropdownMenu"
 
 /*
 1) Intraday
