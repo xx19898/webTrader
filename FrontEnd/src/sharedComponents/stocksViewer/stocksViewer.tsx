@@ -34,10 +34,9 @@ import { DropDownTextMenu } from "../dropdownMenu/dropdownMenu"
     },[])
     return(
         <>
-        <form className="flex flex-col align-stretch justify-center">
+        <form className="mt-[10px] mb-10 flex flex-col align-stretch justify-center">
         <DropDownTextMenu dataToVisualise={props.symbols} passUpTheChosenValue={setChosenSymbol} />
         </form>
-
         </>
     )
 }

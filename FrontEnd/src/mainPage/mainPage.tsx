@@ -33,8 +33,8 @@ manage your portfolio.
         </button>
     </div>
 
-    <div className = "mt-[49px] h-60 mb-4 rounded-sm flex flex-col justify-start items-center text-lg bg-[#3F1A4D]">
-    <h1 className="font-bold text-white">Stock Viewer</h1> 
+    <div className = "mt-[49px] h-auto rounded-sm flex flex-col justify-start items-center text-lg bg-[#3F1A4D]">
+    <h1 className="font-bold mt-[20px] text-white">Stock Viewer</h1> 
     <StocksViewer/>
     </div>
     
