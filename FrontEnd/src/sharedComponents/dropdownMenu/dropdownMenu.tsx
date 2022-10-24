@@ -1,9 +1,11 @@
+
 import {v4 as uuidv4} from 'uuid'
-import { RefObject, useEffect, useMemo, useRef} from "react"
+import { RefObject, useEffect, useMemo, useRef, useState} from "react"
 
 import { DropDownArrowIcon } from "../../icons/dropdownArrowIcon"
 import { IStockSymbolList } from "../../state/Stocks/stocksZodSchemas"
 import useDropDownMenu from "./useDropDownMenu"
+import DropdownList from './dropdownList'
 
 
 function useOutsideAlerter(ref:any,closeDropdown : () => void){
@@ -34,22 +36,33 @@ interface IBaseDropDown{
 const BaseDropDown:React.FC<IBaseDropDown> = 
 ({height,value,dataIsFetched,clickDropDownArrowButton,changeValue,dropdownStatus,setDropdownStatus,shouldFocusOnInput}) => {
     const inputRef: RefObject<HTMLInputElement> = useRef(null)
+    const [dropdownWasNotPreviouslyOpen,setDropdownWasNotPreviouslyOpen] = useState(true)
     useEffect( () => {
-        if(shouldFocusOnInput && inputRef != null){
+        if(shouldFocusOnInput && inputRef != null && dropdownWasNotPreviouslyOpen){
             inputRef.current && inputRef.current.focus()
     }
 },[])
     const valueChanged = (newValue:string) => {
         if(value.trim().length === 0){
-            if(!dropdownStatus) setDropdownStatus(true)
+            if(!dropdownStatus){
+                setDropdownWasNotPreviouslyOpen(true)
+                setDropdownStatus(true)
+            }
+            else{
+                setDropdownWasNotPreviouslyOpen(false)
+            }
             changeValue(newValue)    
         }
         if(newValue.length === 0){
             changeValue(newValue)
+            setDropdownWasNotPreviouslyOpen(true)
             setDropdownStatus(false)
         }
         else{
-            if(!dropdownStatus) setDropdownStatus(true)
+            if(!dropdownStatus){
+                setDropdownWasNotPreviouslyOpen(true)
+                setDropdownStatus(true)
+            }    
             changeValue(newValue)     
         }
     }
@@ -96,31 +109,22 @@ export const DropDownTextMenu = ({dataToVisualise,passUpTheChosenValue}:IDropDow
     
         if(dataToVisualise.length != 0){
             if(dropDownStatus){
+                //Data is fetched and the list is open
                 return(
                     <div className="flex flex-col items-stretch focus-within:outline-2 focus-within:outline focus-within:outline-primary" tabIndex={123} ref={dropdownRef}>
                         <BaseDropDown height={20} value={chosenElement}  dataIsFetched={true}
                         clickDropDownArrowButton={clickArrowButton} changeValue={setChosenElement} 
-                        dropdownStatus={dropDownStatus} setDropdownStatus={setStatusOfDropdown} shouldFocusOnInput={true}/>
-                    <ul className="relative block bg-white w-full max-h-20 overflow-scroll">
-                        {
-                            filteredData.length === 0 
-                            ? 
-                            <li className="w-auto bg-gray-300 content-end  text-right after:content-['']
-                            after:w-full after:bg-primary/40 after:rounded-sm hover:bg-secondary-2/30 hover:cursor-pointer after:h-[1.5px] 
-                            after:absolute after:list-item after:box-content "><p className="mr-[20px]">{"None found"}</p></li>
-                            : 
-                        filteredData.map(
-                            (symbol,index) => index == (dataToVisualise.length - 1)
-                            ?
-                            <li key={uuidv4()} className="w-auto bg-gray-300 list-item content-end hover:bg-secondary-2/30 hover:cursor-pointer text-right"><p className="mr-[20px]">{symbol}</p></li>
-                            :
-                            <li key={uuidv4()} className="w-auto bg-gray-300 content-end  text-right after:content-['']
-                                           after:w-full after:bg-primary/40 after:rounded-sm hover:bg-secondary-2/30 hover:cursor-pointer after:h-[1.5px] after:absolute after:list-item after:box-content "><p className="mr-[20px]">{symbol}</p></li>
-                            )}
-                    </ul>
+                        dropdownStatus={dropDownStatus} setDropdownStatus={setStatusOfDropdown} shouldFocusOnInput/>
+
+                        <DropdownList height={200}
+                        width={200}
+                        chosenElement={chosenElement}
+                        dataToVisualise={dataToVisualise}
+                        filteredData={filteredData}/>
                     </div>
                 )
             }
+            //Data is fetched but the list is not open
             return(
                 <BaseDropDown height={20} value={chosenElement} dataIsFetched={true} 
                 clickDropDownArrowButton={clickArrowButton} changeValue={setChosenElement}
@@ -128,6 +132,7 @@ export const DropDownTextMenu = ({dataToVisualise,passUpTheChosenValue}:IDropDow
                 />
             )
         }
+        //Data has yet to be fetched
         return(
             <BaseDropDown height={20} value={"Stock symbol data is being fetched"} dataIsFetched={false}
             clickDropDownArrowButton={clickArrowButton} changeValue={setChosenElement}
