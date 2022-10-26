@@ -7,7 +7,8 @@ import { connect, ConnectedProps, useDispatch } from "react-redux"
 import { AppDispatch, RootState } from "../../store"
 import { IStockState } from "../../state/Stocks/stocksSlice"
 import { IStockQueryParams } from "../../state/Stocks/stocksActions"
-import { DropDownTextMenu } from "../dropdownMenu/dropdownMenu"
+import { DropDownTextMenu } from "../dropdownMenuW/Searchbar/dropdownMenu"
+import DropDownMenu from "../dropdownMenu/dropdownMenu"
 
 /*
 1) Intraday
@@ -24,18 +25,33 @@ import { DropDownTextMenu } from "../dropdownMenu/dropdownMenu"
 
 
 */
+const timeSeries = [
+   "TIME_SERIES_INTRADAY",
+   "TIME_SERIES_DAILY",
+   "TIME_SERIES_WEEKLY",
+   "TIME_SERIES_WEEKLY_ADJUSTED",
+   "TIME_SERIES_MONTHLY",
+   "TIME_SERIES_MONTHLY_ADJUSTED",
+]
 
  const StocksViewer = (props:StocksViewerProps) => {
     const dispatch = useDispatch()
     const [chosenSymbol,setChosenSymbol] = useState("")
+    const [chosenTimeSeries,setChosenTimeSeries] = useState("")
+
     useEffect(() => {
         dispatch({type:GET_SYMBOLS});
         console.log("dispatched get symbols")
     },[])
     return(
         <>
-        <form className="mt-[10px] mb-10 flex flex-col align-stretch justify-center">
-        <DropDownTextMenu dataToVisualise={props.symbols} passUpTheChosenValue={setChosenSymbol} />
+        <form className="mt-[10px] w-3/4 mb-10 flex flex-col align-stretch justify-center">
+        <label className="text-white mb-[5px]">Symbol</label>
+        <DropDownTextMenu dataToVisualise={props.symbols} passUpTheChosenValue={setChosenSymbol}/>
+        <label className="text-white mb-[5px]">Time Series</label>
+        <DropDownMenu items={timeSeries} setChosenValue={setChosenTimeSeries} 
+        chosenValue={chosenTimeSeries.length === 0 ? undefined : chosenTimeSeries}/>
+
         </form>
         </>
     )
