@@ -164,7 +164,5 @@ export const symbolInfo = z.object({
 export type SymbolInfo = z.infer<typeof symbolInfo>
 
 export const symbolListSchema = z.array(symbolInfo)
-export type SymbolListSchema = z.infer<typeof symbolListSchema>
-
 export type IStockSymbolList = z.infer<typeof symbolListSchema>
 

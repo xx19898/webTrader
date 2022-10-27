@@ -10,7 +10,7 @@ export const MainPage  = () =>
  {
     return(
     
-    <div className="ml-2 mr-2 flex-col items-center justify-center h-screen w-auto">
+    <div className="mx-10 mb-10 flex-col items-center justify-center h-screen w-auto">
     <h1 className="mt-[50px] text-white font-poppins text-xl text-center font-bold">Welcome to the</h1>
     <h2 className=" text-primary font-poppins text-xl text-center font-bold ">WebTrader</h2>
     <p className="indent-3 text-white mt-[51px] font-poppins text-lg font-bold w-auto text-center">

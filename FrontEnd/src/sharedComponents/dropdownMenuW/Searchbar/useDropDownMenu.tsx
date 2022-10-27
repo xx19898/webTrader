@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 
 export function getMatchingListElements (list: string[], stringToMatchAgainst : string){
     return list.filter( (element) => {
-        const lengthOfTheString = stringToMatchAgainst.trim().toLowerCase().length
-        const correspondingPartOfElement = element.trim().toLowerCase().substring(0,lengthOfTheString)
+        const lengthOfTheString = stringToMatchAgainst.trim().length
+        const correspondingPartOfElement = element.trim().substring(0,lengthOfTheString)
         return stringToMatchAgainst === correspondingPartOfElement
     })
 }
@@ -43,8 +43,8 @@ const useDropDownMenu = ({list}:IUseDropDownMenu) => {
             document.addEventListener('keydown',handleHideDropdown, true)
             document.addEventListener('click',handleClickOutside, true)
             return () => {
-                document.addEventListener('keydown',handleHideDropdown, true)
-                document.addEventListener('click',handleClickOutside, true)
+                document.removeEventListener('keydown',handleHideDropdown, true)
+                document.removeEventListener('click',handleClickOutside, true)
             }
         })
 
@@ -66,6 +66,9 @@ const useDropDownMenu = ({list}:IUseDropDownMenu) => {
             setChosenElementIsCorrect: setChosenElementIsCorrect,
 
             filteredData: filteredData,
+
+            shouldFocusOnSymbolInput: shouldFocusOnInput,
+            setShouldFocusOnSymbolInput: setShouldFocusOnInput,
         })
 }
 

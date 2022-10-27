@@ -27,11 +27,11 @@ const VirtualizedList = ({filteredData,itemSize}:IVirtualizedList) => {
           
             if(index === (data.length - 1)){
                 return <li className="w-auto bg-gray-300 content-end  text-right
-                hover:bg-secondary-2/10 hover:cursor-pointer" style={style}>
+                hover:bg-primary hover:cursor-pointer" style={style}>
                     <p className="mr-[20px]">{data[index]}</p></li>
             }
             return <li className="w-auto bg-gray-300 content-end  text-right after:content-['']
-            after:w-full after:bg-primary/40 after:rounded-sm hover:bg-secondary-2/10 hover:cursor-pointer after:h-[1.5px] 
+            after:w-full after:bg-primary/40 after:rounded-sm hover:bg-primary hover:cursor-pointer after:h-[1.5px] 
             after:absolute after:list-item after:box-content " style={style}><p className="mr-[20px]">{data[index]}</p></li>
         }}
                 </List>
@@ -81,10 +81,10 @@ const DropdownList = ({filteredData,chosenElement,dataToVisualise,listItemSize}:
                             (index === filteredData.length - 1) 
                             ?
                             <li className="w-full overflow-hidden h-[30px] bg-gray-300 content-end  text-right
-                            hover:bg-secondary-2/10 hover:cursor-pointer">{<p className="relative right-[20px]">{element}</p>}</li>
+                            hover:bg-primary hover:cursor-pointer">{<p className="relative right-[20px]">{element}</p>}</li>
                             :
                             <li className="w-auto h-[30px] right-[20px] bg-gray-300 content-end  text-right after:content-['']
-                            after:w-full after:bg-primary/40 after:rounded-sm hover:bg-secondary-2/10 hover:cursor-pointer after:h-[1.5px] 
+                            after:w-full after:bg-primary/40 after:rounded-sm hover:bg-primary hover:cursor-pointer after:h-[1.5px] 
                             after:list-item after:box-content ">{<p className="relative right-[20px]">{element}</p>}</li>
                             )
                         })

@@ -30,22 +30,25 @@ interface IBaseDropDown{
     setDropdownStatus: (newStatus:boolean) => void,
     clickDropDownArrowButton: () => void,
     changeValue: (newValue:string) => void,
-    shouldFocusOnInput ?: boolean
+    shouldFocusOnInput: boolean
+    setShouldFocusOnInput: (focus:boolean) => void,
 }
 
-const BaseDropDown:React.FC<IBaseDropDown> = 
-({height,value,dataIsFetched,clickDropDownArrowButton,changeValue,dropdownStatus,setDropdownStatus,shouldFocusOnInput}) => {
+const BaseDropDown = 
+({height,value,dataIsFetched,clickDropDownArrowButton,changeValue,
+  dropdownStatus,setDropdownStatus,shouldFocusOnInput,setShouldFocusOnInput}:IBaseDropDown) => {
     const inputRef: RefObject<HTMLInputElement> = useRef(null)
     const [dropdownWasNotPreviouslyOpen,setDropdownWasNotPreviouslyOpen] = useState(true)
     useEffect( () => {
-        if(shouldFocusOnInput && inputRef != null && dropdownWasNotPreviouslyOpen){
+        if(shouldFocusOnInput && inputRef != null){
             inputRef.current && inputRef.current.focus()
     }
-},[])
+},[shouldFocusOnInput])
     const valueChanged = (newValue:string) => {
-        if(value.trim().length === 0){
+        //Input was empty, now typed something
+        if(value.trim().length === 0 && newValue.length != 0){
             if(!dropdownStatus){
-                setDropdownWasNotPreviouslyOpen(true)
+                setDropdownWasNotPreviouslyOpen(false)
                 setDropdownStatus(true)
             }
             else{
@@ -54,6 +57,10 @@ const BaseDropDown:React.FC<IBaseDropDown> =
             changeValue(newValue)    
         }
         if(newValue.length === 0){
+            if(value.length !== 0){
+                console.log("got here")
+                setShouldFocusOnInput(true)
+            }
             changeValue(newValue)
             setDropdownWasNotPreviouslyOpen(true)
             setDropdownStatus(false)
@@ -68,8 +75,8 @@ const BaseDropDown:React.FC<IBaseDropDown> =
     }
     if(dataIsFetched){
         return(
-            <div className="relative flex flex-row items-center align-stretch bg-white focus-within:outline-2 focus-within:outline focus-within:outline-primary" tabIndex={0}>
-                <input className="mr-[20px] bg-white p-2 text-right rounded-sm focus:outline-none"
+            <div className="relative flex h-[44px] flex-row items-center align-stretch bg-white focus-within:outline-2 focus-within:outline focus-within:outline-primary" tabIndex={0}>
+                <input className="w-full text-right mr-8 bg-white rounded-sm focus:outline-none"
                  type="search" value={value} onChange={(e) => valueChanged(e.target.value)} ref={inputRef}/>
                 <div className="flex flex-row items-center justify-center absolute right-2 min-h-full bg-white">
                     <button className="cursor-pointer" onClick={() => clickDropDownArrowButton()}><DropDownArrowIcon height={height}/></button>
@@ -79,8 +86,8 @@ const BaseDropDown:React.FC<IBaseDropDown> =
     }
     else{
         return(
-        <div className="relative flex flex-row items-center align-stretch bg-white focus-within:outline-2 focus-within:outline focus-within:outline-red-600" tabIndex={0}>
-                <input className="mr-[20px] bg-white p-2 text-right  rounded-sm focus:outline-none" type="search" value={value} onChange={(e) => valueChanged(e.target.value)}/>
+        <div className="relative flex h-[44px] flex-row items-center align-stretch bg-white focus-within:outline-2 focus-within:outline focus-within:outline-red-600" tabIndex={0}>
+                <input className=" w-full bg-white text-right mr-8  rounded-sm focus:outline-none" type="search" value={value} onChange={(e) => valueChanged(e.target.value)}/>
                 <div className="absolute right-2 min-h-full bg-white flex flex-row items-center justify-center">
                     <DropDownArrowIcon height={height}/>
                 </div>
@@ -96,15 +103,16 @@ export const DropDownTextMenu = ({dataToVisualise,passUpTheChosenValue}:IDropDow
     const symbols = useMemo(() => {
         return dataToVisualise.map( item => item.symbol)
     },[dataToVisualise])
-    const shouldFocusOnInput = false
     
-    //TODO: IMPLEMENT USEREF SO THAT DROPDOWN INPUT RETAINS THE FOCUS WHEN THE FIRST CHARACTER IS TYPED IN, USE USEEFFECT IN PAIR WITH USESTATE VARIABLE 'FOCUSONNEXTRENDER'
+    
     const {chosenElement,setChosenElement,
            clickArrowButton,dropDownStatus,
            dropdownRef,setStatusOfDropdown,
            chosenElementIsCorrect,
            setChosenElementIsCorrect,
            filteredData,
+           shouldFocusOnSymbolInput,
+           setShouldFocusOnSymbolInput,
            } = useDropDownMenu({list:symbols})
     
         if(dataToVisualise.length != 0){
@@ -114,7 +122,8 @@ export const DropDownTextMenu = ({dataToVisualise,passUpTheChosenValue}:IDropDow
                     <div className="flex flex-col items-stretch focus-within:outline-2 focus-within:outline focus-within:outline-primary" tabIndex={123} ref={dropdownRef}>
                         <BaseDropDown height={20} value={chosenElement}  dataIsFetched={true}
                         clickDropDownArrowButton={clickArrowButton} changeValue={setChosenElement} 
-                        dropdownStatus={dropDownStatus} setDropdownStatus={setStatusOfDropdown} shouldFocusOnInput/>
+                        dropdownStatus={dropDownStatus} setDropdownStatus={setStatusOfDropdown}
+                        shouldFocusOnInput={shouldFocusOnSymbolInput} setShouldFocusOnInput={setShouldFocusOnSymbolInput}/>
 
                         <DropdownList 
                         chosenElement={chosenElement}
@@ -128,7 +137,9 @@ export const DropDownTextMenu = ({dataToVisualise,passUpTheChosenValue}:IDropDow
             return(
                 <BaseDropDown height={20} value={chosenElement} dataIsFetched={true} 
                 clickDropDownArrowButton={clickArrowButton} changeValue={setChosenElement}
-                dropdownStatus={dropDownStatus} setDropdownStatus={setStatusOfDropdown}
+                dropdownStatus={dropDownStatus} setDropdownStatus={setStatusOfDropdown} 
+                shouldFocusOnInput={shouldFocusOnSymbolInput}
+                setShouldFocusOnInput={setShouldFocusOnSymbolInput}
                 />
             )
         }
@@ -137,6 +148,7 @@ export const DropDownTextMenu = ({dataToVisualise,passUpTheChosenValue}:IDropDow
             <BaseDropDown height={20} value={"Stock symbol data is being fetched"} dataIsFetched={false}
             clickDropDownArrowButton={clickArrowButton} changeValue={setChosenElement}
             dropdownStatus={dropDownStatus} setDropdownStatus={setStatusOfDropdown}
+            shouldFocusOnInput={false} setShouldFocusOnInput={setShouldFocusOnSymbolInput}
             />
         )
     }
