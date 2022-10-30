@@ -49,13 +49,12 @@ const timeIntervalsIntraday = [
     const [chosenTimeIntervalIntraday, setChosenTimeIntervalIntraday] = useState("")
     useEffect(() => {
         dispatch({type:GET_SYMBOLS});
-        console.log("dispatched get symbols")
     },[])
     return(
         <>
         <form className="mt-[10px] w-2/3 mb-10 flex flex-col align-stretch justify-center">
         <label className="text-white mb-[5px]">Symbol</label>
-        <DropDownTextMenu dataToVisualise={props.symbols} passUpTheChosenValue={setChosenSymbol}/>
+        <DropDownTextMenu dataToVisualise={props.symbols} setChosenValue={setChosenSymbol} chosenValue={chosenSymbol}/>
         <label className="text-white mb-[5px]">Time Series</label>
         <DropDownMenu items={timeSeries} setChosenValue={setChosenTimeSeries} 
         chosenValue={chosenTimeSeries.length === 0 ? undefined : chosenTimeSeries}/>
@@ -67,7 +66,7 @@ const timeIntervalsIntraday = [
         chosenValue={chosenTimeIntervalIntraday === "" ? undefined : chosenTimeIntervalIntraday}/> 
         </>
         }
-        <button className="self-end mt-2 font-bold text-white
+        <button className="self-end mt-4 font-bold text-white
          text-center align-middle bg-gradient-to-tr from-primary to-secondary
          border-2 border-white border-rounded border-solid w-20 h-8 rounded-sm">Fetch</button>
         </form>

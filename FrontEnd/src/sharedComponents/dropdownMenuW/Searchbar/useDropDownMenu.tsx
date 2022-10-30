@@ -10,13 +10,15 @@ export function getMatchingListElements (list: string[], stringToMatchAgainst : 
 
 interface IUseDropDownMenu {
     list:string[],
+    setChosenElement: (newChosenElement:string) => void,
+    chosenElement: string,
 }
 
-const useDropDownMenu = ({list}:IUseDropDownMenu) => {
+const useDropDownMenu = ({list,chosenElement,setChosenElement}:IUseDropDownMenu) => {
         const [open,setStatusOfDropdown] = useState(false)
-        const [chosenElement,setChosenElement] = useState("")
         const [chosenElementIsCorrect,setChosenElementIsCorrect] = useState(false)
         const [shouldFocusOnInput,setShouldFocusOnInput] = useState(false)
+        const [valueHoveredInList,setValueHoveredInList] = useState("");
         
         const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -69,6 +71,9 @@ const useDropDownMenu = ({list}:IUseDropDownMenu) => {
 
             shouldFocusOnSymbolInput: shouldFocusOnInput,
             setShouldFocusOnSymbolInput: setShouldFocusOnInput,
+
+            valueHighlightedInList: valueHoveredInList,
+            setValueHighlightedInList: setValueHoveredInList,
         })
 }
 
