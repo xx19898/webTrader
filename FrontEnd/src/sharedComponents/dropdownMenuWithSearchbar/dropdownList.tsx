@@ -1,9 +1,8 @@
 import {v4 as uuidv4} from 'uuid'
 import {FixedSizeList as List} from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer';
-
-
-import { IStockSymbolList } from "../../../state/Stocks/stocksZodSchemas"
+import { IStockSymbolList } from '../../state/Stocks/stocksZodSchemas';
+ 
 
 interface IVirtualizedList {
     filteredData:string[],
@@ -32,7 +31,8 @@ const VirtualizedList = ({filteredData,itemSize,setValue,setHighlightedValue}:IV
                 hover:bg-primary hover:cursor-pointer" style={style}
                 onClick={() => setValue(data[index])}
                 onMouseEnter={() =>setHighlightedValue(data[index])}
-                onMouseLeave={() => setHighlightedValue("")}>
+                onMouseLeave={() => setHighlightedValue("")}
+                key={uuidv4()}>
                     <p className="mr-[20px]">{data[index]}</p></li>
             }
             return <li className="w-auto bg-gray-300 content-end  text-right after:content-['']
@@ -40,7 +40,8 @@ const VirtualizedList = ({filteredData,itemSize,setValue,setHighlightedValue}:IV
             after:absolute after:list-item after:box-content" style={style}
             onClick={() => setValue(data[index])}
             onMouseEnter={() =>setHighlightedValue(data[index])}
-            onMouseLeave={() => setHighlightedValue("")}>
+            onMouseLeave={() => setHighlightedValue("")}
+            key={uuidv4()}>
                 <p className="mr-[20px]">{data[index]}</p></li>
         }}
                 </List>
@@ -73,7 +74,9 @@ const DropdownList = ({filteredData,chosenElement,dataToVisualise,listItemSize,s
 
             //No symbols found on the query
         }else if(filteredData.length === 0){
-                return <li className="w-auto bg-gray-300 content-end  text-right h-[30px]"><p className="mr-[20px]">{"None found"}</p></li>
+                return <li className="w-auto bg-gray-300 content-end  text-right h-[30px]" key={uuidv4()}>
+                    <p className="mr-[20px]">{"None found"}</p>
+                      </li>
         //Showing symbols that were found on the query
         }else{
              return <>{
@@ -97,6 +100,7 @@ const DropdownList = ({filteredData,chosenElement,dataToVisualise,listItemSize,s
                             onClick={() => setValue(element)}
                             onMouseEnter={() =>setHighlightedValue(element)}
                             onMouseLeave={() => setHighlightedValue("")}
+                            key={uuidv4()}
                             >{<p className="relative right-[20px]">{element}</p>}</li>
                             :
                             <li className="w-auto h-[30px] right-[20px] bg-gray-300 content-end  text-right after:content-['']
@@ -104,7 +108,8 @@ const DropdownList = ({filteredData,chosenElement,dataToVisualise,listItemSize,s
                             after:list-item after:box-content "
                             onClick={() => setValue(element)}
                             onMouseEnter={() =>setHighlightedValue(element)}
-                            onMouseLeave={() => setHighlightedValue("")}>
+                            onMouseLeave={() => setHighlightedValue("")}
+                            key={uuidv4()}>
                                 {<p className="relative right-[20px]">{element}</p>}
                             </li>
                             )

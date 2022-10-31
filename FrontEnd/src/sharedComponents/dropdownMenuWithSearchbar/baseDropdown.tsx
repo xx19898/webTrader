@@ -12,7 +12,7 @@ interface IBaseDropDown{
     shouldFocusOnInput: boolean
     setShouldFocusOnInput: (focus:boolean) => void,
     valueHighlightedInList?: string,
-    verifyChosenElement: (stringToVerify:string) => void,
+    verifyChosenElement: () => void,
     chosenValueIsCorrect: boolean
 }
 
@@ -28,10 +28,14 @@ const BaseDropDown =
             inputRef.current && inputRef.current.focus()
     }
 },[shouldFocusOnInput])
+    const valueForInputField = () => {
+        if(!valueHighlightedInList) return value
+        if(valueHighlightedInList.length != 0) return valueHighlightedInList
+        return value
+    }
     const valueChanged = (newValue:string) => {
         //Input was empty, now typed something that is not of length 0
         if(value.trim().length === 0 && newValue.trim().length != 0){
-            verifyChosenElement(newValue.trim())
             //If dropdown is not open, open it
             if(!dropdownStatus){
                 setDropdownWasNotPreviouslyOpen(false)
@@ -40,7 +44,8 @@ const BaseDropDown =
             else{
                 setDropdownWasNotPreviouslyOpen(false)
             }
-            changeValue(newValue)    
+            changeValue(newValue)
+            verifyChosenElement()    
         }
         if(newValue.length === 0){
             //retain focus on input if user deleted last string - so that input is empty
@@ -50,21 +55,25 @@ const BaseDropDown =
             changeValue(newValue)
             setDropdownWasNotPreviouslyOpen(true)
             setDropdownStatus(false)
+            verifyChosenElement()
         }
         else{
             if(!dropdownStatus){
                 setDropdownWasNotPreviouslyOpen(true)
+                setShouldFocusOnInput(true)
                 setDropdownStatus(true)
             }    
-            changeValue(newValue)     
+            changeValue(newValue)
+            verifyChosenElement()
         }
     }
 
     if(dataIsFetched){
         return(
-            <div className="relative flex h-[44px] flex-row items-center align-stretch bg-white focus-within:outline-2 focus-within:outline focus-within:outline-primary" tabIndex={0}>
+            <div className={`${chosenValueIsCorrect ? 'outline-green-800' : 'outline-red-800'} relative flex h-[44px] flex-row items-center align-stretch
+            bg-white focus-within:outline-2 focus-within:outline focus-within:outline-primary`} tabIndex={0}>
                 <input className="w-full text-right mr-8 bg-white rounded-sm focus:outline-none"
-                 type="search" value={valueHighlightedInList ? valueHighlightedInList : value} onChange={(e) => valueChanged(e.target.value)} ref={inputRef}/>
+                 type="search" value={valueForInputField()} onChange={(e) => valueChanged(e.target.value)} ref={inputRef}/>
                 <div className="flex flex-row items-center justify-center absolute right-2 min-h-full bg-white">
                     <button className="cursor-pointer" onClick={() => clickDropDownArrowButton()}><DropDownArrowIcon height={height}/></button>
                 </div>

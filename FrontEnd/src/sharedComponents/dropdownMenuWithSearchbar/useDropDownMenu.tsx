@@ -18,7 +18,7 @@ const useDropDownMenu = ({list,chosenElement,setChosenElement}:IUseDropDownMenu)
         const [open,setStatusOfDropdown] = useState(false)
         const [chosenElementIsCorrect,setChosenElementIsCorrect] = useState(false)
         const [shouldFocusOnInput,setShouldFocusOnInput] = useState(false)
-        const [valueHoveredInList,setValueHoveredInList] = useState("");
+        const [valueHoveredInList,setValueHoveredInList] = useState("")
         
         const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -27,10 +27,24 @@ const useDropDownMenu = ({list,chosenElement,setChosenElement}:IUseDropDownMenu)
                 setStatusOfDropdown(false)
             }
         }
-
         const filteredData = useMemo(() => {
             return chosenElement.length === 0 ?  list :  getMatchingListElements(list,chosenElement)
         },[chosenElement,list])
+        
+        const verifyMemo = useMemo(() => {
+            return list.includes(chosenElement)
+        },[chosenElement])
+
+        const verifyChosenElement = () => {
+            if(verifyMemo) setChosenElementIsCorrect(true)
+            else setChosenElementIsCorrect(false)
+        }
+
+        const clickOnListItem = (chosenVal:string) => {
+            setChosenElement(chosenVal)
+            setChosenElementIsCorrect(true)
+            setStatusOfDropdown(false)
+        }
 
         const handleClickOutside = (event: Event) => {
             if(
@@ -74,6 +88,10 @@ const useDropDownMenu = ({list,chosenElement,setChosenElement}:IUseDropDownMenu)
 
             valueHighlightedInList: valueHoveredInList,
             setValueHighlightedInList: setValueHoveredInList,
+
+            verifyChosenElement: verifyChosenElement,
+
+            clickOnListItem: clickOnListItem
         })
 }
 

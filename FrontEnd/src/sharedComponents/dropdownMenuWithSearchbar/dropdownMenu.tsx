@@ -1,12 +1,11 @@
 
 import {v4 as uuidv4} from 'uuid'
 import { RefObject, useEffect, useMemo, useRef, useState} from "react"
-
-import { DropDownArrowIcon } from "../../../icons/dropdownArrowIcon"
-import { IStockSymbolList } from "../../../state/Stocks/stocksZodSchemas"
 import useDropDownMenu from "./useDropDownMenu"
 import DropdownList from './dropdownList'
-import BaseDropDown from '../baseDropdown'
+import { IStockSymbolList } from '../../state/Stocks/stocksZodSchemas'
+import BaseDropDown from './baseDropdown'
+
 
 
 function useOutsideAlerter(ref:any,closeDropdown : () => void){
@@ -44,7 +43,9 @@ export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue}:ID
         shouldFocusOnSymbolInput,
         setShouldFocusOnSymbolInput,
         valueHighlightedInList,
-        setValueHighlightedInList
+        setValueHighlightedInList,
+        verifyChosenElement,
+        clickOnListItem
         } = useDropDownMenu({list:symbols,chosenElement:chosenValue,setChosenElement:setChosenValue})
     
         if(dataToVisualise.length != 0){
@@ -63,6 +64,8 @@ export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue}:ID
                         shouldFocusOnInput={shouldFocusOnSymbolInput}
                         setShouldFocusOnInput={setShouldFocusOnSymbolInput}
                         valueHighlightedInList={valueHighlightedInList}
+                        verifyChosenElement={verifyChosenElement}
+                        chosenValueIsCorrect={chosenElementIsCorrect}
                         />
 
                         <DropdownList 
@@ -70,7 +73,7 @@ export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue}:ID
                         dataToVisualise={dataToVisualise}
                         filteredData={filteredData}
                         listItemSize={30}
-                        setValue={setChosenValue}
+                        setValue={clickOnListItem}
                         setHighlightedValue={setValueHighlightedInList}
                         />
                     </div>
@@ -88,22 +91,25 @@ export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue}:ID
                 setDropdownStatus={setStatusOfDropdown} 
                 shouldFocusOnInput={shouldFocusOnSymbolInput}
                 setShouldFocusOnInput={setShouldFocusOnSymbolInput}
+                verifyChosenElement={verifyChosenElement}
+                chosenValueIsCorrect={chosenElementIsCorrect}
                 />
             )
         }
         //Data is yet to be fetched
         return(
             <BaseDropDown
-            height={20}
-            value={"Stock symbol data is being fetched"}
-            dataIsFetched={false}
-            clickDropDownArrowButton={clickArrowButton}
-            changeValue={setChosenElement}
-            dropdownStatus={dropDownStatus}
-            setDropdownStatus={setStatusOfDropdown}
-            shouldFocusOnInput={false}
-            setShouldFocusOnInput={setShouldFocusOnSymbolInput}
-            />
+                height={20}
+                value={"Stock symbol data is being fetched"}
+                dataIsFetched={false}
+                clickDropDownArrowButton={clickArrowButton}
+                changeValue={setChosenElement}
+                dropdownStatus={dropDownStatus}
+                setDropdownStatus={setStatusOfDropdown}
+                shouldFocusOnInput={false}
+                setShouldFocusOnInput={setShouldFocusOnSymbolInput}
+                verifyChosenElement={verifyChosenElement}
+                chosenValueIsCorrect={false}            />
         )
     }
 
