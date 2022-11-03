@@ -1,14 +1,14 @@
 //a component that takes in a json dataset, name and type of tab and shows user info on chosen stock
 
 import { useEffect, useState } from "react"
-import { Chart } from "react-chartjs-2"
 import {GET_SYMBOLS,GET_INITIAL_STOCK, GET_STOCK_DATA } from "../../state/Stocks/stocksActionTypes"
 import { connect, ConnectedProps, useDispatch } from "react-redux"
 import { AppDispatch, RootState } from "../../store"
 import { IStockState } from "../../state/Stocks/stocksSlice"
-import { IStockQueryParams } from "../../state/Stocks/stocksActions"
+import { getStockData, IStockQueryParams } from "../../state/Stocks/stocksActions"
 import { DropDownTextMenu } from "../dropdownMenuWithSearchbar/dropdownMenu" 
 import DropDownMenu from "../dropdownMenu/dropdownMenu"
+import HighchartsComponent from "./highcharts"
 
 /*
 1) Intraday
@@ -42,21 +42,55 @@ const timeIntervalsIntraday = [
    "60min",
 ]
 
- const StocksViewer = (props:StocksViewerProps) => {
+ const StocksViewer = ({datasets,currentTimeSeries,labels,symbols,getStockData}:StocksViewerProps) => {
     const dispatch = useDispatch()
     const [chosenSymbol,setChosenSymbol] = useState("")
+    const [chosenSymbolIsCorrect,setChosenSymbolIsCorrect] = useState(false)
     const [chosenTimeSeries,setChosenTimeSeries] = useState("TIME_SERIES_INTRADAY")
     const [chosenTimeIntervalIntraday, setChosenTimeIntervalIntraday] = useState("")
+    const data = {
+      labels:labels,
+      datasets: datasets
+    }
+
+   interface IHandleSubmit{
+      e: React.MouseEvent<HTMLButtonElement, MouseEvent> 
+      | 
+      React.FormEvent<HTMLFormElement>
+   }
+    const handleSubmit = (props:IHandleSubmit) => {
+      props.e.preventDefault()
+      const dataRequestingDispatch = {type:GET_STOCK_DATA,stockParams:
+         {symbols:[chosenSymbol],
+          function:chosenTimeSeries,
+          interval: chosenTimeIntervalIntraday.length === 0 
+          ? undefined : chosenTimeIntervalIntraday}}
+      dispatch(dataRequestingDispatch)
+      
+      } 
     useEffect(() => {
         dispatch({type:GET_SYMBOLS});
-    },[])
+    },[true])
     return(
         <>
-        <form className="mt-[10px] w-2/3 mb-10 flex flex-col align-stretch justify-center">
+        <form 
+        className="mt-[10px] w-2/3 mb-10
+         flex flex-col align-stretch justify-center"
+         onSubmit={(e) => handleSubmit({e:e})}>
         <label className="text-white mb-[5px]">Symbol</label>
-        <DropDownTextMenu dataToVisualise={props.symbols} setChosenValue={setChosenSymbol} chosenValue={chosenSymbol}/>
-        <label className="text-white mb-[5px]">Time Series</label>
-        <DropDownMenu items={timeSeries} setChosenValue={setChosenTimeSeries} 
+        <DropDownTextMenu 
+        dataToVisualise={symbols}
+        setChosenValue={setChosenSymbol}
+        chosenValue={chosenSymbol}
+        isCorrect={chosenSymbolIsCorrect}
+        setIsCorrect={setChosenSymbolIsCorrect}
+        />
+        <label className="text-white mb-[5px]">
+         Time Series
+         </label>
+        <DropDownMenu
+        items={timeSeries}
+        setChosenValue={setChosenTimeSeries} 
         chosenValue={chosenTimeSeries.length === 0 ? undefined : chosenTimeSeries}/>
         {
         chosenTimeSeries === "TIME_SERIES_INTRADAY" && 
@@ -66,10 +100,17 @@ const timeIntervalsIntraday = [
         chosenValue={chosenTimeIntervalIntraday === "" ? undefined : chosenTimeIntervalIntraday}/> 
         </>
         }
-        <button className="self-end mt-4 font-bold text-white
+        <button className={`self-end mt-4 font-bold text-white
          text-center align-middle bg-gradient-to-tr from-primary to-secondary
-         border-2 border-white border-rounded border-solid w-20 h-8 rounded-sm">Fetch</button>
+         ${chosenSymbolIsCorrect ? 'outline outline-2 outline-secondary' : 'outline outline-2 outline-red-800'} w-20 h-8 rounded-sm`}
+         disabled={chosenSymbolIsCorrect ? false : true}
+         >Fetch</button>
         </form>
+        <div>
+         { 
+         datasets.length != 0 ? <HighchartsComponent dataset={datasets[0]}/> : <p>Nothing to show yet</p> 
+         }
+        </div>
         </>
     )
 }

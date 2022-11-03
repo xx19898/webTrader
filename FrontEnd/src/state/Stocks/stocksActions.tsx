@@ -22,14 +22,19 @@ export const getSymbols  = async () => {
 export type IStockQueryParams =  IStockQueryParamsIntraday | IStockQueryParamsNonIntraday
 
 export const getStockData = (queryParams: IStockQueryParams) => {
-    const symbolsAsOneString = concatListOfSymbols(queryParams.symbols)
+    
+    const symbolsAsOneString = 
+    (queryParams.symbols.length === 1) 
+    ? queryParams.symbols[0]
+    : concatListOfSymbols([...queryParams.symbols])
+
+    console.log("got here")
     const axiosConfig = {
         method: 'get',
         url: 'interval' in queryParams ? 
         `${BASE_URL}stocks/getStockData?function=${(queryParams.function)}&symbols=${symbolsAsOneString},&interval=${(queryParams.interval)}`
         :
-        `${BASE_URL}stocks/getStockData?function=${(queryParams.function)}&symbols=${symbolsAsOneString}`
-        
+        `${BASE_URL}stocks/getStockData?function=${(queryParams.function)}&symbols=${symbolsAsOneString}`    
     }
     const axiosPromise = axios.request<StockDataApiResponse>(axiosConfig).then(
         (response) => {

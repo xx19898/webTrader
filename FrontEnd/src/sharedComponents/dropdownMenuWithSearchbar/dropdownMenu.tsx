@@ -26,9 +26,11 @@ function useOutsideAlerter(ref:any,closeDropdown : () => void){
 interface IDropDownMenu{
     dataToVisualise: IStockSymbolList,
     chosenValue: string,
-    setChosenValue: (newValue:string) => void
+    setChosenValue: (newValue:string) => void,
+    isCorrect: boolean,
+    setIsCorrect: (status:boolean) => void,
 }
-export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue}:IDropDownMenu) => {
+export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue,isCorrect,setIsCorrect}:IDropDownMenu) => {
     const symbols = useMemo(() => {
         return dataToVisualise.map(item => item.symbol)
     },[dataToVisualise])
@@ -37,8 +39,6 @@ export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue}:ID
         chosenElement,setChosenElement,
         clickArrowButton,dropDownStatus,
         dropdownRef,setStatusOfDropdown,
-        chosenElementIsCorrect,
-        setChosenElementIsCorrect,
         filteredData,
         shouldFocusOnSymbolInput,
         setShouldFocusOnSymbolInput,
@@ -46,7 +46,7 @@ export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue}:ID
         setValueHighlightedInList,
         verifyChosenElement,
         clickOnListItem
-        } = useDropDownMenu({list:symbols,chosenElement:chosenValue,setChosenElement:setChosenValue})
+        } = useDropDownMenu({list:symbols,chosenElement:chosenValue,setChosenElement:setChosenValue,isCorrect:isCorrect,setIsCorrect:setIsCorrect})
     
         if(dataToVisualise.length != 0){
             if(dropDownStatus){
@@ -65,7 +65,7 @@ export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue}:ID
                         setShouldFocusOnInput={setShouldFocusOnSymbolInput}
                         valueHighlightedInList={valueHighlightedInList}
                         verifyChosenElement={verifyChosenElement}
-                        chosenValueIsCorrect={chosenElementIsCorrect}
+                        chosenValueIsCorrect={isCorrect}
                         />
 
                         <DropdownList 
@@ -92,7 +92,7 @@ export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue}:ID
                 shouldFocusOnInput={shouldFocusOnSymbolInput}
                 setShouldFocusOnInput={setShouldFocusOnSymbolInput}
                 verifyChosenElement={verifyChosenElement}
-                chosenValueIsCorrect={chosenElementIsCorrect}
+                chosenValueIsCorrect={isCorrect}
                 />
             )
         }

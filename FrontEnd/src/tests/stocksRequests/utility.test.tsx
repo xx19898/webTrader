@@ -76,7 +76,17 @@ const datasetB = createDataset({metadata:BJsonParsed["Meta Data"],data:BJsonPars
 const datasetC = createDataset({metadata:CJsonParsed["Meta Data"],data:CJsonParsed["Time Series (5min)"],borderColor:"red"})
 const oldDatasets:Dataset[] = [datasetA,datasetB,datasetC]
 const newDatasets:Dataset[] = [datasetA];
-test('it should delete all new datasets',() => {
+
+describe('testing utilities for stock functionality', () => {
+    test('it should delete all new datasets',() => {
     const resultDataset = deleteOlderVersionsOfStockData({newDatasets:newDatasets,oldDatasets:oldDatasets})
     expect(resultDataset).toMatchObject([datasetB,datasetC])
+})
+
+test('it should concatenate two symbols into one',() => {
+    const symbolA = "A",symbolB = "B"
+    const resultSymbol = concatListOfSymbols([symbolA,symbolB])
+    console.log(resultSymbol)
+    expect(resultSymbol).toBe("A,B")
+})
 })

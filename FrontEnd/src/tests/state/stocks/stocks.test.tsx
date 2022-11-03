@@ -1,5 +1,4 @@
-//TODO: test that fetching stock data from backend api and populating the state
-//TODO: works correctly
+
 import { IStockState, stockSlice } from "../../../state/Stocks/stocksSlice"
 import stocksWatcherSaga from "../../../state/Stocks/stocksWatcherSaga"
 import { expectSaga, testSaga } from 'redux-saga-test-plan';

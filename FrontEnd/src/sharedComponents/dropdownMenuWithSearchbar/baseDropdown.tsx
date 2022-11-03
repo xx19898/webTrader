@@ -70,8 +70,8 @@ const BaseDropDown =
 
     if(dataIsFetched){
         return(
-            <div className={`${chosenValueIsCorrect ? 'outline-green-800' : 'outline-red-800'} relative flex h-[44px] flex-row items-center align-stretch
-            bg-white focus-within:outline-2 focus-within:outline focus-within:outline-primary`} tabIndex={0}>
+            <div className={`${chosenValueIsCorrect ? 'outline-green-800 outline-4 outline' : 'outline-red-800 outline-4 outline'} relative flex h-[44px] flex-row items-center align-stretch
+            bg-white focus-within:outline-2 focus-within:outline focus-within:outline-primary overflow-hidden`} tabIndex={0}>
                 <input className="w-full text-right mr-8 bg-white rounded-sm focus:outline-none"
                  type="search" value={valueForInputField()} onChange={(e) => valueChanged(e.target.value)} ref={inputRef}/>
                 <div className="flex flex-row items-center justify-center absolute right-2 min-h-full bg-white">

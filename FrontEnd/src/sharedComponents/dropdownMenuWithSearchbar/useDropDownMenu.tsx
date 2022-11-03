@@ -12,11 +12,12 @@ interface IUseDropDownMenu {
     list:string[],
     setChosenElement: (newChosenElement:string) => void,
     chosenElement: string,
+    isCorrect: boolean,
+    setIsCorrect: (newStatus:boolean) => void,
 }
 
-const useDropDownMenu = ({list,chosenElement,setChosenElement}:IUseDropDownMenu) => {
+const useDropDownMenu = ({list,chosenElement,setChosenElement,isCorrect,setIsCorrect}:IUseDropDownMenu) => {
         const [open,setStatusOfDropdown] = useState(false)
-        const [chosenElementIsCorrect,setChosenElementIsCorrect] = useState(false)
         const [shouldFocusOnInput,setShouldFocusOnInput] = useState(false)
         const [valueHoveredInList,setValueHoveredInList] = useState("")
         
@@ -27,6 +28,7 @@ const useDropDownMenu = ({list,chosenElement,setChosenElement}:IUseDropDownMenu)
                 setStatusOfDropdown(false)
             }
         }
+
         const filteredData = useMemo(() => {
             return chosenElement.length === 0 ?  list :  getMatchingListElements(list,chosenElement)
         },[chosenElement,list])
@@ -36,13 +38,13 @@ const useDropDownMenu = ({list,chosenElement,setChosenElement}:IUseDropDownMenu)
         },[chosenElement])
 
         const verifyChosenElement = () => {
-            if(verifyMemo) setChosenElementIsCorrect(true)
-            else setChosenElementIsCorrect(false)
+            if(verifyMemo) setIsCorrect(true)
+            else setIsCorrect(false)
         }
 
         const clickOnListItem = (chosenVal:string) => {
             setChosenElement(chosenVal)
-            setChosenElementIsCorrect(true)
+            setIsCorrect(true)
             setStatusOfDropdown(false)
         }
 
@@ -77,9 +79,6 @@ const useDropDownMenu = ({list,chosenElement,setChosenElement}:IUseDropDownMenu)
 
             dropdownRef: wrapperRef,
             clickArrowButton: clickArrowButton,
-
-            chosenElementIsCorrect: chosenElementIsCorrect,
-            setChosenElementIsCorrect: setChosenElementIsCorrect,
 
             filteredData: filteredData,
 

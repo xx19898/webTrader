@@ -22,15 +22,20 @@ interface IStockDataHandlerSaga{
 export function* stockDataHandlerSaga(props: IStockDataHandlerSaga):
 Generator<CallEffect<StockDataApiResponse> | PutEffect<AnyAction>,
                      void,
-                     StocksServiceResponse>                                                                                                                                
+                     StocksServiceResponse>                                                                                                                           
 {
     try{
+        console.log(props.stockParams)
     const response: StockDataApiResponse = yield call(getStockData, props.stockParams);
     //Updating the state
-    yield put({type:stocksActionTypes.UPDATE_CURRENT_STOCKS, payload:response})
+    yield put
+    ({
+        type:stocksActionTypes.UPDATE_CURRENT_STOCKS,
+        payload:response
+    })
     }
     catch(e){
-        console.log((e as Error).message);
+        console.log((e as Error).message)
     }
 }
 
@@ -38,8 +43,6 @@ export function* getSymbolsHandlerSaga():
  Generator<CallEffect<IStockSymbolList> | PutEffect<{type:string,payload:IStockSymbolList}>, void,IStockSymbolList>
 {
     const response: IStockSymbolList = yield call(getSymbols);
-    console.log("downloaded!")
-    console.log(response.length)
     yield put(UPDATE_SYMBOL_LIST(response))
 }
 
