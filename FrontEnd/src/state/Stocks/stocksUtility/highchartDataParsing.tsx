@@ -8,6 +8,7 @@ const processDataForHighCharts = ({dataset}:{dataset:Dataset}) => {
         case "Intraday (5min) open, high, low, close prices and volume":
             return processIntradayData(dataset.data as Record<string,SingleDataUnitDailyIntradayWeeklyAndMonthly>)
         default:
+            console.log("right here " + dataset.metadata["1. Information"])
             throw Error("No appropriate handlers found")
     }
 

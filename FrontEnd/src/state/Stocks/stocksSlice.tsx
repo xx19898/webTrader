@@ -56,10 +56,12 @@ export const stockSlice = createSlice({
     initialState:StockInitialState,
     reducers:{
         UPDATE_CURRENT_STOCKS: (state, action: PayloadAction<StockDataApiResponse>) => {
+            console.log("got here")
             const newDatasets: Dataset[] = fromApiDataToDatasetFormat(action.payload,state.datasets);
             const renewedOldDatasets = deleteOlderVersionsOfStockData({newDatasets: newDatasets,oldDatasets:state.datasets})
             const newLabels = getLabelsFromApiData({apiData:action.payload});
             state.datasets = renewedOldDatasets.concat(newDatasets);
+            
         },
         UPDATE_SYMBOL_LIST: (state, action: PayloadAction<IStockSymbolList>) => {
             state.symbols = action.payload;

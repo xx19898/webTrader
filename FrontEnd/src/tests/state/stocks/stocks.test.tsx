@@ -142,7 +142,7 @@ const mockedApiResponse = {
             const symbol = metaData["2. Symbol"]
             expect(symbol).toBe("AA")
         })
-    
+    /*
 
         test('stocksHandlerSaga should put same result as the fetchStockData method',async () => {
             const props = {stockParams:{function:stockFunctionTypes.DAILY,symbols:["AA"]},type:GET_STOCK_DATA}
@@ -175,6 +175,7 @@ const mockedApiResponse = {
 
             .run()  
         })
+        */
     })
 
 
