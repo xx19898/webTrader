@@ -17,10 +17,10 @@ const processDataForHighCharts = ({dataset}:{dataset:Dataset}) => {
 }
 
 const processIntradayData = (data:Record<string,SingleDataUnitDailyIntradayWeeklyAndMonthly>) => {
-    const ohlc: number[][] = [], volume: number[] = []
+    const ohlc: number[][] = [], volume: number[][] = []
     Object.entries(data).forEach(([key,value]) => {
         ohlc.push([timeParser(key),value["1. open"],value["2. high"],value["3. low"],value["4. close"]])
-        volume.push(value["5. volume"])
+        volume.push([timeParser(key),value["5. volume"]])
     })
     return({
         ohlc:ohlc,

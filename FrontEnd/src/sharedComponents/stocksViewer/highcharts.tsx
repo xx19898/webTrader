@@ -10,7 +10,8 @@ interface IHighcharts{
 
 const HighchartsComponent = ({dataset}:IHighcharts) => {
     const {ohlc,volume} = processDataForHighCharts({dataset: dataset})
-    const dataLength = dataset.data.length
+    console.log(ohlc)
+
     const options = {
         rangeSelector: {
             selected: 1,

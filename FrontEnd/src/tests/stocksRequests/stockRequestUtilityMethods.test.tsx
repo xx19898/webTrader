@@ -126,5 +126,5 @@ test('testing that fromApiDataToDatasetFormat method works correctly',() => {
 })
 const expectedLabels = ['2022-09-28',"2022-09-27"]
  test('getting labels works correctly',() => {
-    expect(getLabelsFromApiData({apiData: testJson})).toStrictEqual(expectedLabels)
+    expect(getLabelsFromApiData({apiData: stockDataApiResponse.parse(testJson)})).toStrictEqual(expectedLabels)
 }); 

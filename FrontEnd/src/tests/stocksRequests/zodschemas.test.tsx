@@ -1,6 +1,6 @@
 import { resolve } from "path";
 import { string, z } from "zod";
-import {singleDataUnitDailyIntradayWeeklyAndMonthly, stockDataApiResponse, stockDataForSingleSymbol, stockDataForSingleSymbolDataPart} from "../../state/Stocks/stocksZodSchemas"
+import {singleDataUnitDailyIntradayWeeklyAndMonthly, stockDataApiResponse, stockDataForSingleSymbol, stockDataForSingleSymbolDataPart, stringAsNumber, symbolListSchema} from "../../state/Stocks/stocksZodSchemas"
 import testData from "../state/stocks/apiResponse";
 
 const fullJson = {
@@ -96,6 +96,15 @@ const x = z.object({"1. open": madeType,
 
   test('whole json stock data object is correct',() => {
     expect(new Promise(() => stockDataApiResponse.parse(testData))).resolves.not.toThrowError()
+  })
+
+
+  test('integer string gets checked as number',() => {
+    expect(new Promise(() => {
+        const testData = "123.4"
+        const result = stringAsNumber.parse(testData)
+        console.log(result)
+    })).resolves.not.toThrowError()
   })
 
 

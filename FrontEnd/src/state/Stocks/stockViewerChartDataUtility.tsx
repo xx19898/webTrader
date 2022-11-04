@@ -75,9 +75,8 @@ export const deleteOlderVersionsOfStockData = (params:{newDatasets: Dataset[],ol
     return renewedOldDatasets;
 }
 
-export const getLabelsFromApiData = (props:{apiData:Object}) => {
-    const validatedStockData = stockDataApiResponse.parse(props.apiData);
-    const dataOnFirstStockInArray = Object.values(validatedStockData)[0];
+export const getLabelsFromApiData = (props:{apiData:StockDataApiResponse}) => {
+    const dataOnFirstStockInArray = Object.values(props.apiData)[0];
     const dataEntry = Object.keys(dataOnFirstStockInArray).find( key => Object.values(DATA_ENTRY_NAMES).some( dataEntry => dataEntry === key))
     if(dataEntry){
         return Object.keys(dataOnFirstStockInArray[dataEntry])
