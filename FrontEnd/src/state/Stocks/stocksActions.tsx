@@ -21,7 +21,6 @@ export const getSymbols  = async () => {
 export type IStockQueryParams =  IStockQueryParamsIntraday | IStockQueryParamsNonIntraday
 
 export const getStockData = async (queryParams: IStockQueryParams) => {
-    
     const symbolsAsOneString = 
     (queryParams.symbols.length === 1) 
     ? queryParams.symbols[0]
@@ -43,7 +42,6 @@ export const getStockData = async (queryParams: IStockQueryParams) => {
             throw err;
         })
     return stockDataApiResponse.parse(apiResponse)
-    
     }
 
 
