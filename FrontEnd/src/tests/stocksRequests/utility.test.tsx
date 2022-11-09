@@ -1,6 +1,9 @@
 import { createDataset, Dataset } from "../../state/Stocks/stocksSlice";
 import {concatListOfSymbols} from "../../state/Stocks/stocksUtility";
-import { stockDataForSingleSymbol } from "../../state/Stocks/stocksZodSchemas";
+import { processData } from "../../state/Stocks/stocksUtility/highchartDataParsing";
+import sortDataByDate from "../../state/Stocks/stocksUtility/sortDataByDate";
+import {parseDateTimeToUnixFormat} from "../../state/Stocks/stocksUtility/timeParser";
+import { SingleDataUnitDailyIntradayWeeklyAndMonthly, stockDataForSingleSymbol } from "../../state/Stocks/stocksZodSchemas";
 import { deleteOlderVersionsOfStockData } from "../../state/Stocks/stockViewerChartDataUtility";
 
 const array = ["IBM","APPLE","GP"];
@@ -89,4 +92,33 @@ test('it should concatenate two symbols into one',() => {
     console.log(resultSymbol)
     expect(resultSymbol).toBe("A,B")
 })
+test('merge sort should work properly',() => {
+    const testArr = [['2022-12-23',0,0,0,0],['2022-11-20',0,0,0,0],['2022-10-09',0,0,0,0]] 
+    console.log("'**********")
+    const sortedTestArr = sortDataByDate(testArr,0,2)
+    console.log(sortedTestArr)
+    expect(sortedTestArr).toStrictEqual([['2022-10-09',0,0,0,0],['2022-11-20',0,0,0,0],['2022-12-23',0,0,0,0]])
 })
+
+test('time parser should work properly',() => {
+    const timeAsString = "2020-12-22"
+    const convertedToUnix = parseDateTimeToUnixFormat(timeAsString)
+    console.log(convertedToUnix)
+    expect(convertedToUnix).toBe(1608588000)
+})
+test('populate the array method should work properly',() => {
+    const testObject: SingleDataUnitDailyIntradayWeeklyAndMonthly = {
+        "1. open": 2.5,
+        "2. high": 7,
+        "3. low": 3,
+        "4. close":4,
+        "5. volume":100,
+    }
+
+    const x = processData({"2022-12-22":testObject})
+    console.log(x.ohlc)
+    expect(x.ohlc[0][1]).toBe(2.5)
+
+})
+})
+

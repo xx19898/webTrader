@@ -56,6 +56,8 @@ const singleDataUnitBase = z.object({
     "4. close": stringAsNumber,
 })
 
+export type SingleDataUnitBase = z.infer<typeof singleDataUnitBase>
+
 
 
 export const singleDataUnitDailyIntradayWeeklyAndMonthly = singleDataUnitBase.extend({"5. volume": stringAsNumber})

@@ -14,7 +14,6 @@ export const getSymbols  = async () => {
     });
     const processedResponse = processListOfSymbols(response.data.toString());
     const validatedSymbolList = symbolListSchema.parse(processedResponse);
-    //validatedSymbolList.forEach(e => console.log(e.name))
     return validatedSymbolList;
 }
 
@@ -43,7 +42,6 @@ export const getStockData = async (queryParams: IStockQueryParams) => {
             console.log();
             throw err;
         })
-    console.log("starting parsing")
     return stockDataApiResponse.parse(apiResponse)
     
     }

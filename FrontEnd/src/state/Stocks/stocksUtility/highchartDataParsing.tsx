@@ -1,57 +1,35 @@
 import { Dataset } from "../stocksSlice"
-import { SingleDataUnitDailyIntradayWeeklyAndMonthly, StockDataForSingleSymbolDataPart } from "../stocksZodSchemas"
-import timeParser from "./timeParser"
+import { CommonDataForSingleTimeUnit, SingleDataUnitBase, SingleDataUnitDailyAdjusted, singleDataUnitDailyIntradayWeeklyAndMonthly, SingleDataUnitDailyIntradayWeeklyAndMonthly, SingleDataUnitMonthlyAdjusted, SingleDataUnitWeeklyAdjusted, StockDataForSingleSymbolDataPart } from "../stocksZodSchemas"
+import sortDataByDate from "./sortDataByDate"
+import {parseDateTimeToUnixFormat} from "./timeParser"
 
 
-const processDataForHighCharts = ({dataset}:{dataset:Dataset}) => {
-    switch( dataset.metadata["1. Information"]){
-        case "Intraday (5min) open, high, low, close prices and volume":
-            return processIntradayData(dataset.data as Record<string,SingleDataUnitDailyIntradayWeeklyAndMonthly>)
-        default:
-            console.log("right here " + dataset.metadata["1. Information"])
-            throw Error("No appropriate handlers found")
+
+const processData = (data: Record<string, CommonDataForSingleTimeUnit>) => {
+        const ohlc: number [][] = [], volume: number[][] = []
+        populateOhlcAndVolumeArrays(data, ohlc, volume)
+        const sortedOhlc = sortDataByDate(ohlc,0,ohlc.length - 1)
+        return({
+            ohlc:sortedOhlc as number[][],
+            volume:volume as number[][],
+        })
     }
 
-    //TODO: IMPLEMENT VISUALISING DATA WITH HIGHCHARTS
-
-}
-
-const processIntradayData = (data:Record<string,SingleDataUnitDailyIntradayWeeklyAndMonthly>) => {
-    const ohlc: number[][] = [], volume: number[][] = []
-    Object.entries(data).forEach(([key,value]) => {
-        ohlc.push([timeParser(key),value["1. open"],value["2. high"],value["3. low"],value["4. close"]])
-        volume.push([timeParser(key),value["5. volume"]])
+function populateOhlcAndVolumeArrays(data: Record<string, CommonDataForSingleTimeUnit>, ohlc: number[][], volume: number[][]) {
+    Object.entries(data).forEach(([key, value]) => {
+        console.log("Date: " + key)
+        ohlc.push([parseDateTimeToUnixFormat(key), value["1. open"], value["2. high"], value["3. low"], value["4. close"]])
+        let volumeValue;
+        if('6. volume' in value){
+            volumeValue = value['6. volume']
+        }else if('5. volume' in value){
+            volumeValue = value['5. volume']
+        }else{
+            throw new Error('None volume property found on alpha API data!')
+        }
+        console.log('new value for volumeValue is: ' + volumeValue)
+        volume.push([parseDateTimeToUnixFormat(key), volumeValue])
     })
-    return({
-        ohlc:ohlc,
-        volume:volume,
-    })
 }
 
-const processDailyData = () => {
-    
-}
-
-
-const processDailyAdjustedData = () => {
-    
-}
-
-const processWeeklyData = () => {
-    
-}
-
-const processWeeklyAdjustedData = () => {
-    
-}
-
-const processMonthlyData = () => {
-    
-}
-
-const processMonthlyAdjustedData = () => {
-    
-}
-
-
-export {processDataForHighCharts};
+export  {processData}

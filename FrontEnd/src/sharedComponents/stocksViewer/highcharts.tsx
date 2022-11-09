@@ -1,8 +1,6 @@
 import HighchartsReact from "highcharts-react-official"
 import Highcharts from "highcharts/highstock";
 import { Dataset } from "../../state/Stocks/stocksSlice"
-import { processDataForHighCharts } from "../../state/Stocks/stocksUtility/highchartDataParsing"
-
 
 interface IHighcharts{
     dataset: Dataset
@@ -10,7 +8,6 @@ interface IHighcharts{
 
 const HighchartsComponent = ({dataset}:IHighcharts) => {
     const {ohlc,volume} = processDataForHighCharts({dataset: dataset})
-    console.log(ohlc)
 
     const options = {
         rangeSelector: {
@@ -80,3 +77,7 @@ const HighchartsComponent = ({dataset}:IHighcharts) => {
 }
 
 export default HighchartsComponent
+function processDataForHighCharts(arg0: { dataset: Dataset; }): { ohlc: any; volume: any; } {
+    throw new Error("Function not implemented.");
+}
+
