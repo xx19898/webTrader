@@ -45,6 +45,7 @@ const useDropDownMenu = ({list,chosenElement,setChosenElement,isCorrect,setIsCor
         const clickOnListItem = (chosenVal:string) => {
             setChosenElement(chosenVal)
             setIsCorrect(true)
+            setShouldFocusOnInput(false)
             setStatusOfDropdown(false)
         }
 

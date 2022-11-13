@@ -29,7 +29,10 @@ const VirtualizedList = ({filteredData,itemSize,setValue,setHighlightedValue}:IV
             if(index === (data.length - 1)){
                 return <li className="w-auto bg-gray-300 content-end  text-right
                 hover:bg-primary hover:cursor-pointer" style={style}
-                onClick={() => setValue(data[index])}
+                onClick={() => {
+                    setValue(data[index])
+                    setHighlightedValue("")
+                }}
                 onMouseEnter={() =>setHighlightedValue(data[index])}
                 onMouseLeave={() => setHighlightedValue("")}
                 key={uuidv4()}>
@@ -38,7 +41,10 @@ const VirtualizedList = ({filteredData,itemSize,setValue,setHighlightedValue}:IV
             return <li className="w-auto bg-gray-300 content-end  text-right after:content-['']
             after:w-full after:bg-primary/40 after:rounded-sm hover:bg-primary hover:cursor-pointer after:h-[1.5px] 
             after:absolute after:list-item after:box-content" style={style}
-            onClick={() => setValue(data[index])}
+            onClick={() => {
+                setValue(data[index])
+                setHighlightedValue("")
+            }}
             onMouseEnter={() =>setHighlightedValue(data[index])}
             onMouseLeave={() => setHighlightedValue("")}
             key={uuidv4()}>
@@ -97,7 +103,11 @@ const DropdownList = ({filteredData,chosenElement,dataToVisualise,listItemSize,s
                             ?
                             <li className="w-full overflow-hidden h-[30px] bg-gray-300 content-end  text-right
                             hover:bg-primary hover:cursor-pointer" 
-                            onClick={() => setValue(element)}
+                            onClick={() => {
+                                setValue(element)
+                                setHighlightedValue("")
+                            }
+                            }
                             onMouseEnter={() =>setHighlightedValue(element)}
                             onMouseLeave={() => setHighlightedValue("")}
                             key={uuidv4()}
@@ -106,7 +116,10 @@ const DropdownList = ({filteredData,chosenElement,dataToVisualise,listItemSize,s
                             <li className="w-auto h-[30px] right-[20px] bg-gray-300 content-end  text-right after:content-['']
                             after:w-full after:bg-primary/40 after:rounded-sm hover:bg-primary hover:cursor-pointer after:h-[1.5px] 
                             after:list-item after:box-content "
-                            onClick={() => setValue(element)}
+                            onClick={() => {
+                                setValue(element)
+                                setHighlightedValue("")
+                            }}
                             onMouseEnter={() =>setHighlightedValue(element)}
                             onMouseLeave={() => setHighlightedValue("")}
                             key={uuidv4()}>

@@ -17,9 +17,21 @@ interface IBaseDropDown{
 }
 
 const BaseDropDown = 
-({height,value,dataIsFetched,clickDropDownArrowButton,changeValue,
-  dropdownStatus,setDropdownStatus,shouldFocusOnInput,setShouldFocusOnInput,
-  valueHighlightedInList,verifyChosenElement,chosenValueIsCorrect}:IBaseDropDown) => {
+({
+    height,
+    value,
+    dataIsFetched,
+    clickDropDownArrowButton,
+    changeValue,
+    dropdownStatus,
+    setDropdownStatus,
+    shouldFocusOnInput,
+    setShouldFocusOnInput,
+    valueHighlightedInList,
+    verifyChosenElement,
+    chosenValueIsCorrect
+}:IBaseDropDown) => {
+
     const inputRef: RefObject<HTMLInputElement> = useRef(null)
     const [dropdownWasNotPreviouslyOpen,setDropdownWasNotPreviouslyOpen] = useState(true)
 
@@ -30,10 +42,16 @@ const BaseDropDown =
 },[shouldFocusOnInput])
     const valueForInputField = () => {
         if(!valueHighlightedInList) return value
-        if(valueHighlightedInList.length != 0) return valueHighlightedInList
+        if(valueHighlightedInList.length != 0) {
+            console.log("returning value highlighted in list")
+            console.log(valueHighlightedInList)
+            return valueHighlightedInList
+        }
         return value
     }
     const valueChanged = (newValue:string) => {
+        console.log("old value : " + value)
+        console.log("new value : " + newValue)
         //Input was empty, now typed something that is not of length 0
         if(value.trim().length === 0 && newValue.trim().length != 0){
             //If dropdown is not open, open it

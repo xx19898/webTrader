@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { trackPromise } from 'react-promise-tracker';
 import { BASE_URL} from '../../constants/urls';
 import { processListOfSymbols} from "../../utility/csvUtility";
 import { IStockQueryParamsIntraday, IStockQueryParamsNonIntraday , ISymbolList, stockFunctionTypes } from './stocksRequestTypes';
@@ -33,15 +34,17 @@ export const getStockData = async (queryParams: IStockQueryParams) => {
         :
         `${BASE_URL}stocks/getStockData?function=${(queryParams.function)}&symbols=${symbolsAsOneString}`    
     }
-    const apiResponse = await axios.request(axiosConfig).then(
+    return trackPromise(axios.request(axiosConfig).then(
         (response) => {
-            return response.data
+            return stockDataApiResponse.parse(response.data)
         })
         .catch( err => {
             console.log();
             throw err;
-        })
-    return stockDataApiResponse.parse(apiResponse)
+        }))
+      
+        
+
     }
 
 

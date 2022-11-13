@@ -1,14 +1,24 @@
 //a component that takes in a json dataset, name and type of tab and shows user info on chosen stock
 
 import { useEffect, useState } from "react"
+import {v4 as uuidv4} from 'uuid'
 import {GET_SYMBOLS,GET_INITIAL_STOCK, GET_STOCK_DATA } from "../../state/Stocks/stocksActionTypes"
 import { connect, ConnectedProps, useDispatch } from "react-redux"
 import { AppDispatch, RootState } from "../../store"
-import { IStockState } from "../../state/Stocks/stocksSlice"
+import { Dataset, IStockState } from "../../state/Stocks/stocksSlice"
 import { getStockData, IStockQueryParams } from "../../state/Stocks/stocksActions"
 import { DropDownTextMenu } from "../dropdownMenuWithSearchbar/dropdownMenu" 
 import DropDownMenu from "../dropdownMenu/dropdownMenu"
 import HighchartsComponent from "./highcharts"
+import {usePromiseTracker} from "react-promise-tracker"
+import {ThreeDots} from "react-loader-spinner"
+import { IStockSymbolList } from "../../state/Stocks/stocksZodSchemas"
+
+interface IHandleSubmit{
+   e: React.MouseEvent<HTMLButtonElement, MouseEvent> 
+   | 
+   React.FormEvent<HTMLFormElement>
+}
 
 /*
 1) Intraday
@@ -42,35 +52,68 @@ const timeIntervalsIntraday = [
    "60min",
 ]
 
- const StocksViewer = ({datasets,currentTimeSeries,labels,symbols,getStockData}:StocksViewerProps) => {
+const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
+   const dataFetchingInProgress = usePromiseTracker()
+
+   if(dataFetchingInProgress.promiseInProgress){
+      return(
+         <ThreeDots 
+            height="80" 
+            width="80" 
+            radius="9"
+            color="#4fa94d" 
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+             /> 
+      )
+   }
+   
+   const renderList = datasets.map((dataset) => 
+      <li className="mt-5" key={uuidv4()}>
+         <HighchartsComponent dataset={dataset} />
+      </li>
+   )
+
+   if(datasets.length != 0){
+      return(
+      <ul>
+      {renderList}
+      </ul>
+      )
+   }
+   return(
+      <>
+      <p className="text-center">Nothing to show here yet</p>
+      </>
+   )
+}
+
+ const StocksViewer = ({datasets,labels,symbols,currentTimeSeries}:StocksViewerProps) => {
     const dispatch = useDispatch()
     const [chosenSymbol,setChosenSymbol] = useState("")
     const [chosenSymbolIsCorrect,setChosenSymbolIsCorrect] = useState(false)
     const [chosenTimeSeries,setChosenTimeSeries] = useState("TIME_SERIES_INTRADAY")
     const [chosenTimeIntervalIntraday, setChosenTimeIntervalIntraday] = useState("")
-    const data = {
-      labels:labels,
-      datasets: datasets
-    }
 
-   interface IHandleSubmit{
-      e: React.MouseEvent<HTMLButtonElement, MouseEvent> 
-      | 
-      React.FormEvent<HTMLFormElement>
-   }
     const handleSubmit = (props:IHandleSubmit) => {
+      console.log("clicked handle submit")
       props.e.preventDefault()
-      const dataRequestingDispatch = {type:GET_STOCK_DATA,stockParams:
+      const dataRequestingDispatch = {
+         type:GET_STOCK_DATA,stockParams:
          {symbols:[chosenSymbol],
           function:chosenTimeSeries,
           interval: chosenTimeIntervalIntraday.length === 0 
-          ? undefined : chosenTimeIntervalIntraday}}
+          ? undefined : chosenTimeIntervalIntraday}
+         }
       dispatch(dataRequestingDispatch)
-      
-      } 
+      }
+
     useEffect(() => {
         dispatch({type:GET_SYMBOLS});
     },[true])
+
     return(
         <>
         <form 
@@ -105,12 +148,9 @@ const timeIntervalsIntraday = [
          ${chosenSymbolIsCorrect ? 'outline outline-2 outline-secondary' : 'outline outline-2 outline-red-800'} w-20 h-8 rounded-sm`}
          disabled={chosenSymbolIsCorrect ? false : true}
          >Fetch</button>
+         
+        <StocksViewerDataVisualisation datasets={datasets}/>
         </form>
-        <div>
-         { 
-         datasets.length != 0 ? <HighchartsComponent dataset={datasets[0]}/> : <p>Nothing to show yet</p> 
-         }
-        </div>
         </>
     )
 }
@@ -128,5 +168,6 @@ const mapDispatchToProps = (dispatch:AppDispatch) => {
 const connector = connect(mapStateToProps,mapDispatchToProps)
 
 type StocksViewerProps = ConnectedProps<typeof connector>
+
 export default connector(StocksViewer);
 
