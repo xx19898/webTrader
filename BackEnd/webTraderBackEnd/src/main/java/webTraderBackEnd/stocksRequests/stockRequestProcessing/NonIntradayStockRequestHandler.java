@@ -22,6 +22,7 @@ public class NonIntradayStockRequestHandler extends BaseStockRequestHandler{
 		System.out.println("fug");
 		}
 		super.setUriBuildingStrategy(new NonIntradayUriBuildingStrategy(stockRequest.requestParameters()));
+		System.out.println(super.uriBuilder.formUri());
 		return super.fetchStockData(super.uriBuilder.formUri());
 	}
 }

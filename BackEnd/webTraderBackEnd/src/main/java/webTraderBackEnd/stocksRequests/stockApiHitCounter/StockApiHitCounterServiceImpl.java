@@ -1,20 +1,14 @@
 package webTraderBackEnd.stocksRequests.stockApiHitCounter;
 
-import java.text.MessageFormat;
 import java.time.LocalTime;
-import java.util.ArrayDeque;
 import java.util.Date;
 import java.util.Deque;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.stereotype.Service;
 
 import webTraderBackEnd.stocksRequests.exceptions.HitCounterError;
-import webTraderBackEnd.utility.Constants;
 
 
 public class StockApiHitCounterServiceImpl implements StockApiHitCounterService{
@@ -28,7 +22,7 @@ public class StockApiHitCounterServiceImpl implements StockApiHitCounterService{
 		this.timesApiCanBeHitPerTimeLimit = timesApiCanBeHitPerTimeLimit;
 	}
 	@Override
-	public int getSizeOfStack() {
+	public int getSizeOfStack(){
 		return this.StockApiHitCounterStack.size();
 	}
 	@Override
@@ -40,27 +34,46 @@ public class StockApiHitCounterServiceImpl implements StockApiHitCounterService{
 			throw new HitCounterError(HttpStatus.CONFLICT,"Sorry, the hit counter counter stack is already full");
 		}
 		for(int i = 0;i < numberOfHits;i++) {
-			((Deque) StockApiHitCounterStack).push( LocalTime.now() );
+			((Deque<Date>) StockApiHitCounterStack).push( new Date() );
 			//i so that all the async methods do not finish waiting simultaneously :)
-			queueDeletionOfHitCounterElement(timeLimitInSeconds + i);
+			queueDeletionOfHitCounterElement(timeLimitInSeconds*1000 + i);
 		}
 	}
+	
 	@Override
-	public int numberOfTimesStockApiBeenHitDuringLastTimePeriod() {
+	public int numberOfTimesStockApiBeenHitDuringLastTimePeriod(){ 
 		return StockApiHitCounterStack.size();
 	}
 	@Override
-	public int timesApiCanBeHitDuringTheTimeLimit() {
+	public int timesApiCanBeHitDuringTheTimeLimit(){
 		return this.timesApiCanBeHitPerTimeLimit;
+	}
+	@Override
+	public int timesApiCanBeHit() {
+		return (timesApiCanBeHitPerTimeLimit - this.StockApiHitCounterStack.size());
 	}
 	private void queueDeletionOfHitCounterElement(int timeInMilliseconds) {
 		CompletableFuture<Void> completableFuture = CompletableFuture.runAsync(() -> {
-			try {
+			try{
 				Thread.sleep(timeInMilliseconds);
-			} catch (InterruptedException e) {
+			}catch (InterruptedException e){
 				e.printStackTrace();
 			}
 			StockApiHitCounterStack.removeLast();
 		});
+	}
+	@Override
+	public int[] timeToWaitInSec(){
+		Iterator<Date> dequeIterator = StockApiHitCounterStack.iterator();
+		Date dateAtStart = new Date();
+		int[] timeToWaitInSec = new int[StockApiHitCounterStack.size()];
+		int listIterator = 0;
+		while(dequeIterator.hasNext()){
+			Date currDate = new Date();
+			long timeDifference = ((currDate.getTime() - dequeIterator.next().getTime())/1000)%60;
+			timeToWaitInSec[listIterator] = timeLimitInSeconds - (int) timeDifference;
+			listIterator++;
+		}
+		return timeToWaitInSec;		
 	}
 }

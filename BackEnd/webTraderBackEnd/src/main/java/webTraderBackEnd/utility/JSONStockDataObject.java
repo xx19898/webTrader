@@ -17,8 +17,10 @@ public class JSONStockDataObject implements StockDataObject<JSONObject>{
 	private static Logger logger = LogManager.getLogger(JSONStockDataObject.class);
     private void addPartStockDataObject(JSONObject mainJsonObject,JSONObject partStockDataObject) {
     	try {
+    		System.out.println(partStockDataObject);
 			JSONObject MetaDataJSONObject = partStockDataObject.getJSONObject("Meta Data");
 			String symbolName = MetaDataJSONObject.getString("2. Symbol");
+
 			mainJsonObject.put(symbolName, partStockDataObject);
 		} catch (JSONException e) {
 			logger.error(e.getMessage());
@@ -30,7 +32,7 @@ public class JSONStockDataObject implements StockDataObject<JSONObject>{
 		JSONObject mainObject = new JSONObject();
 		for(JSONObject partObject : dataObjects){
 			addPartStockDataObject(mainObject,partObject);
-		}	
+		}
 		return mainObject;
 	}
 }

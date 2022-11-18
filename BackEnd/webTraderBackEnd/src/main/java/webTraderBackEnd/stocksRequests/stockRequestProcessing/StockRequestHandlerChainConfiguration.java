@@ -12,7 +12,7 @@ public class StockRequestHandlerChainConfiguration {
 	@Autowired
 	NonIntradayStockRequestHandler nonIntradayStockRequestHandler;
 	
-	@Bean
+	@Bean(value="intraday/nonIntraday Config")
 	StockRequestHandlerChain stockHandlerChain() {
 		nonIntradayStockRequestHandler.setNext(intradayStockRequestHandler);
 		return new StockRequestHandlerChain(nonIntradayStockRequestHandler);

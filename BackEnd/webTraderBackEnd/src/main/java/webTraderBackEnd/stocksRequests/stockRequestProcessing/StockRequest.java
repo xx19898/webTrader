@@ -7,7 +7,6 @@ public class StockRequest implements IStockRequest{
 	private final Map<String,String> parameters;
 	
 	public StockRequest(Map<String,String> paramsMap){
-		System.out.println(paramsMap.get("function"));
 		String functionName = paramsMap.get("function");
 		if(functionName.equals("TIME_SERIES_INTRADAY")){
 			this.type = StockRequestType.INTRADAY;

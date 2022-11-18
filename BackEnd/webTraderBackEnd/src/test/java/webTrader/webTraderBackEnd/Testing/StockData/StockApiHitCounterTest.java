@@ -1,9 +1,10 @@
 package webTrader.webTraderBackEnd.Testing.StockData;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.Duration;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
@@ -11,24 +12,19 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import webTraderBackEnd.stocksRequests.exceptions.HitCounterError;
 import webTraderBackEnd.stocksRequests.stockApiHitCounter.StockApiHitCounterServiceImpl;
-
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.awaitility.Awaitility;
 
 
 @Import(StockApiHitCounterTestConfig.class)
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class StockApiHitCounterTest {
+class StockApiHitCounterTest{
 	
 	@Autowired
 	@Qualifier("stockApiHitCounterServiceTestConfig")
@@ -36,7 +32,7 @@ class StockApiHitCounterTest {
 	
 	
 	@Test
-	void itShouldCountTimesApiBeenHitDuringLastMinute() {
+	void itShouldCountTimesApiBeenHitDuringLastMinute(){
 		int timesStockApiBeenHit = (int)Math.round(Math.random() * ((5-1) + 1));
 		System.out.println("Api's being hit " + timesStockApiBeenHit);
 		try {
@@ -44,7 +40,6 @@ class StockApiHitCounterTest {
 		} catch (HitCounterError e) {
 			e.printStackTrace();
 		}
-		System.out.println(underTest.numberOfTimesStockApiBeenHitDuringLastTimePeriod());
 	    assertTrue(underTest.numberOfTimesStockApiBeenHitDuringLastTimePeriod() == timesStockApiBeenHit,"Stock Api Hit Counter does not get incremented on hit");	 
 	}
 	@Test
@@ -67,20 +62,32 @@ class StockApiHitCounterTest {
 		assertTrue(actualMessage.contains(expectedMessage));
 	}
 	
-	//TODO: next write a test for making sure that the apihit timestamp gets deleted from the stack after one minute is passed and 
-	// implement the functionality on the main class
 	
 	@Timeout(unit = TimeUnit.SECONDS,value = 10)
-	@Test void itShouldAutomaticallyDeleteDatesFromHitCounterStackAfterTheyExpire() {
+	@Test void itShouldAutomaticallyDeleteDatesFromHitCounterStackAfterTheyExpire() throws InterruptedException {
 		try {
 			underTest.incrementStockApiHitCount(2);
 		} catch (HitCounterError e) {
 			e.printStackTrace();
 		}
-		assertTrue(underTest.getSizeOfStack() == 2);
-		Awaitility.await().atLeast(2, TimeUnit.SECONDS).atMost(4, TimeUnit.SECONDS);
+		int initialNumbOfHitsInStack = underTest.getSizeOfStack();
+		assertTrue(initialNumbOfHitsInStack == 2);
+		//Awaitility.await().atLeast(10, TimeUnit.SECONDS).atMost(12, TimeUnit.SECONDS);
+		CountDownLatch waiter = new CountDownLatch(1);
+		waiter.await(5,TimeUnit.SECONDS);
 		
-		assertTrue(underTest.getSizeOfStack() == 0);
+		int finalNumbOfHitsInStack = underTest.getSizeOfStack();
+		assertTrue(finalNumbOfHitsInStack == 0);
+	}
+	
+	@Test void itShouldReturnArrayOfSecondsThatUserShouldWaitToCallApiAgain(){
+		System.out.println("*******************");
+		underTest.incrementStockApiHitCount(1);
+		int[] array = new int[1];
+		array[0] = 3;
+		int[] resultArray = underTest.timeToWaitInSec();
+		System.out.println("Result array to wait for " + resultArray[0]);
+		assertTrue(resultArray[0] == array[0]);
 	}
 	
 }

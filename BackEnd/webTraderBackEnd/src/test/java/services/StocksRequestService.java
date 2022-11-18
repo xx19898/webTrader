@@ -42,6 +42,7 @@ public class StocksRequestService{
 	StocksRequestServiceImpl stocksRequestService;
 	
 	@Autowired JacksonStockDataJSONHandler jsonHandler;
+	
 	@Test
 	void testThatStockRequestServiceReceivesAndParcesDataForSingleSymbolCorrectly() throws Exception{
 		String symbol = "IBM";
@@ -59,6 +60,32 @@ public class StocksRequestService{
 			String symbolFromApiResponse = IBMDailyData.getMetaData().getSymbol();
 			assertEquals(symbolFromApiResponse,"IBM");
 		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	void testThatStockRequestServiceReceivesAndParcesDataForMultipleSymbolsCorrectly() throws Exception,JSONException, StockRequestHandlerChainException, IOException{
+		String firstSymbol = "IBM";
+		String secondSymbol = "AA";
+		String[] listSymbols = new String[2];
+		listSymbols[0] = firstSymbol;
+		listSymbols[1] = secondSymbol;
+		Map<String,String> paramsMap = new HashMap<String,String>();
+		paramsMap.put("function", StockApiTimeSeries.TIME_SERIES_DAILY.toString());
+		
+		String jsonResponse = (this.stocksRequestService.getStockData(listSymbols, paramsMap)).toString();
+		try {
+			JSONObject apiResponse = new JSONObject(jsonResponse);
+			JSONObject IBMdata = apiResponse.getJSONObject("IBM");
+			JSONObject AAdata = apiResponse.getJSONObject("AA");
+			DailyApiResponse IBMParsedData = (DailyApiResponse) jsonHandler.parseStockData(StockApiTimeSeries.TIME_SERIES_DAILY, IBMdata.toString());
+			DailyApiResponse AAParsedData = (DailyApiResponse) jsonHandler.parseStockData(StockApiTimeSeries.TIME_SERIES_DAILY, AAdata.toString());
+			String ibmSymbol = IBMParsedData.getMetaData().getSymbol();
+			String aaSymbol = AAParsedData.getMetaData().getSymbol();
+			assertEquals(ibmSymbol,"IBM");
+			assertEquals(aaSymbol,"AA");
+		}catch(JSONException e){
 			e.printStackTrace();
 		}
 	}

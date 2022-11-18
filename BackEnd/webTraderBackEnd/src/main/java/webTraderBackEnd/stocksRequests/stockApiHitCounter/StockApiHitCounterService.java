@@ -7,4 +7,6 @@ public interface StockApiHitCounterService {
 	int numberOfTimesStockApiBeenHitDuringLastTimePeriod();
 	int getSizeOfStack();
 	int timesApiCanBeHitDuringTheTimeLimit();
+	int timesApiCanBeHit();
+	int[] timeToWaitInSec();
 }

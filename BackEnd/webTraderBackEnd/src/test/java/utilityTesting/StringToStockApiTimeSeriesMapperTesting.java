@@ -22,5 +22,4 @@ class StringToStockApiTimeSeriesMapperTesting {
 		System.out.println(timeSeriesConstant.toString());
 		equals(timeSeriesAsAString.equals(timeSeriesConstant.toString()));
 	}
-
 }

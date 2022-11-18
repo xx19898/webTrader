@@ -17,7 +17,7 @@ abstract class BaseStockRequestHandler implements StockRequestHandler{
 	
 	HTTPCallable httpClient;
 	
-	public BaseStockRequestHandler(HTTPCallable httpClient) {
+	public BaseStockRequestHandler(HTTPCallable httpClient){
 		this.httpClient = httpClient;
 	}
 	
@@ -48,7 +48,7 @@ abstract class BaseStockRequestHandler implements StockRequestHandler{
 		CompletableFuture<String> apiResponse = CompletableFuture.supplyAsync(
 				() -> {
 					try {
-						return httpClient.fetchStockDataHttpRequest(uriBuilder.formUri());
+						return httpClient.fetchStockDataHttpRequest(uri);
 					}catch (IOException e) {
 						throw new RuntimeException();
 					}

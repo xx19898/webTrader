@@ -19,7 +19,6 @@ public class IntradayUriBuildingStrategy implements UriBuildingStrategy {
 						paramMap.get("function"),paramMap.get("symbol"),paramMap.get("interval"),
 						ApiKeys.getAlphaVantageKey()
 						}));
-		System.out.println(uri);
 		return uri;
 	}
 	

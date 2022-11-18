@@ -8,7 +8,6 @@ import webTraderBackEnd.user.repository.UserRepo;
 
 @SpringBootApplication()
 public class WebTraderBackEndApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(WebTraderBackEndApplication.class, args);
 	}

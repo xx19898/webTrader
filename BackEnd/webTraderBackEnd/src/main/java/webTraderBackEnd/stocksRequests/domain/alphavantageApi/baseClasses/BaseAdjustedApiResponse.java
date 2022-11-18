@@ -14,7 +14,7 @@ public class BaseAdjustedApiResponse implements StockApiResponse{
 	Map<String,WeeklyAndMonthlySingleDataEntry> data;
 	
 	@Override
-	public StockApiResponse getData() {
+	public StockApiResponse getData(){
 		return this;
 	}
 }
