@@ -2,6 +2,9 @@ package webTraderBackEnd.exceptionHandling;
 
 import java.util.Date;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +21,14 @@ public class ControllerExceptionHandler{
 	StockApiHitCounterService apiHitCounter;
 	
 	@ExceptionHandler(HitCounterError.class)
-	public ResponseEntity<int[]> limitForApiCallsBeenBreachedException(HitCounterError ex, WebRequest request){
-		return new ResponseEntity<int[]>(apiHitCounter.timeToWaitInSec(),HttpStatus.REQUEST_TIMEOUT);
+	public ResponseEntity<String> limitForApiCallsBeenBreachedException(HitCounterError ex, WebRequest request){
+		JSONObject jsonResponse = new JSONObject();
+		try {
+			jsonResponse.put("cooldownExpirationTimeForApiRequests", new JSONArray(apiHitCounter.timeToWaitInSec()));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new ResponseEntity<String>(jsonResponse.toString(),HttpStatus.REQUEST_TIMEOUT);
 	}
 }

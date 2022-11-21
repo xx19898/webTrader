@@ -45,10 +45,10 @@ public class StocksRequestServiceImpl implements StocksRequestService {
 	
 	@Override
 	public JSONObject getStockData(String[] symbols,Map<String, String> otherParams) throws StockRequestHandlerChainException, IOException{
-		List<String> stockDataList = getTheStockDataAsListOfStrings(symbols, otherParams);
 		if(symbols.length > apiHitCounter.timesApiCanBeHit()) {
 			throw new HitCounterError(HttpStatus.INTERNAL_SERVER_ERROR,"Api call limit is exceeded");
 		}
+		List<String> stockDataList = getTheStockDataAsListOfStrings(symbols, otherParams);
 		List<JSONObject> stockDataListAsJsonObjects = listOfStringsToListOfJsonObjects(stockDataList);
 		JSONObject finalStockData = jsonHelper.composeAnStockDataObjectFromMultipleDataObjects(stockDataListAsJsonObjects);
 		return finalStockData;
