@@ -72,7 +72,8 @@ const expectedFinalState:IStockState = {
     ],
     currentTimeSeries:stockFunctionTypes.DAILY,
     labels:[],
-    symbols:[]
+    symbols:[],
+    timeToWaitForApiRequestSlots:[]
 }
 // ELIMINATE THE ERRORS, RUN THE TESTS
 const mockedApiResponse = {

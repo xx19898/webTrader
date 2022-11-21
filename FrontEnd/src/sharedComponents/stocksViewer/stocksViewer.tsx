@@ -13,6 +13,7 @@ import HighchartsComponent from "./highcharts"
 import {usePromiseTracker} from "react-promise-tracker"
 import {ThreeDots} from "react-loader-spinner"
 import { IStockSymbolList } from "../../state/Stocks/stocksZodSchemas"
+import ApiRequestLimitExceededComponent from "./apiRequestLimitExceededComponent"
 
 interface IHandleSubmit{
    e: React.MouseEvent<HTMLButtonElement, MouseEvent> 
@@ -90,7 +91,7 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
    )
 }
 
- const StocksViewer = ({datasets,labels,symbols,currentTimeSeries}:StocksViewerProps) => {
+ const StocksViewer = ({datasets,labels,symbols,currentTimeSeries,timeToWaitForApiRequestSlots}:StocksViewerProps) => {
     const dispatch = useDispatch()
     const [chosenSymbol,setChosenSymbol] = useState("")
     const [chosenSymbolIsCorrect,setChosenSymbolIsCorrect] = useState(false)
@@ -148,6 +149,12 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
          ${chosenSymbolIsCorrect ? 'outline outline-2 outline-secondary' : 'outline outline-2 outline-red-800'} w-20 h-8 rounded-sm`}
          disabled={chosenSymbolIsCorrect ? false : true}
          >Fetch</button>
+         {
+            timeToWaitForApiRequestSlots.length != 0 &&
+            <>
+            <ApiRequestLimitExceededComponent waitArray={timeToWaitForApiRequestSlots} />
+            </>
+         }
          
         <StocksViewerDataVisualisation datasets={datasets}/>
         </form>

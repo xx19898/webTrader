@@ -168,3 +168,7 @@ export type SymbolInfo = z.infer<typeof symbolInfo>
 export const symbolListSchema = z.array(symbolInfo)
 export type IStockSymbolList = z.infer<typeof symbolListSchema>
 
+export const timeToWaitForApiRequestSlots = z.object({cooldownExpirationTimeForApiRequests:z.array(z.number())})
+export type ITimeToWaitForApiRequestSlots = z.infer<typeof timeToWaitForApiRequestSlots>
+
+

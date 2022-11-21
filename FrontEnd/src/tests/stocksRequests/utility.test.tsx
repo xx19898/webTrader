@@ -1,3 +1,4 @@
+import { renewApiRequestSlots } from "../../state/Stocks/stocksActions";
 import { createDataset, Dataset } from "../../state/Stocks/stocksSlice";
 import {concatListOfSymbols} from "../../state/Stocks/stocksUtility";
 import { processData } from "../../state/Stocks/stocksUtility/highchartDataParsing";
@@ -104,7 +105,7 @@ test('time parser should work properly',() => {
     const timeAsString = "2020-12-22"
     const convertedToUnix = parseDateTimeToUnixFormat(timeAsString)
     console.log(convertedToUnix)
-    expect(convertedToUnix).toBe(1608588000)
+    expect(convertedToUnix).toBe(1608588000000)
 })
 test('populate the array method should work properly',() => {
     const testObject: SingleDataUnitDailyIntradayWeeklyAndMonthly = {
@@ -116,9 +117,23 @@ test('populate the array method should work properly',() => {
     }
 
     const x = processData({"2022-12-22":testObject})
-    console.log(x.ohlc)
     expect(x.ohlc[0][1]).toBe(2.5)
-
-})
 })
 
+ test('convertion of array of cooldown times in seconds to an array of expiration dates for api request slots functions properly', () => {
+    const waitTimeArray = [21,3]
+    const currTime_1 = new Date()
+    currTime_1.setSeconds(currTime_1.getSeconds() + 21)
+    const currTime_2 = new Date()
+    currTime_2.setSeconds(currTime_2.getSeconds() + 3)
+    const shouldBe = [currTime_1,currTime_2]
+    const resultArr = renewApiRequestSlots({timeToWaitInSeconds: waitTimeArray})
+    expect(resultArr[0].toDateString()).toBe(shouldBe[0].toDateString())
+    expect(resultArr[1].toDateString()).toBe(shouldBe[1].toDateString())
+    console.log("GOT TO FINISH")
+})
+
+
+
+
+})

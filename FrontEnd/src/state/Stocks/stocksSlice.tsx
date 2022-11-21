@@ -1,7 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { RootState } from '../../store';
 import { deleteOlderVersionsOfStockData, fromApiDataToDatasetFormat, getLabelsFromApiData} from './stockViewerChartDataUtility';
-import { CommonDataForSingleTimeUnit, CommonMetaData, IStockSymbolList, StockDataApiResponse, StockDataForSingleSymbol, StockDataForSingleSymbolDataPart, StockDataForSingleSymbolDataPartDeeperObject } from './stocksZodSchemas';
+import { CommonMetaData, IStockSymbolList, ITimeToWaitForApiRequestSlots, StockDataApiResponse, StockDataForSingleSymbolDataPart, StockDataForSingleSymbolDataPartDeeperObject } from './stocksZodSchemas';
 import { stockFunctionTypes } from './stocksRequestTypes';
 
 export type Dataset = {
@@ -27,7 +26,7 @@ export function createDataset({
         borderColor:string,
         tension?: number,
     }):Dataset{
-    return {
+    return{
         metadata,
         data,
         fill,
@@ -40,7 +39,8 @@ export type IStockState = {
     datasets: Dataset[],
     labels: string[],
     currentTimeSeries: stockFunctionTypes,
-    symbols: IStockSymbolList
+    symbols: IStockSymbolList,
+    timeToWaitForApiRequestSlots: Date[]
 }
 
 const StockInitialState: IStockState = {
@@ -48,6 +48,7 @@ const StockInitialState: IStockState = {
     labels:[],
     currentTimeSeries: stockFunctionTypes.DAILY,
     symbols: [],
+    timeToWaitForApiRequestSlots: []
 }
 
 
@@ -67,10 +68,18 @@ export const stockSlice = createSlice({
         UPDATE_SYMBOL_LIST: (state, action: PayloadAction<IStockSymbolList>) => {
             state.symbols = action.payload;
         },
+        RENEW_API_REQUEST_SLOTS:(state, action: PayloadAction<ITimeToWaitForApiRequestSlots>) => {
+                const calculatedExpirationDates = action.payload.cooldownExpirationTimeForApiRequests.map( timeToWaitInSeconds => {
+                    const finalTime = new Date()
+                    finalTime.setSeconds(finalTime.getSeconds() + timeToWaitInSeconds)
+                    return finalTime;
+                })
+                state.timeToWaitForApiRequestSlots = calculatedExpirationDates
+            }
     }
 })
 
-export const {UPDATE_CURRENT_STOCKS,UPDATE_SYMBOL_LIST} = stockSlice.actions;
+export const {UPDATE_CURRENT_STOCKS,UPDATE_SYMBOL_LIST,RENEW_API_REQUEST_SLOTS} = stockSlice.actions;
 
 
 

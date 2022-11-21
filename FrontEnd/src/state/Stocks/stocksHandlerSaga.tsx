@@ -1,10 +1,12 @@
-import { getStockData, getSymbols, IStockQueryParams, } from "./stocksActions";
+import { getStockData, getSymbols, IStockQueryParams, renewApiRequestSlots, } from "./stocksActions";
 import {put, call, SagaReturnType, CallEffect, PutEffect} from 'redux-saga/effects'
 import * as stocksActionTypes from "./stocksActionTypes";
 import { AnyAction } from "redux";
-import { IStockSymbolList, StockDataApiResponse, stockDataApiResponse } from "./stocksZodSchemas";
+import { IStockSymbolList, ITimeToWaitForApiRequestSlots, StockDataApiResponse, stockDataApiResponse, timeToWaitForApiRequestSlots } from "./stocksZodSchemas";
 import { RootState } from "../../store";
-import { UPDATE_CURRENT_STOCKS, UPDATE_SYMBOL_LIST } from "./stocksSlice";
+import { RENEW_API_REQUEST_SLOTS, UPDATE_CURRENT_STOCKS, UPDATE_SYMBOL_LIST } from "./stocksSlice";
+import axios, { AxiosError } from "axios";
+
 
 
 type StocksServiceResponse = SagaReturnType<typeof getStockData>
@@ -20,7 +22,7 @@ interface IStockDataHandlerSaga{
 }
 
 export function* stockDataHandlerSaga(props: IStockDataHandlerSaga):
-Generator<CallEffect<StockDataApiResponse> | PutEffect<{type:string,payload:StockDataApiResponse}>,
+Generator<CallEffect<StockDataApiResponse> |  PutEffect<{type:string,payload:StockDataApiResponse} | {type:string,payload:ITimeToWaitForApiRequestSlots}>,
                      void,
                      StockDataApiResponse>                                                                                                                           
 {
@@ -32,8 +34,14 @@ Generator<CallEffect<StockDataApiResponse> | PutEffect<{type:string,payload:Stoc
     //Updating the state
     yield put(UPDATE_CURRENT_STOCKS(response))
     }
-    catch(e){
-        console.log((e as Error).message)
+    catch(err){
+        console.log((err as Error).message)
+        if(axios.isAxiosError(err) && err.response){
+            if(err.response.status == 408){
+                const timeToWaitInSeconds = timeToWaitForApiRequestSlots.parse(err.response.data)
+                yield put(RENEW_API_REQUEST_SLOTS(timeToWaitInSeconds))
+            }
+        }
     }
 }
 

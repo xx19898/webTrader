@@ -1,7 +1,11 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { trackPromise } from 'react-promise-tracker';
+import { z } from 'zod';
+import { cooldownExpirationTimeForStockApiRequestSlotInSeconds } from '../../constants/stocksRelatedConstants';
 import { BASE_URL} from '../../constants/urls';
+import { AppDispatch } from '../../store';
 import { processListOfSymbols} from "../../utility/csvUtility";
+import { RENEW_STOCK_API_REQUEST_SLOTS } from './stocksActionTypes';
 import { IStockQueryParamsIntraday, IStockQueryParamsNonIntraday , ISymbolList, stockFunctionTypes } from './stocksRequestTypes';
 import { concatListOfSymbols} from './stocksUtility';
 import { stockDataApiResponse, StockDataApiResponse, symbolListSchema} from "./stocksZodSchemas";
@@ -18,10 +22,20 @@ export const getSymbols  = async () => {
     return validatedSymbolList;
 }
 
+//TODO: test
+export const renewApiRequestSlots = ({timeToWaitInSeconds}:{timeToWaitInSeconds:number[]}) => {
+    const calculatedExpirationDates = timeToWaitInSeconds.map( timeToWaitInSeconds => {
+        const finalTime = new Date()
+        finalTime.setSeconds(finalTime.getSeconds() + timeToWaitInSeconds)
+        return finalTime;
+    })
+    return calculatedExpirationDates;
+}
+
 
 export type IStockQueryParams =  IStockQueryParamsIntraday | IStockQueryParamsNonIntraday
 
-export const getStockData = async (queryParams: IStockQueryParams) => {
+export const getStockData = (queryParams: IStockQueryParams) => {
     const symbolsAsOneString = 
     (queryParams.symbols.length === 1) 
     ? queryParams.symbols[0]
@@ -38,13 +52,9 @@ export const getStockData = async (queryParams: IStockQueryParams) => {
         (response) => {
             return stockDataApiResponse.parse(response.data)
         })
-        .catch( err => {
-            console.log();
+        .catch( (err: Error | AxiosError) => {
             throw err;
         }))
-      
-        
-
     }
 
 
