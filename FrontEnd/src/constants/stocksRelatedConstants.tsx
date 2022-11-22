@@ -1,4 +1,5 @@
 const cooldownExpirationTimeForStockApiRequestSlotInSeconds = 60;
+const apiCallLimitPerTimeUnit = 5;
 
 
-export {cooldownExpirationTimeForStockApiRequestSlotInSeconds}
+export {cooldownExpirationTimeForStockApiRequestSlotInSeconds, apiCallLimitPerTimeUnit}

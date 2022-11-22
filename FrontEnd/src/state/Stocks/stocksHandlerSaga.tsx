@@ -1,11 +1,8 @@
-import { getStockData, getSymbols, IStockQueryParams, renewApiRequestSlots, } from "./stocksActions";
+import { getStockData, getSymbols, IStockQueryParams} from "./stocksActions";
 import {put, call, SagaReturnType, CallEffect, PutEffect} from 'redux-saga/effects'
-import * as stocksActionTypes from "./stocksActionTypes";
-import { AnyAction } from "redux";
-import { IStockSymbolList, ITimeToWaitForApiRequestSlots, StockDataApiResponse, stockDataApiResponse, timeToWaitForApiRequestSlots } from "./stocksZodSchemas";
-import { RootState } from "../../store";
+import { IStockSymbolList, ITimeToWaitForApiRequestSlots, StockDataApiResponse, timeToWaitForApiRequestSlots } from "./stocksZodSchemas";
 import { RENEW_API_REQUEST_SLOTS, UPDATE_CURRENT_STOCKS, UPDATE_SYMBOL_LIST } from "./stocksSlice";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 
 
 
@@ -34,7 +31,7 @@ Generator<CallEffect<StockDataApiResponse> |  PutEffect<{type:string,payload:Sto
     //Updating the state
     yield put(UPDATE_CURRENT_STOCKS(response))
     }
-    catch(err){
+    catch(err: any){
         console.log((err as Error).message)
         if(axios.isAxiosError(err) && err.response){
             if(err.response.status == 408){

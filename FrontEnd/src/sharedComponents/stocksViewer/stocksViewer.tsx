@@ -137,12 +137,14 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
         setChosenValue={setChosenTimeSeries} 
         chosenValue={chosenTimeSeries.length === 0 ? undefined : chosenTimeSeries}/>
         {
-        chosenTimeSeries === "TIME_SERIES_INTRADAY" && 
+        chosenTimeSeries === "TIME_SERIES_INTRADAY" ?
         <>
         <label className="text-white mb-[5px] mt-[5px] align-middle">Time Series</label> 
         <DropDownMenu items={timeIntervalsIntraday} setChosenValue={setChosenTimeIntervalIntraday} 
         chosenValue={chosenTimeIntervalIntraday === "" ? undefined : chosenTimeIntervalIntraday}/> 
         </>
+        :
+        null
         }
         <button className={`self-end mt-4 font-bold text-white
          text-center align-middle bg-gradient-to-tr from-primary to-secondary

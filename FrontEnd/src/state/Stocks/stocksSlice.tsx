@@ -1,7 +1,10 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import { deleteOlderVersionsOfStockData, fromApiDataToDatasetFormat, getLabelsFromApiData} from './stockViewerChartDataUtility';
-import { CommonMetaData, IStockSymbolList, ITimeToWaitForApiRequestSlots, StockDataApiResponse, StockDataForSingleSymbolDataPart, StockDataForSingleSymbolDataPartDeeperObject } from './stocksZodSchemas';
+import { CommonMetaData, IStockSymbolList, ITimeToWaitForApiRequestSlots, StockDataApiResponse, StockDataForSingleSymbolDataPart, StockDataForSingleSymbolDataPartDeeperObject, timeToWaitForApiRequestSlots } from './stocksZodSchemas';
 import { stockFunctionTypes } from './stocksRequestTypes';
+import { EARLIEST_STOCK_API_REQUEST_COOLDOWN_TIME_EXPIRED } from './stocksActionTypes';
+import { compareDates } from './stocksUtility/sortDataByDate';
+import { a } from 'msw/lib/glossary-dc3fd077';
 
 export type Dataset = {
     metadata: CommonMetaData,
@@ -75,7 +78,18 @@ export const stockSlice = createSlice({
                     return finalTime;
                 })
                 state.timeToWaitForApiRequestSlots = calculatedExpirationDates
-            }
+            },
+        EARLIEST_STOCK_API_REQUEST_COOLDOWN_TIME_EXPIRED:(state) => {
+            console.log("*******EARLIEST_STOCK_API")
+            const sortedArray = state.timeToWaitForApiRequestSlots.sort((firstDate,secondDate) => {
+                if(firstDate.getTime() >= secondDate.getTime()){
+                    return 1
+                }
+                return 0
+            })
+            sortedArray.shift()
+            state.timeToWaitForApiRequestSlots = sortedArray
+        }
     }
 })
 

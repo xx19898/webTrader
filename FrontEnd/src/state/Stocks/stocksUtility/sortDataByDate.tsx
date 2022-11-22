@@ -42,3 +42,5 @@ const merge = (left:number[][],right:number[][]) => {
 }
 
 export default sortDataByDate
+
+export {compareDates}
