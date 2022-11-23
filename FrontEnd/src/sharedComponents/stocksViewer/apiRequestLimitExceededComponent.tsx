@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
-import { EARLIEST_STOCK_API_REQUEST_COOLDOWN_TIME_EXPIRED } from "../../state/Stocks/stocksActionTypes"
+import { EARLIEST_STOCK_API_REQUEST_COOLDOWN_TIME_EXPIRED } from "../../state/Stocks/stocksSlice"
 
 interface IProgressBarCountdown{
     expirationDate: Date
@@ -11,17 +11,14 @@ const ProgressBarCountdown = ({expirationDate}:IProgressBarCountdown) => {
     const dispatch = useDispatch()
     
     useEffect(() => {
-        if(timeLeft > 0){
-            console.log("timeLeft: " + timeLeft)
             const intervalId = setInterval(() => {
-                setTimeLeft(countDiffBetweenDateAndCurrDateInSeconds(expirationDate))
-            },1000)
-            return(() => clearInterval(intervalId))
-        }
-        if(timeLeft == 0){
-            dispatch({type:EARLIEST_STOCK_API_REQUEST_COOLDOWN_TIME_EXPIRED})
-        }
-            
+                const timeLeftCurrent = countDiffBetweenDateAndCurrDateInSeconds(expirationDate)
+                if(timeLeftCurrent <= 1){
+                    console.log("deleting progress bars")
+                    dispatch(EARLIEST_STOCK_API_REQUEST_COOLDOWN_TIME_EXPIRED())
+                }else{setTimeLeft(timeLeftCurrent)}
+            },100)
+            return(() => clearInterval(intervalId))   
     },[expirationDate])
 
     return(
@@ -56,7 +53,7 @@ const ApiRequestLimitExceededComponent = ({waitArray}:IApiRequestLimitExceededCo
 export default ApiRequestLimitExceededComponent;
 
 
-const countDiffBetweenDateAndCurrDateInSeconds = (date:Date): number => {
+export const countDiffBetweenDateAndCurrDateInSeconds = (date:Date): number => {
     const currDate = new Date()
     const differenceInSeconds = Math.ceil((date.getTime() - currDate.getTime())/1000)
     return differenceInSeconds;
