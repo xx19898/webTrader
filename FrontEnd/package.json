@@ -19,7 +19,7 @@
     "axios": "^0.27.2",
     "delta-e": "^0.0.8",
     "gsap": "^3.10.4",
-    "highcharts": "^10.3.1",
+    "highcharts": "^10.3.2",
     "highcharts-react-official": "^3.1.0",
     "jquery-csv": "^1.0.21",
     "msw": "^0.47.3",

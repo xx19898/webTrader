@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react"
 import {v4 as uuidv4} from 'uuid'
-import {GET_SYMBOLS,GET_INITIAL_STOCK, GET_STOCK_DATA } from "../../state/Stocks/stocksActionTypes"
+import {GET_SYMBOLS,GET_INITIAL_STOCK, GET_STOCK_DATA} from "../../state/Stocks/stocksActionTypes"
 import { connect, ConnectedProps, useDispatch } from "react-redux"
 import { AppDispatch, RootState } from "../../store"
-import { Dataset, IStockState } from "../../state/Stocks/stocksSlice"
+import { Dataset, EARLIEST_STOCK_API_REQUEST_COOLDOWN_TIME_EXPIRED, IStockState } from "../../state/Stocks/stocksSlice"
 import { getStockData, IStockQueryParams } from "../../state/Stocks/stocksActions"
 import { DropDownTextMenu } from "../dropdownMenuWithSearchbar/dropdownMenu" 
 import DropDownMenu from "../dropdownMenu/dropdownMenu"
@@ -13,7 +13,9 @@ import HighchartsComponent from "./highcharts"
 import {usePromiseTracker} from "react-promise-tracker"
 import {ThreeDots} from "react-loader-spinner"
 import { IStockSymbolList } from "../../state/Stocks/stocksZodSchemas"
-import ApiRequestLimitExceededComponent from "./apiRequestLimitExceededComponent"
+import ApiRequestLimitExceededComponent, { countDiffBetweenDateAndCurrDateInSeconds } from "./apiRequestLimitExceededComponent"
+import { apiCallLimitPerTimeUnit, cooldownExpirationTimeForStockApiRequestSlotInSeconds } from "../../constants/stocksRelatedConstants"
+import useStocksViewer from "./useStocksViewer"
 
 interface IHandleSubmit{
    e: React.MouseEvent<HTMLButtonElement, MouseEvent> 
@@ -45,6 +47,15 @@ const timeSeries = [
    "TIME_SERIES_MONTHLY_ADJUSTED",
 ]
 
+enum TimeSeries {
+   TIME_SERIES_INTRADAY = "TIME_SERIES_INTRADAY",
+   TIME_SERIES_DAILY = "TIME_SERIES_DAILY",
+   TIME_SERIES_WEEKLY = "TIME_SERIES_WEEKLY",
+   TIME_SERIES_WEEKLY_ADJUSTED = "TIME_SERIES_WEEKLY_ADJUSTED",
+   TIME_SERIES_MONTHLY = "TIME_SERIES_MONTHLY",
+   TIME_SERIES_MONTHLY_ADJUSTED = "TIME_SERIES_MONTHLY_ADJUSTED",
+}
+
 const timeIntervalsIntraday = [
    "1min",
    "5min",
@@ -55,6 +66,7 @@ const timeIntervalsIntraday = [
 
 const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
    const dataFetchingInProgress = usePromiseTracker()
+   
 
    if(dataFetchingInProgress.promiseInProgress){
       return(
@@ -91,36 +103,31 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
    )
 }
 
- const StocksViewer = ({datasets,labels,symbols,currentTimeSeries,timeToWaitForApiRequestSlots}:StocksViewerProps) => {
-    const dispatch = useDispatch()
-    const [chosenSymbol,setChosenSymbol] = useState("")
-    const [chosenSymbolIsCorrect,setChosenSymbolIsCorrect] = useState(false)
-    const [chosenTimeSeries,setChosenTimeSeries] = useState("TIME_SERIES_INTRADAY")
-    const [chosenTimeIntervalIntraday, setChosenTimeIntervalIntraday] = useState("")
-
-    const handleSubmit = (props:IHandleSubmit) => {
-      console.log("clicked handle submit")
-      props.e.preventDefault()
-      const dataRequestingDispatch = {
-         type:GET_STOCK_DATA,stockParams:
-         {symbols:[chosenSymbol],
-          function:chosenTimeSeries,
-          interval: chosenTimeIntervalIntraday.length === 0 
-          ? undefined : chosenTimeIntervalIntraday}
-         }
-      dispatch(dataRequestingDispatch)
-      }
-
-    useEffect(() => {
-        dispatch({type:GET_SYMBOLS});
-    },[true])
+ const StocksViewer = () => {
+    
+    const {
+      symbols,
+      datasets,
+      timeToWaitForApiRequestSlots,
+      apiRequestLimitExceeded,
+      handleSubmit,
+      chosenSymbolIsCorrect,
+      setChosenSymbolIsCorrect,
+      chosenTimeSeries,
+      setChosenTimeSeries,
+      dispatch,
+      chosenSymbol,
+      setChosenSymbol,
+      chosenTimeIntervalIntraday,
+      setChosenTimeIntervalIntraday
+   } = useStocksViewer();
 
     return(
         <>
         <form 
-        className="mt-[10px] w-2/3 mb-10
-         flex flex-col align-stretch justify-center"
-         onSubmit={(e) => handleSubmit({e:e})}>
+        className="mt-[10px] w-2/3 mb-10 flex flex-col align-stretch justify-center"
+        onSubmit={(e) => handleSubmit({e:e})}>
+
         <label className="text-white mb-[5px]">Symbol</label>
         <DropDownTextMenu 
         dataToVisualise={symbols}
@@ -149,16 +156,18 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
         <button className={`self-end mt-4 font-bold text-white
          text-center align-middle bg-gradient-to-tr from-primary to-secondary
          ${chosenSymbolIsCorrect ? 'outline outline-2 outline-secondary' : 'outline outline-2 outline-red-800'} w-20 h-8 rounded-sm`}
-         disabled={chosenSymbolIsCorrect ? false : true}
+         disabled={!chosenSymbolIsCorrect}
          >Fetch</button>
          {
-            timeToWaitForApiRequestSlots.length != 0 &&
+            apiRequestLimitExceeded ?
             <>
-            <ApiRequestLimitExceededComponent waitArray={timeToWaitForApiRequestSlots} />
+            <div>You have exceeded your limit of Api calls. Remember, it is {apiCallLimitPerTimeUnit} per {cooldownExpirationTimeForStockApiRequestSlotInSeconds} seconds</div>
+            <ApiRequestLimitExceededComponent />
             </>
+            :
+            null
          }
-         
-        <StocksViewerDataVisualisation datasets={datasets}/>
+        <StocksViewerDataVisualisation datasets={datasets} />
         </form>
         </>
     )
@@ -166,8 +175,13 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
 
 
 const mapStateToProps = (state:RootState) => {
-   return state.stocks;
+   return{
+      datasets:state.stocks.datasets,
+      symbols: state.stocks.symbols,
+      timeToWaitForApiRequestSlots: state.stocks.timeToWaitForApiRequestSlots
+   };
 }
+
 const mapDispatchToProps = (dispatch:AppDispatch) => {
    return {
       getStockData: (props:IStockQueryParams) => dispatch({type:GET_STOCK_DATA,params:props})

@@ -28,7 +28,8 @@ const ProgressBarCountdown = ({expirationDate}:IProgressBarCountdown) => {
     
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
-            gsap.fromTo(progressBarRef.current,{width:`${procentsLeft}%`},{width:'0%',onComplete: () => {dispatch(EARLIEST_STOCK_API_REQUEST_COOLDOWN_TIME_EXPIRED())}}).duration(timeLeft)
+            const tl = gsap.timeline()
+            tl.fromTo(progressBarRef.current,{width:`${procentsLeft}%`},{width:'0%',onComplete: () => {dispatch(EARLIEST_STOCK_API_REQUEST_COOLDOWN_TIME_EXPIRED())}}).duration(timeLeft)
         },)
         return () => ctx.revert()
     })
@@ -37,20 +38,6 @@ const ProgressBarCountdown = ({expirationDate}:IProgressBarCountdown) => {
         origTimeToWaitRef.current = countDiffBetweenDateAndCurrDateInSeconds(expirationDate)
     },[])
 
-    /*
-    useEffect(() => {
-            const intervalId = setInterval(() => {
-                const timeLeftCurrent = countDiffBetweenDateAndCurrDateInSeconds(expirationDate)
-
-                if(timeLeftCurrent <= 0){
-                    console.log("got here")
-                    setTimeLeft(0)
-                    dispatch(EARLIEST_STOCK_API_REQUEST_COOLDOWN_TIME_EXPIRED())
-                }else{setTimeLeft(timeLeftCurrent)}
-            },100)
-            return(() => clearInterval(intervalId))   
-    },[expirationDate])
-    */
 
     return(
         <li 

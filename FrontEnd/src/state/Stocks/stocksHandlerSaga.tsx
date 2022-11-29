@@ -26,9 +26,6 @@ Generator<CallEffect<StockDataApiResponse> |  PutEffect<{type:string,payload:Sto
     try{
         console.log(props.stockParams)
     const response = yield call(getStockData, props.stockParams);
-    console.log("printing backend data response")
-    console.log(response)
-    //Updating the state
     yield put(UPDATE_CURRENT_STOCKS(response))
     }
     catch(err: any){

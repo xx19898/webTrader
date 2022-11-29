@@ -1,5 +1,5 @@
 import HighchartsReact from "highcharts-react-official"
-import Highcharts from 'highcharts';
+import Highcharts from 'highcharts/highstock';
 import { usePromiseTracker } from "react-promise-tracker";
 import { Dataset } from "../../state/Stocks/stocksSlice"
 import { processData } from "../../state/Stocks/stocksUtility/highchartDataParsing";
@@ -71,7 +71,6 @@ const HighchartsComponent = ({dataset}:IHighcharts) => {
                 data: ohlc,
                 animation: {
                     duration: 1500,
-                    // Uses simple function
                     easing: easeOutBounce
                 }
             },
@@ -81,7 +80,6 @@ const HighchartsComponent = ({dataset}:IHighcharts) => {
                 data: volume,
                 animation: {
                     duration: 1500,
-                    // Uses simple function
                     easing: easeOutBounce
                 },
                 yAxis: 1,
