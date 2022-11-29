@@ -2,9 +2,6 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import { deleteOlderVersionsOfStockData, fromApiDataToDatasetFormat, getLabelsFromApiData} from './stockViewerChartDataUtility';
 import { CommonMetaData, IStockSymbolList, ITimeToWaitForApiRequestSlots, StockDataApiResponse, StockDataForSingleSymbolDataPart, StockDataForSingleSymbolDataPartDeeperObject, timeToWaitForApiRequestSlots } from './stocksZodSchemas';
 import { stockFunctionTypes } from './stocksRequestTypes';
-import { compareDates } from './stocksUtility/sortDataByDate';
-import { a } from 'msw/lib/glossary-dc3fd077';
-import { countDiffBetweenDateAndCurrDateInSeconds } from '../../sharedComponents/stocksViewer/apiRequestLimitExceededComponent';
 
 export type Dataset = {
     metadata: CommonMetaData,
@@ -86,7 +83,7 @@ export const stockSlice = createSlice({
                 }
                 return 1
             })
-            const deletedElement = sortedArray.shift()
+            sortedArray.shift()
             state.timeToWaitForApiRequestSlots = sortedArray
         }
     }

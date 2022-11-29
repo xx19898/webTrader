@@ -1,5 +1,5 @@
 import HighchartsReact from "highcharts-react-official"
-import Highcharts from "highcharts/highstock";
+import Highcharts from 'highcharts';
 import { usePromiseTracker } from "react-promise-tracker";
 import { Dataset } from "../../state/Stocks/stocksSlice"
 import { processData } from "../../state/Stocks/stocksUtility/highchartDataParsing";

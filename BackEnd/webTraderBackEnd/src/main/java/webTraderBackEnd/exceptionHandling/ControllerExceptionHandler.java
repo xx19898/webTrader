@@ -26,7 +26,6 @@ public class ControllerExceptionHandler{
 		try {
 			jsonResponse.put("cooldownExpirationTimeForApiRequests", new JSONArray(apiHitCounter.timeToWaitInSec()));
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return new ResponseEntity<String>(jsonResponse.toString(),HttpStatus.REQUEST_TIMEOUT);
