@@ -42,8 +42,8 @@ const ProgressBarCountdown = ({expirationDate}:IProgressBarCountdown) => {
     return(
         <li 
         key={uuidv4()} 
-        className="text-center bg-pink-200 w-full h-6">
-            <div ref={progressBarRef} className={"bg-primary h-full rounded-lg"}></div>
+        className="text-center bg-sec-primary w-full h-6">
+            <div ref={progressBarRef} className={"bg-primary h-full rounded"}></div>
         </li>
     )
 }

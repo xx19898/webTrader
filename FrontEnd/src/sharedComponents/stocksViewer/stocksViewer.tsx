@@ -98,7 +98,7 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
    }
    return(
       <>
-      <p className="text-center">Nothing to show here yet</p>
+      <p className="text-white indent-2 p-4 mt-5 mb-3 border-white rounded-md border-2 text-center">Nothing to show here yet</p>
       </>
    )
 }
@@ -119,8 +119,10 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
       chosenSymbol,
       setChosenSymbol,
       chosenTimeIntervalIntraday,
-      setChosenTimeIntervalIntraday
+      setChosenTimeIntervalIntraday,
+      fetchButtonStatus
    } = useStocksViewer();
+   
 
     return(
         <>
@@ -155,19 +157,19 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
         }
         <button className={`self-end mt-4 font-bold text-white
          text-center align-middle bg-gradient-to-tr from-primary to-secondary
-         ${chosenSymbolIsCorrect ? 'outline outline-2 outline-secondary' : 'outline outline-2 outline-red-800'} w-20 h-8 rounded-sm`}
-         disabled={!chosenSymbolIsCorrect}
+         ${fetchButtonStatus ? 'outline outline-2 outline-secondary' : 'outline outline-2 outline-red-800'} w-20 h-8 rounded-sm`}
+         disabled={!fetchButtonStatus}
          >Fetch</button>
          {
             apiRequestLimitExceeded ?
             <>
-            <div>You have exceeded your limit of Api calls. Remember, it is {apiCallLimitPerTimeUnit} per {cooldownExpirationTimeForStockApiRequestSlotInSeconds} seconds</div>
+            <div className="text-white indent-2 p-4 mt-5 mb-3 border-white rounded-md border-2 text-center">You have exceeded your limit of Api calls. Remember, it is {apiCallLimitPerTimeUnit} calls per {cooldownExpirationTimeForStockApiRequestSlotInSeconds} seconds</div>
             <ApiRequestLimitExceededComponent />
             </>
             :
             null
          }
-        <StocksViewerDataVisualisation datasets={datasets} />
+        <StocksViewerDataVisualisation datasets={datasets}/>
         </form>
         </>
     )

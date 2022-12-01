@@ -7,8 +7,6 @@ export interface IUser{
     username: String
 }
 
-
-//TODO: type the data received from api with help of "zod"
 export const logIn = (user: IUser) => {
     axios({
         method: 'get',

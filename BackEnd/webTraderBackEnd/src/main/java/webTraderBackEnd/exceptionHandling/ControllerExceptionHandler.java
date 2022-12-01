@@ -23,9 +23,9 @@ public class ControllerExceptionHandler{
 	@ExceptionHandler(HitCounterError.class)
 	public ResponseEntity<String> limitForApiCallsBeenBreachedException(HitCounterError ex, WebRequest request){
 		JSONObject jsonResponse = new JSONObject();
-		try {
+		try{
 			jsonResponse.put("cooldownExpirationTimeForApiRequests", new JSONArray(apiHitCounter.timeToWaitInSec()));
-		} catch (JSONException e) {
+		}catch(JSONException e){
 			e.printStackTrace();
 		}
 		return new ResponseEntity<String>(jsonResponse.toString(),HttpStatus.REQUEST_TIMEOUT);

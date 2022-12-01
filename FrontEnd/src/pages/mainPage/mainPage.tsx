@@ -1,9 +1,9 @@
 import React, { ReactNode } from "react";
-import "../css/mainPage/mainPage.css";
-import "../css/styles.css";
-import {RegisterIcon} from "../icons/registerIcon";
-import { LoginIcon } from "../icons/loginIcon";
-import  StocksViewer from "../sharedComponents/stocksViewer/stocksViewer";
+import "../../css/mainPage/mainPage.css";
+import "../../css/styles.css";
+import { RegisterIcon } from "../../icons/registerIcon";
+import { LoginIcon } from "../../icons/loginIcon";
+import  StocksViewer from "../../sharedComponents/stocksViewer/stocksViewer";
 
 
 export const MainPage  = () =>

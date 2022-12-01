@@ -19,7 +19,7 @@ newDate_2.setSeconds(newDate_2.getSeconds() + 10)
 const waitArrayState = {
     timeToWaitForApiRequestSlots:[newDate_1,newDate_2]
 }
-const Mockstore = ({mockState,children}:{mockState: typeof waitArrayState,children: any}) => (
+export const Mockstore = ({mockState,children}:{mockState: typeof waitArrayState,children: any}) => (
     <Provider
     store={configureStore({
         reducer: {

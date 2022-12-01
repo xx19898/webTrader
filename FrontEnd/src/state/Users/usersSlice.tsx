@@ -12,9 +12,8 @@ export const userSlice = createSlice({
     name: 'users',
     initialState,
     reducers:{
-        SET_NEW_LOGGED_USER: () => {
-            console.log("hello");
-            
+        SET_NEW_LOGGED_USER: (state,action: PayloadAction<string>) => {
+            state.loggedUser = action.payload;
         }
     }
 })

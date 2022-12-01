@@ -5,22 +5,11 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import "./mainPage/mainPage";
+import "./pages/mainPage/mainPage";
 
-import {MainPage} from './mainPage/mainPage';
+import {MainPage} from './pages/mainPage/mainPage';
 
-export const router = createBrowserRouter
-(
-  [
-    {
-    element: <h1>basic</h1>,
-    path: "/"
-  },
-  {
-      element: <MainPage/>,
-      path:"main",
-    }
-  ])
+
 function App() {
   return (
     

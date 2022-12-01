@@ -51,7 +51,9 @@ export  default () => {
     const [chosenTimeSeries,setChosenTimeSeries] = useState("TIME_SERIES_INTRADAY")
     const [chosenTimeIntervalIntraday, setChosenTimeIntervalIntraday] = useState("")
 
-    let apiRequestLimitExceeded = false;
+    const apiRequestLimitExceeded = (timeToWaitForApiRequestSlots.length >= apiCallLimitPerTimeUnit)
+     
+
 
     const handleSubmit = (props:IHandleSubmit) => {
         props.e.preventDefault()
@@ -65,13 +67,17 @@ export  default () => {
         dispatch(dataRequestingDispatch)
         }
   
-     const fetchButtonStatus = () => {
-        if( !apiRequestLimitExceeded && chosenTimeSeries !== TimeSeries.TIME_SERIES_INTRADAY.toString() && chosenSymbolIsCorrect ){
-           return true
+     var checkFetchButtonStatus = () => {
+        if( !apiRequestLimitExceeded &&
+             chosenTimeSeries !== TimeSeries.TIME_SERIES_INTRADAY.toString() &&
+             chosenSymbolIsCorrect ){
+               console.log("first")
+               return true
         }
         if(!apiRequestLimitExceeded &&
            chosenTimeSeries === TimeSeries.TIME_SERIES_INTRADAY.toString() &&
            timeIntervalsIntraday.includes(chosenTimeIntervalIntraday)){
+           console.log("second")
            return true
         }
         return false
@@ -82,10 +88,6 @@ export  default () => {
       },[true])
   
       useEffect(() => {
-        apiRequestLimitExceeded = !(timeToWaitForApiRequestSlots.length >= apiCallLimitPerTimeUnit)
-      })
-  
-      useEffect(() => {
         if(timeToWaitForApiRequestSlots.length != 0){
            timeToWaitForApiRequestSlots.forEach((expirationDate) => {
               if(countDiffBetweenDateAndCurrDateInSeconds(expirationDate) <= 0){
@@ -94,6 +96,8 @@ export  default () => {
            })       
      }
       },[timeToWaitForApiRequestSlots])
+
+      const fetchButtonStatus = checkFetchButtonStatus()
 
       return {
         dispatch: dispatch,
@@ -116,5 +120,7 @@ export  default () => {
 
         chosenTimeIntervalIntraday: chosenTimeIntervalIntraday,
         setChosenTimeIntervalIntraday: setChosenTimeIntervalIntraday,
+
+        fetchButtonStatus: fetchButtonStatus
       }
 }
