@@ -31,11 +31,12 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter{
 		if(request.getServletPath().equals("/login")) {
 			filterChain.doFilter(request, response);
 		} else {
+			//TODO:Switch to cookie implementation of JWT token with secure and same-site flags, continue grinding spring sec
 			String authorizationHeader = request.getHeader(AUTHORIZATION);
 			if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
 				try {
 					String token = authorizationHeader.substring("Bearer ".length());
-					Algorithm algorithm = Algorithm.HMAC256(JWTUtil.secretKey.getBytes());
+					Algorithm algorithm = Algorithm.HMAC256(JWTUtil.privateKey.getBytes());
 					JWTVerifier verifier = JWT.require(algorithm).build();
 					DecodedJWT decodedJWT = verifier.verify(token);
 					String username = decodedJWT.getSubject();

@@ -59,7 +59,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	throws  IOException, ServletException{
 		User user = (User) authentication.getPrincipal();
 		String userId = Long.toString(user.getId());
-		Algorithm algorithm = Algorithm.HMAC256(JWTUtil.secretKey.getBytes());
+		Algorithm algorithm = Algorithm.HMAC256(JWTUtil.privateKey.getBytes());
 		String accessToken = JWT.create()
 				.withSubject(userId)
 				.withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))

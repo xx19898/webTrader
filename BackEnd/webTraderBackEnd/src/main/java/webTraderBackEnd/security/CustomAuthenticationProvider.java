@@ -35,8 +35,8 @@ import webTraderBackEnd.user.service.UserServiceImpl;
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException{
 		System.out.println(authentication.getCredentials().toString());
-		if(! (credentialsExist(authentication) && usernameExists(authentication)) ){
-			return null;
+		if(!(credentialsExist(authentication) && usernameExists(authentication))){
+			throw new BadCredentialsException("Sorry but you've not provided username or the password");
 		}
 		 User userFromDatabase = (User) userDetails.loadUserByUsername(authentication.getName());
 		 System.out.println("password from database: " + userFromDatabase.getPassword());
