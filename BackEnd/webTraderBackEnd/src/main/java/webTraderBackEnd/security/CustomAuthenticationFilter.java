@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -47,7 +48,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		String password = request.getParameter("password");
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,password);
 	    Authentication auth = authenticationManager.authenticate(authenticationToken);
-	    if(auth.equals(null)) {
+	    if(auth.equals(null)){
 	    	System.out.println("WARNING!");
 	    }
 	    System.out.println("credentialss " + auth.getCredentials());
@@ -73,13 +74,19 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 				.withIssuer(request.getRequestURL().toString())
 				.withClaim("roles",  user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 			    .sign(algorithm);
+		response.setHeader("Set-Cookie", "SameSite=strict");
 		
-		response.setHeader("access_token", accessToken);
-		response.setHeader("refresh_token", refreshToken);
+		Cookie jwtAccessTokenCookie = new Cookie("access_cookie",accessToken);
+		jwtAccessTokenCookie.setSecure(true);
+		jwtAccessTokenCookie.setHttpOnly(true);
+		
+		response.addCookie(jwtAccessTokenCookie);
+		
+		Cookie jwtRefreshTokenCookie = new Cookie("refresh_cookie",refreshToken);
+		jwtRefreshTokenCookie.setSecure(true);
+		jwtRefreshTokenCookie.setHttpOnly(true);
+		
+		response.addCookie(jwtRefreshTokenCookie);
+		
 	}
-	
-	
-	
-	
-
 }

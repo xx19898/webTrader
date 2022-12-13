@@ -44,20 +44,4 @@ public class LoginAndRegistrationResource {
 		userService.createNewUser(newUser);
 		return new ResponseEntity<String>(String.format("User %s has successfully been created",newUser.getUsername()),HttpStatus.OK);
 	}
-	
-	@GetMapping(path="/login")
-	public @ResponseBody ResponseEntity<String> login(@RequestBody LoginCredentials loginCredentials){
-		Authentication authenticationObject = new UsernamePasswordAuthenticationToken(loginCredentials.getUsername(),loginCredentials.getPassword());
-		Authentication auth = authProvider.authenticate(authenticationObject);
-		try {
-		    Algorithm algorithm = Algorithm.RSA256(rsaPublicKey, rsaPrivateKey);
-		    String token = JWT.create()
-		        .withIssuer("auth0")
-		        .sign(algorithm);
-		} catch (JWTCreationException exception){
-		    // Invalid Signing configuration / Couldn't convert Claims.
-		}
-		
-	}
-
 }
