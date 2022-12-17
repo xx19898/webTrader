@@ -10,8 +10,6 @@
                 <label className="mt-2">Password</label>
                 <input className="shadow-lg" type="password"></input>
                 <a className="decoration-solid text-blue-400 mt-4 mx-auto" href="url">I forgot password</a>
-                
-                    
             </form>
         </div>
     )

@@ -10,7 +10,7 @@ export const MainPage  = () =>
  {
     return(
     
-    <div className="mx-10 mb-10 flex-col items-center justify-center h-screen w-auto">
+    <div className="mx-5 mb-10 flex-col items-center justify-center h-screen w-auto">
     <h1 className="mt-[50px] text-white font-poppins text-xl text-center font-bold">Welcome to the</h1>
     <h2 className=" text-primary font-poppins text-xl text-center font-bold ">WebTrader</h2>
     <p className="indent-3 text-white mt-[51px] font-poppins text-lg font-bold w-auto text-center">
@@ -33,11 +33,10 @@ manage your portfolio.
         </button>
     </div>
 
-    <div className = "mt-[49px] h-auto rounded-sm flex flex-col justify-start items-center text-lg bg-[#3F1A4D]">
+    <div className = "mt-[49px] h-auto rounded-sm flex flex-col justify-start items-center text-lg bg-primary/70">
     <h1 className="font-bold mt-[20px] text-white">Stock Viewer</h1> 
     <StocksViewer/>
     </div>
-    
     </div>
 
     );
