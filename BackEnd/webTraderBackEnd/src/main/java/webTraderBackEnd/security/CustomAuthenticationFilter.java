@@ -11,8 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.transform.ToListResultTransformer;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -43,15 +47,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	
 	@Override 
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException{
-		System.out.println("attempting authentication");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		if(username == null || password == null) {
+			throw new BadCredentialsException("Bad Credentials!");
+		}
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,password);
 	    Authentication auth = authenticationManager.authenticate(authenticationToken);
 	    if(auth.equals(null)){
-	    	System.out.println("WARNING!");
+	    	throw new AuthenticationServiceException("Something went wrong during authentication");
 	    }
-	    System.out.println("credentialss " + auth.getCredentials());
 	    return auth;
 	}
 	
@@ -68,25 +73,30 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 				.withClaim("roles",  user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 			    .sign(algorithm);
 		
+		int refreshTokenLifetime = 30 * 60;
+		
 		String refreshToken = JWT.create()
 				.withSubject(userId)
-				.withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+				.withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenLifetime))
 				.withIssuer(request.getRequestURL().toString())
 				.withClaim("roles",  user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 			    .sign(algorithm);
+		
 		response.setHeader("Set-Cookie", "SameSite=strict");
 		
-		Cookie jwtAccessTokenCookie = new Cookie("access_cookie",accessToken);
-		jwtAccessTokenCookie.setSecure(true);
-		jwtAccessTokenCookie.setHttpOnly(true);
+		JSONObject accessTokenJSON = new JSONObject();
+		try {
+			accessTokenJSON.put("access_token", accessToken);
+		} catch (JSONException e){
+			System.out.println("");
+		}
 		
-		response.addCookie(jwtAccessTokenCookie);
+		response.getWriter().write(accessTokenJSON.toString());
 		
 		Cookie jwtRefreshTokenCookie = new Cookie("refresh_cookie",refreshToken);
 		jwtRefreshTokenCookie.setSecure(true);
 		jwtRefreshTokenCookie.setHttpOnly(true);
-		
+		jwtRefreshTokenCookie.setMaxAge(refreshTokenLifetime);
 		response.addCookie(jwtRefreshTokenCookie);
-		
 	}
 }

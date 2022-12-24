@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+
 import webTraderBackEnd.stocksRequests.exceptions.HitCounterError;
 import webTraderBackEnd.stocksRequests.stockApiHitCounter.StockApiHitCounterService;
 
@@ -29,5 +31,10 @@ public class ControllerExceptionHandler{
 			e.printStackTrace();
 		}
 		return new ResponseEntity<String>(jsonResponse.toString(),HttpStatus.REQUEST_TIMEOUT);
+	}
+	
+	@ExceptionHandler(JWTVerificationException.class)
+	public ResponseEntity<String> errorDuringJWTVerificationException(JWTVerificationException exception, WebRequest request){
+		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.UNAUTHORIZED);
 	}
 }

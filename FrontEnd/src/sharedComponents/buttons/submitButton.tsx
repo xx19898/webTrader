@@ -10,7 +10,7 @@ interface ISubmitButton {
 export default ({active,text,marginTop}:ISubmitButton) => {
 
     return(
-        <button className="font-poppins font-semibold text-white w-auto h-auto py-2 px-6 text-center mx-auto bg-primary border-solid border-[2px] border-white rounded-sm" style={{marginTop:`${marginTop}rem`}}>
+        <button className="font-poppins font-semibold text-white w-auto h-auto py-2 px-6 text-center mx-auto bg-primary/40 border-solid border-[2px] border-white/60 rounded-sm" style={{marginTop:`${marginTop}rem`}}>
             {text}
         </button>
     )

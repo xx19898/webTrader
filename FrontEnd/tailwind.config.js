@@ -5,6 +5,9 @@ module.exports = {
     ],
     theme: {
       extend:{
+      backgroundImage: {
+        'main-background':"url('../assets/main-background.svg')"
+      },
       fontSize: {
         sm: ['14px', '20px'],
         base: ['16px', '24px'],
