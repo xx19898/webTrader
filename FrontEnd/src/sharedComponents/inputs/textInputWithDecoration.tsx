@@ -25,8 +25,9 @@ export default ({name,value,setValue}:IInputWithDecoration) => {
         onFocus={(e) => onFocus()}
         onChange={(e) => setValue(e)}
         value={value}
-        className=" bg-white px-4 placeholder:italic placeholder:text-black/50 mt-1 rounded-sm w-full h-10 border-solid border-primary border-[3px]"/>
-        <div ref={placeholderRef} className="absolute z-4 p-0 w-full left-0 bottom-[0.5rem] text-gray-900 bg-transparent">{name.toUpperCase()}</div>
+        autoComplete="off"
+        className=" bg-white px-4 placeholder:italic placeholder:text-black/50 mt-1 rounded-sm w-full h-10 border-solid border-primary focus:outline-none border-[3px]"/>
+        <div ref={placeholderRef} className="absolute p-0 left-0 w-full bottom-[0.5rem] text-gray-900 bg-transparent text-center">{name.toUpperCase()}</div>
         </div>
         </div>
         </>

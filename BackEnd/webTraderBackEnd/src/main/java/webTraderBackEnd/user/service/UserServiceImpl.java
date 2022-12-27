@@ -1,11 +1,14 @@
 package webTraderBackEnd.user.service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Optional;
 
+import javax.management.relation.RoleNotFoundException;
 
+import org.assertj.core.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -68,15 +71,23 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 		User user = userOptional.orElseThrow(() -> new UserNotFoundException("User to add role to not found"));
 	}
 	
-	public void createNewUser(User user) {
+	public void createNewUser(User user) throws RoleNotFoundException {
 		//Checking whether the user with the same name already exists in the database
 		Optional<User> userOptional = userRepo.findByUsername(user.getUsername());
+		Optional<Role> roleOptional = roleRepo.findByName("ROLE_USER");
+		
 		if(!userOptional.isEmpty()) {
 			throw new UserAlreadyExistsException(user.getUsername());
 		}
-		saveUser(user);
-			
+		if(roleOptional.isEmpty()) {
+			throw new RoleNotFoundException("No such role found: /USER/");
+		}
 		
+		Role newRole = roleOptional.get();
+		List<Role> roleList = new ArrayList<Role>();
+		roleList.add(newRole);
+		user.setRoles(roleList);
+		saveUser(user);
 	}
 
 	@Override

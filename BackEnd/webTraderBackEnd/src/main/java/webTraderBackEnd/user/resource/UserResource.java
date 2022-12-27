@@ -2,6 +2,8 @@ package webTraderBackEnd.user.resource;
 
 import java.util.List;
 
+import javax.management.relation.RoleNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,7 @@ public class UserResource {
   
   //For adding users via for example admin tab, not registering them 
   @PostMapping(path="/add") // Map ONLY POST Requests
-  public @ResponseBody ResponseEntity<String> addNewUser (@RequestBody User newUser) {
+  public @ResponseBody ResponseEntity<String> addNewUser (@RequestBody User newUser) throws RoleNotFoundException {
     // @ResponseBody means the returned String is the response, not a view name
     // @RequestParam means it is a parameter from the GET or POST request
    

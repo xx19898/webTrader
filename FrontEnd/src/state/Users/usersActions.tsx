@@ -3,15 +3,20 @@ import axios from 'axios';
 import { BASE_URL } from "../../constants/urls";
 
 export interface IUser{
-    password: String,
-    username: String
+    password: string,
+    username: string
 }
 
 export const logIn = (user: IUser) => {
-    axios({
-        method: 'get',
-        url:'${BASE_URL}',
-        data:user
+    const formData = new FormData()
+
+    formData.append('username',user.username)
+    formData.append('password',user.password)
+
+    return axios({
+        method: 'post',
+        url:`${BASE_URL}` + 'login',
+        data:formData
     }).then(
         (response) => {
             return response
@@ -19,5 +24,19 @@ export const logIn = (user: IUser) => {
         .catch( err => {
             console.log(err)
         })
-        }
+    }
+
+export const register = (user:IUser) => {
+    return axios({
+        method: 'post',
+        url:`${BASE_URL}` + 'register',
+        data:user
+    }).then(
+        (response) => {
+            return response
+        })
+        .catch( err => {
+            return err
+        })
+}
 

@@ -21,13 +21,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import webTraderBackEnd.security.CustomAuthenticationFilter;
 import webTraderBackEnd.user.repository.UserRepo;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -65,20 +70,36 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
 		auth.authenticationProvider(customAuthProvider);
 			  }
+
+	
 	
 	@Override
 	protected
 	void configure(HttpSecurity http)throws Exception{
+		http = http.cors().and().csrf().disable();
 		
+		http = http
+				.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and();
 		
+		http = http
+				.exceptionHandling()
+				.authenticationEntryPoint(
+						(request,response,ex) -> {
+							response.sendError(
+									HttpServletResponse.SC_UNAUTHORIZED,
+									ex.getMessage()
+									);
+						}
+						)
+						.and();
 		http
-		  .csrf()
-		  .disable()
 	      .authorizeRequests()
 	      .antMatchers("/admin/**").hasRole("ADMIN")
+	      .antMatchers("/users/all").authenticated()
 	      .antMatchers("/stocks/**").permitAll()
 	      .antMatchers("/stocks/**").anonymous()
-	      .antMatchers("/users/all").authenticated()
 	      .antMatchers("/login").anonymous()
 	      .antMatchers("/login").permitAll()
 	      .anyRequest().permitAll()
@@ -86,6 +107,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	      .addFilter(new CustomAuthenticationFilter(authenticationManagerBean(),bCryptPasswordEncoder))
 		  .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
+	/*
+	@Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source =
+            new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
+	
+	*/
 	
 	@Bean 
 	@Override

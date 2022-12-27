@@ -12,16 +12,22 @@ export default ({value}:{value:string}) => {
 
     useEffect(() => {
         tl.to(placeholderRef.current,{
-            duration: 0.2,
-            x: '1em',
-            y: '-1.3em',
+            duration:0,
             width: 'fit-content',
-            yoyo: true,
-            ease: Linear.easeNone
+            left: '15%'
         }).to(placeholderRef.current,{
             duration: 0.1,
-            paddingLeft: '0.5em',
-            paddingRight: '0.5em',
+            x: '-1em',
+            y: '-1.3em',
+            yoyo: true,
+            ease: Linear.easeIn
+        }).to(placeholderRef.current,{
+            duration: 0,
+            background:'white'
+        }).to(placeholderRef.current,{
+            duration: 0.1,
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
             ease: Linear.easeIn,
         })
     },[])
@@ -31,6 +37,16 @@ export default ({value}:{value:string}) => {
             setFocusOnInput()
         }
     },[focused])
+
+    useEffect(() => {
+        console.log({value:value.length})
+        console.log({focused})
+        if(value.length != 0 && focused === false){
+            console.log("RIGHT! " + value );
+            
+            tl.play()
+        }
+    },[value])
     
     useEffect(() => {
         tl.reversed(!focused)
@@ -68,7 +84,7 @@ export default ({value}:{value:string}) => {
             wrapperRef: wrapperRef,
             inputRef:inputRef,
             placeholderRef: placeholderRef,
-            onFocus:onFocus
+            onFocus:onFocus,
         }
     )
 }

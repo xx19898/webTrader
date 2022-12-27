@@ -17,9 +17,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.transaction.Transactional;
 
 import org.apache.tomcat.util.http.fileupload.util.Streams;
 import org.springframework.data.annotation.CreatedDate;
@@ -69,7 +72,13 @@ public class User implements UserDetails{
   private String password;
   
   @ManyToMany(fetch= FetchType.EAGER)
-  private List<Role> roles = new ArrayList<>();
+  @JoinTable(
+		  name="users_roles",
+		  joinColumns = @JoinColumn(
+				  name="user_id", referencedColumnName = "id"),
+		  inverseJoinColumns = @JoinColumn(
+				  name = "role_id", referencedColumnName = "id"))
+  private Collection<Role> roles;
 
   public Long getId() { 
     return id;
@@ -109,6 +118,11 @@ public String getPassword() {
 
 public Collection<Role> getRoles(){
 	return this.roles;
+}
+
+@Transactional
+public void setRoles(List<Role> newRoles){
+	this.roles = newRoles;
 }
 
 @Override

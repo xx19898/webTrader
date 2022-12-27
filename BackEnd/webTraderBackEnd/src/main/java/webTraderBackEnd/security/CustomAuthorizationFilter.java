@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -48,21 +49,31 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter{
 		if(request.getServletPath().equals("/login") || request.getServletPath().equals("/register")) {
 			filterChain.doFilter(request, response);
 		}else{
-			Cookie [] cookies = request.getCookies();
-			Optional<Cookie> refreshCookie = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("refresh_cookie")).findAny();
+			System.out.println(request.getServletPath());
+			Optional<Cookie []> cookies = Optional.ofNullable(request.getCookies());
+			if( cookies.isEmpty()) throw new NoSuchElementException("no cookies attached to the request"); 
+			Optional<Cookie> refreshCookie = Arrays.stream(cookies.get()).filter(cookie -> cookie.getName().equals("refresh_cookie")).findAny();
 			
 			String accessToken = request.getHeader(AUTHORIZATION);
+			System.out.println("Access token: " + accessToken);
+			if(refreshCookie.isEmpty()) throw new NoSuchElementException("no cookies attached to the request"); 
 			String refreshToken = refreshCookie.get().getValue();
+			
 			Algorithm algorithm = Algorithm.HMAC256(JWTUtil.privateKey.getBytes());
 			JWTVerifier verifier = JWT.require(algorithm).build();
 			try {
 				DecodedJWT decodedAccessToken = verifier.verify(accessToken);
+				setSecurityContext(decodedAccessToken);
+				
 			// Send back new access token
 			}catch(TokenExpiredException e){
+				System.out.println("Access Token Expired! Error");
+				
 				processRefreshToken(response,verifier,refreshToken);
 			}catch(JWTVerificationException e) {
-				// Token validation error
-			}	
+				System.out.println("Caught error :/");
+			}
+			
 			filterChain.doFilter(request, response);
 		}
 		
@@ -75,6 +86,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter{
 		stream(roles).forEach(role -> {
 			authorities.add(new SimpleGrantedAuthority(role));
 		});
+		System.out.println(authorities);
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
 		SecurityContext context = SecurityContextHolder.createEmptyContext();
 		context.setAuthentication(authenticationToken);
@@ -82,7 +94,9 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter{
 	
 	private void processRefreshToken(HttpServletResponse response,JWTVerifier verifier,String refreshToken) throws IOException, ServletException{
 		try {
+			System.out.println("refresh token");
 			DecodedJWT decodedRefreshToken = verifier.verify(refreshToken);
+			System.out.println("REFRESH TOKEN EXPIRATION DATE " + decodedRefreshToken.getExpiresAt());
 			Map<String,Claim> claims = decodedRefreshToken.getClaims();
 			Algorithm algorithm = Algorithm.HMAC256(JWTUtil.privateKey.getBytes());
 			String accessToken = JWT.create()

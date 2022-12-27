@@ -68,12 +68,15 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		Algorithm algorithm = Algorithm.HMAC256(JWTUtil.privateKey.getBytes());
 		String accessToken = JWT.create()
 				.withSubject(userId)
-				.withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+				.withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 1000))
 				.withIssuer(request.getRequestURL().toString())
 				.withClaim("roles",  user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 			    .sign(algorithm);
 		
-		int refreshTokenLifetime = 30 * 60;
+		System.out.println("ACCESS TOKEN EXPIRATION DATE: " + new Date(System.currentTimeMillis() + 1000 * 60 * 1000));
+		
+		int refreshTokenLifetime = 1000 * 3600;
+		
 		
 		String refreshToken = JWT.create()
 				.withSubject(userId)
@@ -82,12 +85,15 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 				.withClaim("roles",  user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 			    .sign(algorithm);
 		
+		System.out.println("REFRESH TOKEN EXPIRATION DATE: " + new Date(System.currentTimeMillis() + refreshTokenLifetime));
+		
 		response.setHeader("Set-Cookie", "SameSite=strict");
 		
 		JSONObject accessTokenJSON = new JSONObject();
-		try {
+		
+		try{
 			accessTokenJSON.put("access_token", accessToken);
-		} catch (JSONException e){
+		}catch (JSONException e){
 			System.out.println("");
 		}
 		

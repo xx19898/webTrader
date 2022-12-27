@@ -16,6 +16,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 
 import webTraderBackEnd.stocksRequests.exceptions.HitCounterError;
 import webTraderBackEnd.stocksRequests.stockApiHitCounter.StockApiHitCounterService;
+import webTraderBackEnd.user.exceptions.UserAlreadyExistsException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler{
@@ -36,5 +37,10 @@ public class ControllerExceptionHandler{
 	@ExceptionHandler(JWTVerificationException.class)
 	public ResponseEntity<String> errorDuringJWTVerificationException(JWTVerificationException exception, WebRequest request){
 		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.UNAUTHORIZED);
+	}
+	
+	@ExceptionHandler(UserAlreadyExistsException.class)
+	public ResponseEntity<String> errorWhenTryingToCreateUserException(UserAlreadyExistsException exception,WebRequest request){
+		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.NOT_ACCEPTABLE);
 	}
 }
