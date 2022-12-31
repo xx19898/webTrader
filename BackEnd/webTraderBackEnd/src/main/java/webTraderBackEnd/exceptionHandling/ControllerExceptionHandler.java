@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -20,6 +21,7 @@ import webTraderBackEnd.user.exceptions.UserAlreadyExistsException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler{
+	
 	@Autowired
 	StockApiHitCounterService apiHitCounter;
 	
@@ -42,5 +44,10 @@ public class ControllerExceptionHandler{
 	@ExceptionHandler(UserAlreadyExistsException.class)
 	public ResponseEntity<String> errorWhenTryingToCreateUserException(UserAlreadyExistsException exception,WebRequest request){
 		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.NOT_ACCEPTABLE);
+	}
+	
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<String> errorWhenTryingToAuthenticate(BadCredentialsException exception,WebRequest request){
+		return new ResponseEntity<String>("Either username or password are incorrect",HttpStatus.UNAUTHORIZED);
 	}
 }

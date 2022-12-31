@@ -77,27 +77,25 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		
 		int refreshTokenLifetime = 1000 * 3600;
 		
-		
 		String refreshToken = JWT.create()
 				.withSubject(userId)
 				.withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenLifetime))
 				.withIssuer(request.getRequestURL().toString())
 				.withClaim("roles",  user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 			    .sign(algorithm);
-		
-		System.out.println("REFRESH TOKEN EXPIRATION DATE: " + new Date(System.currentTimeMillis() + refreshTokenLifetime));
-		
+				
 		response.setHeader("Set-Cookie", "SameSite=strict");
 		
-		JSONObject accessTokenJSON = new JSONObject();
+		JSONObject responseJSON = new JSONObject();
 		
 		try{
-			accessTokenJSON.put("access_token", accessToken);
+			responseJSON.put("access_token", accessToken);
+			responseJSON.put("logged_in_user", user.getUsername());
 		}catch (JSONException e){
-			System.out.println("");
+			throw new InternalError("Caught an exception while trying to create json response for user trying to log in");
 		}
 		
-		response.getWriter().write(accessTokenJSON.toString());
+		response.getWriter().write(responseJSON.toString());
 		
 		Cookie jwtRefreshTokenCookie = new Cookie("refresh_cookie",refreshToken);
 		jwtRefreshTokenCookie.setSecure(true);

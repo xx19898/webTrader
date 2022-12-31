@@ -1,23 +1,29 @@
 import {RootState} from "../../store";
 import axios from 'axios';
-import { BASE_URL } from "../../constants/urls";
+import { BASE_URL, LOGIN_URL } from "../../constants/urls";
 
 export interface IUser{
     password: string,
     username: string
 }
 
-export const logIn = (user: IUser) => {
+export const constructAxiosBodyForLoginRequest = (user:IUser) => {
     const formData = new FormData()
 
     formData.append('username',user.username)
     formData.append('password',user.password)
 
-    return axios({
+    return ({
         method: 'post',
-        url:`${BASE_URL}` + 'login',
+        url:LOGIN_URL,
         data:formData
-    }).then(
+    })
+}
+
+export const logIn = (user: IUser) => {
+    const axiosRequestBody = constructAxiosBodyForLoginRequest(user)
+
+    const AxiosRequest = axios(axiosRequestBody).then(
         (response) => {
             return response
         })

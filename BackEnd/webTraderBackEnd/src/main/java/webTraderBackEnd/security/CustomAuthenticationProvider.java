@@ -30,26 +30,26 @@ import webTraderBackEnd.user.service.UserServiceImpl;
 		this.userDetails = userDetails;
 	}
 	
-	
+	public Authentication performAuthentication(Authentication authentication){
+		try{
+			User userFromDatabase = (User) userDetails.loadUserByUsername(authentication.getName());
+			 //CONTINUE BY CHECKING WHETHER THE AUTHENTICATION'S PASSWORD MATCHES THE PASSWORD OF "USER" VARIABLE,
+			 //IF YES, CREATE SUCCESSFUL AUTHENTICATION METHOD JUST AS IN ORIGINAL DAOAUTHENTICATIONPROVIDER ON GITHUB
+			if(passwordEncoder.matches(authentication.getCredentials().toString(), userFromDatabase.getPassword())){
+				UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(userFromDatabase,null,null);
+				 return result;
+				 }
+			throw new BadCredentialsException("Sorry, the password you entered is not valid :/");
+			}catch(UsernameNotFoundException exception) {
+				 throw new BadCredentialsException("Sorry, but either username or the password you entered is not valid :/");
+			 }
+	}
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException{
-		System.out.println(authentication.getCredentials().toString());
-		if(!(credentialsExist(authentication) && usernameExists(authentication))){
-			throw new BadCredentialsException("Sorry but you've not provided username or the password");
-		}
-		 User userFromDatabase = (User) userDetails.loadUserByUsername(authentication.getName());
-		 System.out.println("password from database: " + userFromDatabase.getPassword());
-		 //CONTINUE BY CHECKING WHETHER THE AUTHENTICATION'S PASSWORD MATCHES THE PASSWORD OF "USER" VARIABLE,
-		 //IF YES, CREATE SUCCESSFUL AUTHENTICATION METHOD JUST AS IN ORIGINAL DAOAUTHENTICATIONPROVIDER ON GITHUB
-		 if(passwordEncoder.matches(authentication.getCredentials().toString(), userFromDatabase.getPassword())) {
-			 UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(userFromDatabase,
-					 null,
-					 null
-					 );
-			 return result;
-		 }
-		 throw new BadCredentialsException("Sorry, but either username or the password you entered is not valid :/");
+		usernameAndCredentialsAreAttached(authentication);
+		Authentication successfulAuthentication = performAuthentication(authentication);
+		return successfulAuthentication;
 	}
 	
 
@@ -59,20 +59,13 @@ import webTraderBackEnd.user.service.UserServiceImpl;
 	}
 	
 	//Checks whether credentials are attached to the request or not
-	public boolean credentialsExist(final Authentication authentication) {
+	public void usernameAndCredentialsAreAttached(final Authentication authentication){
 		if(authentication.getCredentials() == null) {
-			throw new BadCredentialsException("Bad Credentials");
+			throw new BadCredentialsException("No password attached");
 		}
-		return true;
-	}
-	
-	//checking that username exists
-	public boolean usernameExists(final Authentication authentication) {
 		if(authentication.getPrincipal() == null) {
 			throw new UsernameNotFoundException("No username attached");
 		}
-		return true;
 	}
-
 }
 
