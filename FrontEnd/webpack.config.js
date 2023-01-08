@@ -1,5 +1,4 @@
 const path = require('path');
-const HTMPWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     mode: 'development',
@@ -8,7 +7,7 @@ module.exports = {
     output:{
         path: path.join(__dirname, '/dist'),
         filename: 'bundle.js',
-        publicPath : '/'
+        publicPath : '/',
     },
 
     plugins: [
@@ -43,7 +42,7 @@ module.exports = {
                         loader: 'ts-loader',
                         options: {
                           compilerOptions: {noEmit: false},
-                        }
+                      }
                       },
                     ],
                   },
