@@ -13,8 +13,6 @@ export const MainPage  = () => {
     const loggedInUser = useSelector((state:RootState) => state.users.loggedUser)
     const userIsAuthenticated = loggedInUser != undefined
 
-    
-
     return (<AuthenticatedMainPage authenticatedUser={'Test User'}/>)
 }
 

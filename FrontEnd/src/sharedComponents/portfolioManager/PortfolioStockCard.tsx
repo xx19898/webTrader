@@ -1,39 +1,57 @@
 import React,{useState,useEffect} from 'react'
+import {v4 as uuidv} from 'uuid'
 import { useDispatch  } from 'react-redux'
-import { StockInPortfolio } from './portfolioDataSchemas'
+import { StockInPortfolio, stockPriceData } from './portfolioDataSchemas'
 import { RootState } from '../../store'
 import { useAppSelector } from '../../reduxHooks'
-import { CONNECT, DISCONNECT } from '../../state/Sockets/socketsSlice'
+//import { CONNECT, DISCONNECT } from '../../state/Sockets/socketsSlice'
+import { finnhubToken } from '../../constants/stocksRelatedConstants'
+
+const finnhubSocket =  new WebSocket(`wss://ws.finnhub.io?token=${finnhubToken}`)
 
 interface IPortfolioStockCard{
     data:StockInPortfolio
 }
 
 const PortfolioStockCard = (props:IPortfolioStockCard) => {
-    const dispatch = useDispatch()
-    const finnhubSocket = useAppSelector( state => state.sockets.finnhubSocket)
-    const [currentStockPrice,setCurrentStockPrice] = useState(undefined)
+    const [currentStockPrice,setCurrentStockPrice] = useState<undefined | number>(undefined)
     const {name,dateOfAcquisition,quantity,priceOfAcquisition} = props.data
     useEffect(() => {
-      dispatch(CONNECT())
-      finnhubSocket.on('connect',() => {
-        console.log("CONNECTED!")
-        finnhubSocket.emit(JSON.stringify({'type':'subscribe', 'symbol':name}))
-        finnhubSocket.on('message',(event:any) => {
-            console.log(event.data)
-            setCurrentStockPrice(event.data)
-        })
+      finnhubSocket.addEventListener('open', () => {
+        console.log("CONNECTION OPENED")
+        finnhubSocket.send(JSON.stringify({'type':'subscribe','symbol':'AAPL'}))
+      })
+      finnhubSocket.addEventListener('message',function(event){
+        const data = JSON.parse(event.data)
+        console.log(data)
+        const parsedData = stockPriceData.parse(data)
+        const lastEntry = parsedData.data[data.data.length - 1].p
+        setCurrentStockPrice(lastEntry)
       })
       return () => {
-        finnhubSocket.off('connect')
-        finnhubSocket.off('message')
-        dispatch(DISCONNECT())
+        finnhubSocket.send(JSON.stringify({'type':'unsubscribe','symbol':name}))
+        finnhubSocket.removeEventListener('open',() => finnhubSocket.send(JSON.stringify({'type':'subscribe','symbol':props.data.name})))
       }
     }, [])
+    const x = {"data":
+    [{
+      "c":["1","24","12"],"p":133.55,"s":"AAPL","t":1673521938710,"v":10
+    },{
+      "c":["1","24","12"],"p":133.55,"s":"AAPL","t":1673521938710,"v":10
+    },{
+      "c":["1","8","24","12"],"p":133.55,"s":"AAPL","t":1673521938710,"v":33
+    }],
+    "type":"trade"}
+    
     
     return (
-        <li className="flex flex-col p-4 bg-white m-2 rounded-lg shadow-lg">
-            <h1></h1>
+        <li key={uuidv()} className="grid gap-2 grid-cols-2 grid-rows-2 p-6 bg-darker-secondary-2 m-2 rounded-lg drop-shadow-md drop-shadow- shadow-lg text-secondary-2">
+          
+            <div className="relative left-[20%] font-semibold text-white">Name: </div><div className="font-normal text-lg text-center  text-white">{name}</div>
+            <div className="relative left-[20%] font-semibold text-white">Date of acquisition</div><div className="font-normal text-center text-white">{dateOfAcquisition.toLocaleString().split(',')[0]}</div>
+            <div className="relative left-[20%] font-semibold text-white">Original Price</div><div className="font-normal text-center text-white">{priceOfAcquisition}</div>
+            <div className="relative left-[20%] font-semibold text-white">Quantity</div><div className="font-normal text-center text-white">{quantity}</div>
+            <div className="relative left-[20%] font-semibold text-white">Current Price</div><div className="font-normal text-center text-secondary">{currentStockPrice}</div>
         </li>
     )
 }

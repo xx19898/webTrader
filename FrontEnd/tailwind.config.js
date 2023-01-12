@@ -25,7 +25,8 @@ module.exports = {
           'secondary':"#4A0263",
           'secondary-2':"#2D2D2D",
           'sec-primary':"#3E3E3E",
-          'white':"#FFFFFF"
+          'white':"#FFFFFF",
+          'darker-secondary-2':"#232323"
         },
         fontFamily:{
           'poppins': ['Poppins','sans-serif']

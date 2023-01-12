@@ -2,9 +2,15 @@ import { createSlice } from "@reduxjs/toolkit";
 import { finnhubToken } from "../../constants/stocksRelatedConstants";
 import {io} from "socket.io-client"
 
-const finnhubSocket = io('wss://ws.finnhub.io',{
-  path: `?token=${finnhubToken}&`},
-
+/*
+const finnhubSocket = io('wss://ws.finnhub.io',
+{
+    transports: ['websocket'],
+    path: '/',
+    query: {
+        token: `${finnhubToken}`,
+  },
+},
   )
 
 
@@ -28,3 +34,4 @@ export const socketsSlice = createSlice({
 })
 
 export const {CONNECT,DISCONNECT} = socketsSlice.actions
+*/
