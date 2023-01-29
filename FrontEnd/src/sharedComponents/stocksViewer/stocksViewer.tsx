@@ -98,7 +98,7 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
    }
    return(
       <>
-      <p className="text-white indent-2 p-4 mt-5 mb-3 border-white rounded-md border-2 text-center">Nothing to show here yet</p>
+      <p className="text-white indent-2 p-4 mt-5 mb-3 border-white rounded-none border-2 text-center">Nothing to show here yet</p>
       </>
    )
 }

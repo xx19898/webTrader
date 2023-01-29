@@ -6,20 +6,22 @@ import { RootState } from '../../store'
 import { useAppSelector } from '../../reduxHooks'
 //import { CONNECT, DISCONNECT } from '../../state/Sockets/socketsSlice'
 import { finnhubToken } from '../../constants/stocksRelatedConstants'
+import GsapPreloader from '../preloaders/gsapPreloader'
 
 const finnhubSocket =  new WebSocket(`wss://ws.finnhub.io?token=${finnhubToken}`)
 
 interface IPortfolioStockCard{
     data:StockInPortfolio
 }
-
+//TODO: lift the forming of the connection up to the stock portfolio manager, as there should only be one active connection.
+//TODO: subscribing to the symbol can be kept to the stock card 
 const PortfolioStockCard = (props:IPortfolioStockCard) => {
     const [currentStockPrice,setCurrentStockPrice] = useState<undefined | number>(undefined)
     const {name,dateOfAcquisition,quantity,priceOfAcquisition} = props.data
     useEffect(() => {
       finnhubSocket.addEventListener('open', () => {
         console.log("CONNECTION OPENED")
-        finnhubSocket.send(JSON.stringify({'type':'subscribe','symbol':'AAPL'}))
+        finnhubSocket.send(JSON.stringify({'type':'subscribe','symbol':name}))
       })
       finnhubSocket.addEventListener('message',function(event){
         const data = JSON.parse(event.data)
@@ -46,12 +48,11 @@ const PortfolioStockCard = (props:IPortfolioStockCard) => {
     
     return (
         <li key={uuidv()} className="grid gap-2 grid-cols-2 grid-rows-2 p-6 bg-darker-secondary-2 m-2 rounded-lg drop-shadow-md drop-shadow- shadow-lg text-secondary-2">
-          
             <div className="relative left-[20%] font-semibold text-white">Name: </div><div className="font-normal text-lg text-center  text-white">{name}</div>
             <div className="relative left-[20%] font-semibold text-white">Date of acquisition</div><div className="font-normal text-center text-white">{dateOfAcquisition.toLocaleString().split(',')[0]}</div>
             <div className="relative left-[20%] font-semibold text-white">Original Price</div><div className="font-normal text-center text-white">{priceOfAcquisition}</div>
             <div className="relative left-[20%] font-semibold text-white">Quantity</div><div className="font-normal text-center text-white">{quantity}</div>
-            <div className="relative left-[20%] font-semibold text-white">Current Price</div><div className="font-normal text-center text-secondary">{currentStockPrice}</div>
+            <div className="relative left-[20%] font-semibold text-white">Current Price</div><div className="font-normal text-center  flex justify-center items-center text-white">{currentStockPrice}</div>
         </li>
     )
 }

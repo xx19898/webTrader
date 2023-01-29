@@ -2,6 +2,9 @@ import { createBrowserRouter } from "react-router-dom";
 import LoginPage from "../pages/loginAndRegister/loginPage";
 import RegisterPage from "../pages/loginAndRegister/registerPage";
 import { MainPage } from "../pages/mainPage/mainPage";
+import PortfolioManagerPage from "../pages/PortfolioManagerPage";
+import StocksViewerPage from "../pages/StocksViewerPage";
+import ProtectedRouteWrapper from "./protectedRouteWrapper";
 
 
 export const router = createBrowserRouter
@@ -23,4 +26,12 @@ export const router = createBrowserRouter
     element: <RegisterPage/>,
     path:"register"
   },
+  {
+    element: <ProtectedRouteWrapper protectedComponent={<StocksViewerPage />} />,
+    path: "stocksViewer"
+  },
+  {
+    element: <ProtectedRouteWrapper protectedComponent={<PortfolioManagerPage />} />,
+    path: "portfolioManager"
+  }
   ])
