@@ -22,7 +22,7 @@ export const portfolioMockData: Portfolio = {
 
 const PortfolioManager = ({}) => {
     const dispatch = useDispatch()
-
+    //TODO: start implementing filing and removing stock deals
     return(
     <>    
     <PortfolioVisualizer 
