@@ -16,6 +16,7 @@ export const constructAxiosBodyForLoginRequest = (user:IUser) => {
     return ({
         method: 'post',
         url:LOGIN_URL,
+        withCredentials:true,
         data:formData
     })
 }

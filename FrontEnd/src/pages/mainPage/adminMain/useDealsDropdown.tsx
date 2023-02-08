@@ -1,5 +1,6 @@
 import axios from "axios"
 import { BASE_URL } from "../../../constants/urls"
+import { DealStatus } from "../../../sharedComponents/portfolioManager/portfolioDataSchemas"
 
 
 export default () => {
@@ -8,7 +9,7 @@ export default () => {
         boolean: 'DISAPPROVED'
     }
 
-    function handleChangeDealStatus({id,newStatus}:{id:number,newStatus: "APPROVED" | "DISAPPROVED" | "PENDING"}){
+    function handleChangeDealStatus({id,newStatus}:{id:number,newStatus: DealStatus}){
         return axios({
             method: 'patch',
             url: BASE_URL + '/admin/changeDealStatus',

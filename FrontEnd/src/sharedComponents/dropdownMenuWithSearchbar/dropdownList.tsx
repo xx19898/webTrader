@@ -62,12 +62,11 @@ interface IDropDownList{
     listItemSize: number,
     filteredData: string[],
     chosenElement: string,
-    dataToVisualise: IStockSymbolList,
     setValue: (newValue: string) => void
     setHighlightedValue: (newHighlightedValue: string) => void,
 }
 
-const DropdownList = ({filteredData,chosenElement,dataToVisualise,listItemSize,setValue,setHighlightedValue}:IDropDownList) => {
+const DropdownList = ({filteredData,chosenElement,listItemSize,setValue,setHighlightedValue}:IDropDownList) => {
 
         
         //Rendering full list of 12k elements,thus using virtualized
@@ -78,11 +77,12 @@ const DropdownList = ({filteredData,chosenElement,dataToVisualise,listItemSize,s
             </div>
             )
 
-            //No symbols found on the query
+        //No items found on the query
         }else if(filteredData.length === 0){
                 return <li className="w-auto bg-gray-300 content-end  text-right h-[30px]" key={uuidv4()}>
                     <p className="mr-[20px]">{"None found"}</p>
                       </li>
+
         //Showing symbols that were found on the query
         }else{
              return <>{
@@ -101,7 +101,7 @@ const DropdownList = ({filteredData,chosenElement,dataToVisualise,listItemSize,s
                             return(
                             (index === filteredData.length - 1) 
                             ?
-                            <li className="w-full overflow-hidden h-[30px] bg-gray-300 content-end  text-right
+                            <li className="absolute w-full overflow-hidden h-[30px] bg-gray-300 content-end  text-right
                             hover:bg-primary hover:cursor-pointer" 
                             onClick={() => {
                                 setValue(element)

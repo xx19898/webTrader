@@ -84,7 +84,9 @@ export  default () => {
      }
   
       useEffect(() => {
-          dispatch({type:GET_SYMBOLS});
+         if(symbols.length == 0){
+          dispatch({type:GET_SYMBOLS})
+         }
       },[true])
   
       useEffect(() => {

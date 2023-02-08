@@ -127,11 +127,12 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
     return(
         <>
         <form 
-        className=" w-full flex flex-col align-stretch justify-stretch"
+        className="w-full flex flex-col align-stretch justify-stretch"
         onSubmit={(e) => handleSubmit({e:e})}>
          
         <label className="text-white mb-[5px]">Symbol</label>
-        <DropDownTextMenu 
+        <DropDownTextMenu
+        nameOfItem="symbol"
         dataToVisualise={symbols}
         setChosenValue={setChosenSymbol}
         chosenValue={chosenSymbol}

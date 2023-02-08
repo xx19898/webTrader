@@ -1,19 +1,23 @@
 import gsap from "gsap"
 import { useEffect, useRef } from "react"
+import { DealStatus } from "../../../sharedComponents/portfolioManager/portfolioDataSchemas"
 import DealsDropdown from "./dealsDropdown"
 import MessageDropdown from "./messageDropdown"
+
+const pending: DealStatus = 'PENDING'
 
 const data = [{
     user: "user1",
     messages: [{message:"Hi, could you please book me some time this week?",date:new Date(2022,10,10)}],
     deals:[
-        {stockName:"AAPL",quantity:4,totalPrice:800,priceOfStock:200}
+        {
+            id:1,stockName:"AAPL",quantity:4,totalPrice:800,priceOfStock:200,status: 'PENDING' as const}
     ]
 },{
     user:"user2",
     messages: [{message:"Hello, how are you doing today?",date:new Date(2022,9,4)},{message:"What do you recommend on buying today?",date:new Date(2022,10,8)}],
     deals:[{
-        stockName:"GGL",quantity: 2, totalPrice:1500,priceOfStock:750
+        id:2,stockName:"GGL",quantity: 2, totalPrice:1500,priceOfStock:750,status: 'PENDING' as const
     }]
 }
 

@@ -4,7 +4,7 @@ import { RegisterIcon } from "../../icons/registerIcon"
 import { router } from "../../routing/mainRouter"
 
 
-    const unlogged = () => {
+    export default  () => {
         const router = useNavigate() 
         return(
         <div className=" bg-secondary-2 w-auto h-full flex flex-col justify-start items-center content-center">
@@ -40,4 +40,3 @@ import { router } from "../../routing/mainRouter"
 
     }
     
-    export default unlogged

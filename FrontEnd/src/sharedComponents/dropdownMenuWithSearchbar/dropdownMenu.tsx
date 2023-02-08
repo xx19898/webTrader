@@ -5,6 +5,7 @@ import useDropDownMenu from "./useDropDownMenu"
 import DropdownList from './dropdownList'
 import { IStockSymbolList } from '../../state/Stocks/stocksZodSchemas'
 import BaseDropDown from './baseDropdown'
+import useDeepCompareEffect from 'use-deep-compare-effect'
 
 
 
@@ -20,19 +21,34 @@ function useOutsideAlerter(ref:any,closeDropdown : () => void){
             document.removeEventListener("mousedown", handleClickOutside)
         }
     },[ref])
+
+}
+
+interface DataToVisualise{
+    [x: string | number]: unknown
 }
 
 
+
 interface IDropDownMenu{
-    dataToVisualise: IStockSymbolList,
+    dataToVisualise: DataToVisualise[],
+    nameOfItem:string,
     chosenValue: string,
     setChosenValue: (newValue:string) => void,
     isCorrect: boolean,
     setIsCorrect: (status:boolean) => void,
 }
-export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue,isCorrect,setIsCorrect}:IDropDownMenu) => {
-    const symbols = useMemo(() => {
-        return dataToVisualise.map(item => item.symbol)
+
+export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue,isCorrect,setIsCorrect,nameOfItem}:IDropDownMenu) => {
+
+    useDeepCompareEffect(() => {
+        dataToVisualise.forEach( item => {
+            if(!(nameOfItem in item)) throw new Error(nameOfItem + " not in data to visualise")
+        })
+    },[dataToVisualise])
+    
+    const symbols = useMemo(() => { 
+        return dataToVisualise.map(item => item[nameOfItem] as string)
     },[dataToVisualise])
         
     const {
@@ -70,7 +86,6 @@ export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue,isC
 
                         <DropdownList 
                         chosenElement={chosenElement}
-                        dataToVisualise={dataToVisualise}
                         filteredData={filteredData}
                         listItemSize={30}
                         setValue={clickOnListItem}

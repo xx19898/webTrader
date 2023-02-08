@@ -1,5 +1,6 @@
 import { useState,useRef } from "react"
 import { trackPromise, usePromiseTracker } from "react-promise-tracker"
+import { DealStatus } from "../../../sharedComponents/portfolioManager/portfolioDataSchemas"
 import GsapPreloader from "../../../sharedComponents/preloaders/gsapPreloader"
 import useAnimatedDropdown from "./useAnimatedDropdown"
 import useDealsDropdown from "./useDealsDropdown"
@@ -9,7 +10,7 @@ interface IDealsDropdown{
     deals:{
         id: number,
         stockName:string,
-        status: 'APPROVED' | 'DISAPPROVED' | 'PENDING'
+        status: DealStatus,
         quantity:number,
         totalPrice:number,
         priceOfStock:number

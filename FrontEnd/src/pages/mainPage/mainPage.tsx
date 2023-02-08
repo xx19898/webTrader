@@ -8,13 +8,23 @@ import { useNavigate } from "react-router";
 import PortfolioManager from "../../sharedComponents/portfolioManager/portfolioManager";
 import { AuthenticatedMainPage } from "./authenticatedMainPage";
 import AdminMainPage from "./adminMain/adminMainPage";
+import AnonymousMainPage from "./anonymousMainPage";
 
+//{userIsAuthenticated ?  <AuthenticatedMainPage  authenticatedUser={loggedInUser}/> :
+//<AnonymousMainPage />
 
 export const MainPage  = () => {
     const loggedInUser = useSelector((state:RootState) => state.users.loggedUser)
     const userIsAuthenticated = loggedInUser != undefined
 
-    return (<AdminMainPage />)
+    return(
+        <>
+         {
+         userIsAuthenticated ?  <AuthenticatedMainPage  authenticatedUser={loggedInUser}/> :
+         <AnonymousMainPage />
+         }
+        </>
+    )
 }
 
 

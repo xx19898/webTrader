@@ -9,6 +9,10 @@ const stockInPortfolio = z.object({
                 
 export type StockInPortfolio = z.infer<typeof stockInPortfolio>
 
+export type DealStatus = 'PENDING' | 'APPROVED' | 'DISAPPROVED'
+
+export type OperationType = 'BUY' | 'SELL' | 'NONE'
+
 const portfolioSchema = z.object({
     balance:z.number(),
     stocksInPortfolio:z.array(
