@@ -90,11 +90,11 @@ export default ({stocks}:IStockDealForm) => {
             onChange={(e) => formDispatchInterceptor({type:"PRICE",payload:e.target.value})}
             className={(formState.PRICE === undefined || formState.PRICE.toString().trim().length === 0) ? "focus:outline-none pl-4 h-[44px] border-solid border-2 border-red-500 " : "h-[44px] pl-4 focus:outline-none"}
             />
-            <button className="text-white bg-secondary py-2" onClick={(e) => {
+            <button className={formState.OPERATION_TYPE === 'BUY' ? "text-white bg-primary py-2 shadow-[0px_0px_10px_3px_rgba(74,2,99,0.7)]" : "text-white font-sans bg-secondary py-2 shadow-[0px_0px_10px_3px_rgba(74,2,99,0.7)]"} onClick={(e) => {
                 e.preventDefault()
                 formDispatch({type:'OPERATION_TYPE',payload:'BUY'})
             }}>BUY</button>
-            <button className="text-white bg-secondary py-2" onClick={(e) => {
+            <button className={formState.OPERATION_TYPE === 'SELL' ? "text-white bg-primary py-2 shadow-[0px_0px_10px_3px_rgba(74,2,99,0.7)]" : "text-white bg-secondary py-2 shadow-[0px_0px_10px_3px_rgba(74,2,99,0.7)]"} onClick={(e) => {
                 e.preventDefault()
                 formDispatch({type:'OPERATION_TYPE',payload:'SELL'})
             }}>SELL</button>

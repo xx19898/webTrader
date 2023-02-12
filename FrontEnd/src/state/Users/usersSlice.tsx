@@ -1,14 +1,19 @@
 import {createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
+import { StockDeal } from '../../sharedComponents/portfolioManager/stockDealVisualizer';
 
 interface IUserState{
     loggedUser?: string,
-    accessToken?: string    
+    accessToken?: string,
+    stockDeals?:StockDeals  
 }
 const initialState: IUserState = {
     loggedUser: undefined,
     accessToken: undefined,
+    stockDeals: undefined,
 }
+
+type StockDeals = StockDeal[]
 
 export const userSlice = createSlice({
     name: 'users',
@@ -21,6 +26,10 @@ export const userSlice = createSlice({
         SET_NEW_ACCESS_TOKEN:(state, action:PayloadAction<string>) => {
             state.accessToken = action.payload
         },
+        UPDATE_STOCK_DEALS:(state, action:PayloadAction<StockDeals>) => {
+            state.stockDeals = action.payload
+        },
+        
     }
 })
 

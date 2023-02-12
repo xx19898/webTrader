@@ -1,6 +1,7 @@
 import {RootState} from "../../store";
 import axios from 'axios';
 import { BASE_URL, LOGIN_URL } from "../../constants/urls";
+import { stockDealSchema, stockDealsSchema } from "../../sharedComponents/portfolioManager/stockDealVisualizer";
 
 export interface IUser{
     password: string,
@@ -46,4 +47,21 @@ export const register = (user:IUser) => {
             return err
         })
 }
+
+export const getLatestStockDeals = (accessToken:string) => {
+    return axios({
+        method: 'get',
+        headers: {
+            Authorisation: accessToken
+        },
+        withCredentials:true,
+        url: BASE_URL + 'users/getStockDeals'
+    }).then(result => {
+        const parsedServerResponse = stockDealsSchema.parse(result)
+        return parsedServerResponse
+    })
+}
+
+
+
 

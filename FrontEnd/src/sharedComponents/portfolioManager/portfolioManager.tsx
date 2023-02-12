@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux"
 import PortfolioVisualizer from "./portfolioVisualizer"
 import { Portfolio } from "./portfolioDataSchemas"
 import StockDealForm from "./stockDealForm"
+import StockDealVisualizer from "./stockDealVisualizer"
 
 export const portfolioMockData: Portfolio = {
     balance: 12013,
@@ -31,6 +32,9 @@ const PortfolioManager = ({}) => {
     />
     <div className="mt-10">
     <StockDealForm stocks={portfolioMockData.stocksInPortfolio} />
+    </div>
+    <div className="mt-10">
+        <StockDealVisualizer />
     </div>
     </>
     )

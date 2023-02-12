@@ -25,7 +25,7 @@ import { router } from "../../routing/mainRouter"
                 <button
                 onClick={(event) => router('/register')}
                 className="bg-primary text-white w-40 h-10 p-2 flex flex-row justify-center items-center text-center content-between gap-2 rounded-sm">
-                    <RegisterIcon height={25}/>
+                    <RegisterIcon height={25} />
                     Register 
                 </button>
             </div>

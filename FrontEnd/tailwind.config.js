@@ -29,7 +29,7 @@ module.exports = {
           'darker-secondary-2':"#232323"
         },
         fontFamily:{
-          'poppins': ['Poppins','sans-serif']
+          poppins: ['Poppins','sans-serif']
       },
     },
   },
