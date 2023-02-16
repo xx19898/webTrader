@@ -11,7 +11,7 @@ import { UPDATE_STOCK_DEALS } from "../../state/Users/usersActionTypes"
 export const stockDealSchema = z.object({
     id: z.number(),
     symbol: z.string(),
-    dealStatus: z.enum(['PENDING','APPROVED','DISAPPROVED','CANCELLED BY USER']),
+    dealStatus: z.enum(['PENDING','APPROVED','DISAPPROVED','CANCELLED']),
     quantity: z.number(),
     price: z.number(),
     operationType: z.enum(['BUY','SELL']),
@@ -41,7 +41,7 @@ const stockDealMockData: StockDeal[] = [{
 ]
 
 export default () => {
-    const [stockDeals,setStockDeals] = useState<StockDeal[]>()
+    const stockDeals = useAppSelector(state => state.users.stockDeals)
     const reduxDispatch = useDispatch()
     const accessToken = useAppSelector(state => state.users.accessToken)
     useEffect(() => {
@@ -60,11 +60,16 @@ export default () => {
                     stockDeals.map(stockDeal => {
                         return(
                         <li className="h-auto w-full my-6 py-2 bg-darker-secondary-2">
+                            {
+                            stockDeal.dealStatus != 'CANCELLED' ? 
                             <div className="h-[30px] flex justify-end items-center">
-                                <button className="m-6" onClick={() => cancelStockDeal(stockDeal.id,accessToken as string)}>
-                                    <RedCrossIcon height={20} />
-                                </button>
+                            <button className="m-6" onClick={() => cancelStockDeal(stockDeal.id,accessToken as string)}>
+                                <RedCrossIcon height={20} />
+                            </button>
                             </div>
+                            :
+                            null
+                            }
                             <div className="grid grid-cols-2 text-center">
                             <h2 className="text-white">Symbol</h2> <p className="text-white font-semibold">{stockDeal.symbol}</p>
                             <h2 className="text-white">Price</h2> <p className="text-white font-semibold">{stockDeal.price}</p> 

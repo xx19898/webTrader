@@ -12,14 +12,19 @@ import { stockDataApiResponse, StockDataApiResponse, symbolListSchema} from "./s
 
 
 
-export const getSymbols  = async () => {
+export const getSymbols  = async (accessToken:string) => {
     const response = await axios.request<ISymbolList>({
         method: 'get',
-        url: 'https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=demo'
+        headers:{
+            Authorization: accessToken,
+        },
+        withCredentials: true,
+        url: BASE_URL + 'stocks/symbols'
     });
     const processedResponse = processListOfSymbols(response.data.toString());
     const validatedSymbolList = symbolListSchema.parse(processedResponse);
     return validatedSymbolList;
+    //NO PROBLEMS HERE
 }
 
 //TODO: test

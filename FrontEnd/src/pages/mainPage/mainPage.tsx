@@ -20,7 +20,8 @@ export const MainPage  = () => {
     return(
         <>
          {
-         <AuthenticatedMainPage authenticatedUser="xd" />
+         userIsAuthenticated ?  <AuthenticatedMainPage  authenticatedUser={loggedInUser}/> :
+         <AnonymousMainPage />
          }
         </>
     )

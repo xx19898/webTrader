@@ -52,13 +52,16 @@ export const getLatestStockDeals = (accessToken:string) => {
     return axios({
         method: 'get',
         headers: {
-            Authorisation: accessToken
+            Authorization: accessToken
         },
         withCredentials:true,
         url: BASE_URL + 'users/getStockDeals'
     }).then(result => {
-        const parsedServerResponse = stockDealsSchema.parse(result)
-        return parsedServerResponse
+        if(Object.keys(result).length === 0){
+            const parsedServerResponse = stockDealSchema.parse(result)
+            return parsedServerResponse
+        }
+        else return []
     })
 }
 

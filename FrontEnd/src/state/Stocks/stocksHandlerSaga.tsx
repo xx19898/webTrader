@@ -1,8 +1,9 @@
 import { getStockData, getSymbols, IStockQueryParams} from "./stocksActions";
-import {put, call, SagaReturnType, CallEffect, PutEffect} from 'redux-saga/effects'
+import {put, call, SagaReturnType, CallEffect, PutEffect, SelectEffect, select} from 'redux-saga/effects'
 import { IStockSymbolList, ITimeToWaitForApiRequestSlots, StockDataApiResponse, timeToWaitForApiRequestSlots } from "./stocksZodSchemas";
 import { RENEW_API_REQUEST_SLOTS, UPDATE_CURRENT_STOCKS, UPDATE_SYMBOL_LIST } from "./stocksSlice";
 import axios from "axios";
+import { RootState } from '../../store';
 
 
 
@@ -24,9 +25,8 @@ Generator<CallEffect<StockDataApiResponse> |  PutEffect<{type:string,payload:Sto
                      StockDataApiResponse>                                                                                                                           
 {
     try{
-        console.log(props.stockParams)
-    const response = yield call(getStockData, props.stockParams);
-    yield put(UPDATE_CURRENT_STOCKS(response))
+        const response = yield call(getStockData, props.stockParams)
+        yield put(UPDATE_CURRENT_STOCKS(response))
     }
     catch(err: any){
         console.log((err as Error).message)
@@ -39,10 +39,13 @@ Generator<CallEffect<StockDataApiResponse> |  PutEffect<{type:string,payload:Sto
     }
 }
 
+const accessTokenSelector = (state: RootState) => state.users.accessToken
+
 export function* getSymbolsHandlerSaga():
- Generator<CallEffect<IStockSymbolList> | PutEffect<{type:string,payload:IStockSymbolList}>, void,IStockSymbolList>
+ Generator<SelectEffect | CallEffect<IStockSymbolList> | PutEffect<{type:string,payload:IStockSymbolList}>,void,string & IStockSymbolList>
 {
-    const response: IStockSymbolList = yield call(getSymbols);
+    const accessToken : string = yield select(accessTokenSelector) 
+    const response: IStockSymbolList = yield call(getSymbols,accessToken)
     yield put(UPDATE_SYMBOL_LIST(response))
 }
 

@@ -66,6 +66,7 @@ export const stockSlice = createSlice({
             
         },
         UPDATE_SYMBOL_LIST: (state, action: PayloadAction<IStockSymbolList>) => {
+            console.log("UPDATING SYMBOL LIST")
             state.symbols = action.payload;
         },
         RENEW_API_REQUEST_SLOTS:(state, action: PayloadAction<ITimeToWaitForApiRequestSlots>) => {
