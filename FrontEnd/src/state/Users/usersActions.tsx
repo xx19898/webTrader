@@ -57,8 +57,10 @@ export const getLatestStockDeals = (accessToken:string) => {
         withCredentials:true,
         url: BASE_URL + 'users/getStockDeals'
     }).then(result => {
-        if(Object.keys(result).length === 0){
-            const parsedServerResponse = stockDealSchema.parse(result)
+        if(Object.keys(result.data).length != 0){
+            console.log(Object.keys(result.data).length)
+            console.log({result})
+            const parsedServerResponse = stockDealsSchema.parse(result.data)
             return parsedServerResponse
         }
         else return []

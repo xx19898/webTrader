@@ -13,16 +13,31 @@ import AnonymousMainPage from "./anonymousMainPage";
 //{userIsAuthenticated ?  <AuthenticatedMainPage  authenticatedUser={loggedInUser}/> :
 //<AnonymousMainPage />
 
+
+/*
+         {(() => {
+            switch(userRole){
+                case 'USER':
+                    return <AuthenticatedMainPage  authenticatedUser={loggedInUser as string}/>
+                case 'ADMIN':
+                    return <AdminMainPage />
+                default:
+                    return <AnonymousMainPage />
+            }
+         })
+         }
+*/
+
+
+
 export const MainPage  = () => {
     const loggedInUser = useSelector((state:RootState) => state.users.loggedUser)
-    const userIsAuthenticated = loggedInUser != undefined
+    const userRole = useSelector((state:RootState) => state.users.userRole) 
 
     return(
         <>
-         {
-         userIsAuthenticated ?  <AuthenticatedMainPage  authenticatedUser={loggedInUser}/> :
-         <AnonymousMainPage />
-         }
+        
+         <AdminMainPage />
         </>
     )
 }

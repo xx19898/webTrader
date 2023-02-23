@@ -4,11 +4,14 @@ import { StockDeal } from '../../sharedComponents/portfolioManager/stockDealVisu
 
 interface IUserState{
     loggedUser?: string,
+    userRole?: 'USER' | 'ADMIN',
     accessToken?: string,
-    stockDeals?:StockDeals  
+    stockDeals?:StockDeals,
 }
+
 const initialState: IUserState = {
     loggedUser: undefined,
+    userRole: undefined,
     accessToken: undefined,
     stockDeals: undefined,
 }
@@ -26,11 +29,19 @@ export const userSlice = createSlice({
         SET_NEW_ACCESS_TOKEN:(state, action:PayloadAction<string>) => {
             state.accessToken = action.payload
         },
-        UPDATE_STOCK_DEALS:(state, action:PayloadAction<StockDeals>) => {
-            state.stockDeals = action.payload
+        SET_STOCK_DEALS:(state, action:PayloadAction<StockDeals>) => {
+            //TODO: implement sorting the stockdeals array on basis of created_date
+            const stockDealsTemp = action.payload
+            stockDealsTemp.sort(function(a,b){
+                if(a.createdDate > b.createdDate){
+                    return - 1
+                }
+                return 1
+            })
+            state.stockDeals = stockDealsTemp
         },
         
     }
 })
 
-export const userActions = userSlice.actions
+export const {SET_NEW_ACCESS_TOKEN,SET_NEW_LOGGED_USER,SET_STOCK_DEALS} = userSlice.actions

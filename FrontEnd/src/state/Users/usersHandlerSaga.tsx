@@ -1,6 +1,7 @@
 import './UserClass';
 import {put, call, SagaReturnType, CallEffect, PutEffect, SelectEffect, select} from 'redux-saga/effects'
-import {getLatestStockDeals, IUser,logIn, register} from './usersActions';
+import {getLatestStockDeals, IUser,logIn, register} from './usersActions'
+import {SET_STOCK_DEALS} from './usersSlice'
 import { StockDeals, stockDealSchema, stockDealsSchema } from '../../sharedComponents/portfolioManager/stockDealVisualizer';
 import { RootState } from '../../store';
 
@@ -31,7 +32,7 @@ export function* updateStockDealsHandlerSaga()
     const accessToken= yield select(getAccessToken)
     const response = yield call(getLatestStockDeals,accessToken)
     
-    yield put({type:'UPDATE_STOCK_DEALS',payload:response})
+    yield put(SET_STOCK_DEALS(response))
 }
 
 export function* registerHandlerSaga(params:IUserHandlerSaga)

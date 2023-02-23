@@ -1,4 +1,4 @@
-import { useAppSelector } from '../../reduxHooks'
+import { useAppDispatch, useAppSelector } from '../../reduxHooks'
 import { DropDownTextMenu } from '../dropdownMenuWithSearchbar/dropdownMenu';
 import { OperationType, StockInPortfolio } from "./portfolioDataSchemas";
 import {useEffect, useReducer, useState} from "react";
@@ -11,6 +11,7 @@ import SubmitButton from '../buttons/submitButton';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/urls';
 import { request } from 'http';
+import { UPDATE_STOCK_DEALS } from '../../state/Users/usersActionTypes';
 
 interface IStockDealForm{
     stocks: StockInPortfolio[],
@@ -44,7 +45,7 @@ export default ({stocks}:IStockDealForm) => {
     const jwtToken = useAppSelector((state) => state.users.accessToken)
     const [formState, formDispatch] = useReducer(formReducer,initialStockDealFormState)
     const [symbolIsCorrect,setSymbolIsCorrect] = useState(false)
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         if(symbols.length == 0){
@@ -55,12 +56,6 @@ export default ({stocks}:IStockDealForm) => {
     return(
         <>
         <h2 className="text-lg font-semibold text-center mb-10 text-white">Make a new deal request</h2>
-        <div className="w-full h-[6rem] grid grid-cols-2">
-            <label>Symbol</label><label>{formState.SYMBOL}</label>
-            <label>Quantity</label><label>{formState.QUANTITY}</label>
-            <label>Price</label><label>{formState.PRICE}</label>
-            <label>OPERATION TYPE</label><label>{formState.OPERATION_TYPE}</label>
-        </div>
         <form className="flex justify-center items-center flex-col bg-darker-secondary-2 pb-5 pt-8"
               onSubmit={(e) => {
                 e.preventDefault()
@@ -142,6 +137,8 @@ export default ({stocks}:IStockDealForm) => {
             quantity: stockDealForm.QUANTITY,
             operation_type: stockDealForm.OPERATION_TYPE
         },requestConfig)
+
+        dispatch({type:UPDATE_STOCK_DEALS})
     }
 
     function formInfoIsCorrect(){

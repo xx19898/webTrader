@@ -1,5 +1,5 @@
 import { takeEvery } from "redux-saga/effects";
-import {LOGIN,REGISTER,UPDATE_STOCK_DEALS } from "./usersActionTypes";
+import {LOGIN,REGISTER,SET_STOCK_DEALS, UPDATE_STOCK_DEALS } from "./usersActionTypes";
 import { loginHandlerSaga, registerHandlerSaga, updateStockDealsHandlerSaga } from "./usersHandlerSaga";
 
 export function* usersWatcherSaga(){
