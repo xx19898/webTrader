@@ -11,7 +11,17 @@ const pending: DealStatus = 'PENDING'
 
 const data:UserInfoAdmin[] = [{
     username: "user1",
-    messages: [{message:"Hi, could you please book me some time this week?",date:new Date(2022,10,10),id:1}],
+    messages: [{
+        username:"user1",
+        message:"Hi, could you please book me some time this week?",
+        replyTo:{
+            username:"user1",
+            date: new Date(2020,10,12),
+            id:39,
+            replyTo:undefined,
+            message:"Hello! How's it been?"
+    },
+    date:new Date(2022,10,10),id:1}],
     stockDeals:[
         {
             id:1,symbol:"AAPL",quantity:4,stockPriceAtTheAcquirement:200,dealStatus: 'PENDING' as const,createdDate:new Date(),operationType: 'BUY' as const}
@@ -21,7 +31,7 @@ const data:UserInfoAdmin[] = [{
     },
     {
     username:"user2",
-    messages: [{message:"Hello, how are you doing today?",date:new Date(2022,9,4),id:2},{message:"What do you recommend on buying today?",date:new Date(2022,10,8),id:3}],
+    messages: [{username:"veronica",message:"Hello, how are you doing today?",date:new Date(2022,9,4),id:2,replyTo:undefined},{username:"user2",message:"What do you recommend on buying today?",date:new Date(2022,10,8),id:3,replyTo:undefined}],
     stockDeals:[{
         id:2,symbol:"GGL",quantity: 2,stockPriceAtTheAcquirement:750,dealStatus: 'PENDING' as const,createdDate: new Date(),operationType: 'SELL',
     }],
@@ -46,13 +56,13 @@ export default () => {
                 </h1>
             </header>
             <section className="mt-10 h-auto w-[80%] flex-col flex justify-center items-center">
-            <form className="relative">
+            <form className="relative w-[80%]">
                 <div className="absolute top-2 left-2">
                 <SearchIcon height={30} ref={searchIconRef} />
                 </div>
             <input
             onChange={(e) => setSearchedUsername(e.target.value)} 
-            className="bg-transparent indent-10 rounded-lg w-[12rem] h-[3rem] px-2 border border-solid border-darker-secondary-2 focus:outline-none text-white" placeholder="Search for user">
+            className="block bg-transparent indent-10 rounded-lg w-full mx-auto h-[3rem] px-2 border border-solid border-darker-secondary-2 focus:outline-none text-white" placeholder="Search for user">
             </input>
             </form>
                 <section className="h-auto mt-5 w-full min-h-[40px] border border-solid border-darker-secondary-2 rounded-md">

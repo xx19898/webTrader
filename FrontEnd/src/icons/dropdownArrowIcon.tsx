@@ -1,7 +1,15 @@
+import { forwardRef } from "react"
+
 interface IDropDownIcon{
     height : number,
 }
 
-export const DropDownArrowIcon = (props:IDropDownIcon) => <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 2" height={props.height} width={398.4/615.8 * props.height} viewBox="0 0 398.4 615.8">
-  <path fill="#a500de" d="M181.01 307.9 398.4 525.29l-90.51 90.51L0 307.91M181.01 307.9 398.4 90.51 307.89 0 0 307.89"/>
-</svg>
+
+export const DropDownArrowIcon = forwardRef(function dropdownArrowIcon({height}:IDropDownIcon,ref:React.LegacyRef<SVGSVGElement>){
+  return(
+    <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" height={height} viewBox="0 0 410.31 234.84" ref={ref}>
+      <path fill="none" stroke="#222323" stroke-miterlimit="10" stroke-width="42" d="m14.85 14.92 205 205"/>
+      <path fill="none" stroke="#222323" stroke-miterlimit="10" stroke-width="42" d="M190.32 219.99 395.46 14.85"/>
+    </svg>
+  )
+})

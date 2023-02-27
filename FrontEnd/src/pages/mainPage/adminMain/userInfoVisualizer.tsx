@@ -1,7 +1,8 @@
 import {useState} from 'react'
+import { Message } from '../../../sharedComponents/chat/chat'
 import { StockDeals } from '../../../sharedComponents/portfolioManager/stockDealVisualizer'
 import DealsDropdown from './dealsDropdown'
-import MessageDropdown, { Message } from './messageDropdown'
+import MessageDropdown from './messageDropdown'
 
 
 
