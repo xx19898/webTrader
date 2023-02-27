@@ -40,13 +40,14 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	@Autowired
 	private final PasswordEncoder passwordEncoder;
 	
-	public CustomAuthenticationFilter(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
+	public CustomAuthenticationFilter(AuthenticationManager authenticationManager,PasswordEncoder passwordEncoder){
 		this.authenticationManager = authenticationManager;
 		this.passwordEncoder = passwordEncoder;
 	}
 	
 	@Override 
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException{
+		System.out.println("attempting auth");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		if(username == null || password == null) {
@@ -84,7 +85,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 				.withClaim("roles",  user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 			    .sign(algorithm);
 				
-		response.setHeader("Set-Cookie", "SameSite=strict");
+		response.setHeader("Set-Cookie", "SameSite=none"); 
 		
 		JSONObject responseJSON = new JSONObject();
 		

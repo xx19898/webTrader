@@ -42,4 +42,27 @@ public class HttpClientService implements HTTPCallable{
 			throw new IOException("Caught IOException when trying to execute httpRequest to attain the stock data");
 		}
 	}
+	
+	@Override
+	public String fetchSymbolsInfo(String uri) throws IOException{
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		ResponseHandler <String> responseHandler = response -> {
+			int status = response.getStatusLine().getStatusCode();
+			if(status >= 200 && status < 300){
+				HttpEntity entity = response.getEntity();
+				String serverResponse = EntityUtils.toString(entity);
+				return serverResponse;
+			}else{
+				throw new ClientProtocolException("Unexpected response status: " + status);
+			}
+		};
+		try{
+			return httpClient.execute(new HttpGet(uri),responseHandler);
+		}catch(IOException e){
+			e.printStackTrace();
+			throw new IOException("Caught IOException when trying to execute httpRequest to attain the stock data");
+		}	
+	}
+	
+	
 }

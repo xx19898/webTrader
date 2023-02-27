@@ -54,7 +54,7 @@ import webTraderBackEnd.user.service.UserServiceImpl;
 	
 
 	@Override
-	public boolean supports(Class<?> authentication) {
+	public boolean supports(Class<?> authentication){
 		return authentication.equals(UsernamePasswordAuthenticationToken.class);
 	}
 	

@@ -15,6 +15,9 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
+import webTraderBackEnd.portfolioStocks.exceptions.MultiplePortfolioStocksWithSameNameException;
+import webTraderBackEnd.portfolioStocks.exceptions.PortfolioStockNotFound;
+import webTraderBackEnd.portfolioStocks.exceptions.StockDealNotFoundException;
 import webTraderBackEnd.stocksRequests.exceptions.HitCounterError;
 import webTraderBackEnd.stocksRequests.stockApiHitCounter.StockApiHitCounterService;
 import webTraderBackEnd.user.exceptions.UserAlreadyExistsException;
@@ -49,5 +52,25 @@ public class ControllerExceptionHandler{
 	@ExceptionHandler(BadCredentialsException.class)
 	public ResponseEntity<String> errorWhenTryingToAuthenticate(BadCredentialsException exception,WebRequest request){
 		return new ResponseEntity<String>("Either username or password are incorrect",HttpStatus.UNAUTHORIZED);
+	}
+	
+	@ExceptionHandler(BadRequestException.class)
+	public ResponseEntity<String> errorWhenTryingToProcessRequest(BadRequestException exception){
+		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(StockDealNotFoundException.class)
+	public ResponseEntity<Void> errorDuringProcessOfRetrievingStockDealFromDatabase(StockDealNotFoundException exception, WebRequest request){
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(PortfolioStockNotFound.class)
+	public ResponseEntity<Void> errorWhenRetrievingPortfolioStock(PortfolioStockNotFound exception, WebRequest request){
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(MultiplePortfolioStocksWithSameNameException.class)
+	public ResponseEntity<Void> errorWhenRetrievingPortfolioStock(MultiplePortfolioStocksWithSameNameException exception, WebRequest request){
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 }

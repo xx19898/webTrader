@@ -6,13 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.annotation.security.RolesAllowed;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +28,8 @@ import webTraderBackEnd.stocksRequests.service.StocksRequestService;
 import webTraderBackEnd.stocksRequests.stockApiHitCounter.StockApiHitCounterService;
 import webTraderBackEnd.stocksRequests.stockRequestProcessing.StockRequestHandlerChainException;
 
+
+@RolesAllowed("USER")
 @RestController
 @RequestMapping(path="/stocks")
 public class StocksResourse{
@@ -33,7 +39,7 @@ public class StocksResourse{
 	@Autowired
 	private StockApiHitCounterService stockApiHitCounter;
 	
-	@CrossOrigin
+	
 	@RequestMapping(
 			produces = {MediaType.APPLICATION_JSON_VALUE,"application/json"},
 			method = RequestMethod.GET,
@@ -48,10 +54,19 @@ public class StocksResourse{
         String[] theSymbolsArray = symbols.stream().
         						   filter(element -> !element.isBlank()).
     						   	   toArray(String[]::new);
-		JSONObject theStockData = stockService.getStockData(theSymbolsArray, stockRequestParameters);
+		JSONObject theStockData = stockService.getStockData(theSymbolsArray,stockRequestParameters);
 		ResponseEntity<String> response = new ResponseEntity<String>(theStockData.toString(),HttpStatus.OK);
 		return response;
 		}
+
+	@RequestMapping(
+			produces = {MediaType.APPLICATION_JSON_VALUE,"application/json"},
+			method = RequestMethod.GET,
+			path= "symbols")
+	public @ResponseBody ResponseEntity<String> getSymbols() throws IOException{
+		ResponseEntity<String> response = new ResponseEntity<String>(stockService.getSymbolsInfo("https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=demo"),HttpStatus.ACCEPTED);
+		return response;
+	}
 	}
 
 

@@ -39,8 +39,26 @@ public class StocksRequestServiceImpl implements StocksRequestService {
 	@Autowired
 	StockRequestHandlerChain stockRequestHandlerChain;
 	
+	@Autowired 
+	HTTPCallable httpClient;
+	
 	public StocksRequestServiceImpl(StockApiHitCounterService apiHitCounter, HTTPCallable httpClient){
 		this.apiHitCounter = apiHitCounter;
+		this.httpClient = httpClient;
+	}
+	
+	@Override
+	public String getSymbolsInfo(String uri) throws IOException{
+		CompletableFuture<String> symbolsInfoFuture =  CompletableFuture.supplyAsync(
+				() -> {
+					try {
+						return httpClient.fetchSymbolsInfo(uri);
+					} catch (IOException e) {
+						throw new RuntimeException();
+					}
+				});
+		String symbolsInfo = symbolsInfoFuture.join();
+		return symbolsInfo;
 	}
 	
 	@Override

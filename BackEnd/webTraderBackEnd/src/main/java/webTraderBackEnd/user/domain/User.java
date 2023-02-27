@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.ElementCollection;
@@ -21,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.transaction.Transactional;
 
@@ -33,6 +34,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+import webTraderBackEnd.messaging.domain.Conversation;
+import webTraderBackEnd.portfolioStocks.domain.Portfolio;
+import webTraderBackEnd.portfolioStocks.domain.StockDeal;
+
+@Getter
 @Entity // This tells Hibernate to make a table out of this class
 public class User implements UserDetails{
 	
@@ -45,8 +52,6 @@ public class User implements UserDetails{
 	 this.password = password;
  }
  
-
- 
  public User() {}
   	
   @Id
@@ -56,7 +61,7 @@ public class User implements UserDetails{
 
   @Column
   @CreatedDate
-  private LocalDateTime createdAt;
+  private LocalDateTime createdAt; 
   
   @Column
   @LastModifiedDate
@@ -65,13 +70,23 @@ public class User implements UserDetails{
   @Column
   private String username;
   
+  @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+  private Set<Conversation> conversations; 
+  
   @Column
   private String email;
   
   @Column
   private String password;
   
-  @ManyToMany(fetch= FetchType.EAGER)
+  @OneToOne(
+		  mappedBy = "user",
+		  fetch = FetchType.LAZY,
+		  cascade = CascadeType.ALL
+		  )
+  private Portfolio portfolio;
+  
+  @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
   @JoinTable(
 		  name="users_roles",
 		  joinColumns = @JoinColumn(
@@ -79,7 +94,18 @@ public class User implements UserDetails{
 		  inverseJoinColumns = @JoinColumn(
 				  name = "role_id", referencedColumnName = "id"))
   private Collection<Role> roles;
-
+  
+  @OneToMany(targetEntity = StockDeal.class, mappedBy="user",cascade = CascadeType.ALL)
+  private Set<StockDeal> stockDeals;
+  
+  public void addStockDeal(StockDeal stockDeal){
+	this.stockDeals.add(stockDeal);  
+  }
+  
+  public void addConversation(Conversation conversation) {
+	  this.conversations.add(conversation);
+  }
+  
   public Long getId() { 
     return id;
   }
@@ -95,9 +121,10 @@ public class User implements UserDetails{
   }
   
 
-  public void setEmail(String email) {
+  public void setEmail(String email){
     this.email = email;
   }
+  
   public void setPassword(String password) {
 	  this.password = password;
   }

@@ -11,4 +11,5 @@ import webTraderBackEnd.stocksRequests.stockRequestProcessing.StockRequestHandle
 
 public interface StocksRequestService{
 	JSONObject getStockData(String[] symbols,Map<String,String> otherParams) throws StockRequestHandlerChainException, IOException;
+	String getSymbolsInfo(String uri) throws IOException;
 }

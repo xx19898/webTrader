@@ -12,11 +12,11 @@ public class UserInsertRepository {
 	private EntityManager entityManager;
 	
 	@Transactional 
-	public void insertWithQuery(User user) {
+	public void insertWithQuery(User user){
 		entityManager.createNativeQuery("INSERT INTO user (username, password) VALUES(?,?)")
 		      .setParameter(1,user.getUsername())
-		      .setParameter(2,user.getPassword());
-		
+		      .setParameter(2,user.getPassword())
+		      .executeUpdate();
 	}
 	
 

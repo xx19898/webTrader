@@ -1,14 +1,10 @@
 package webTraderBackEnd.user.service;
-
-
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Optional;
+import java.util.Set;
 
 import javax.management.relation.RoleNotFoundException;
-
-import org.assertj.core.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import webTraderBackEnd.exceptionHandling.BadRequestException;
+import webTraderBackEnd.portfolioStocks.domain.Portfolio;
+import webTraderBackEnd.portfolioStocks.domain.StockDeal;
+import webTraderBackEnd.portfolioStocks.exceptions.StockDealNotFoundException;
+import webTraderBackEnd.portfolioStocks.repository.StockDealRepository;
 import webTraderBackEnd.user.domain.Role;
 import webTraderBackEnd.user.domain.User;
 import webTraderBackEnd.user.exceptions.UserAlreadyExistsException;
@@ -36,29 +37,32 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 	private final RoleRepo roleRepo;
 	@Autowired
 	private final PasswordEncoder passwordEncoder;
+	@Autowired
+	private final StockDealRepository stockDealRepo;
 	
 	
 	UserServiceImpl(
 			UserRepo userRepo,
 			RoleRepo roleRepo,
-			PasswordEncoder passwordEncoder
+			PasswordEncoder passwordEncoder,
+			StockDealRepository stockDealRepo
 			)
 	{
+		this.stockDealRepo = stockDealRepo;
 		this.userRepo = userRepo;
 		this.roleRepo = roleRepo;
-		this.passwordEncoder = passwordEncoder;
-		
+		this.passwordEncoder = passwordEncoder;	
 	}
 
 	@Override
-	public User saveUser(User user) {
+	public User saveUser(User user){
 		User newUser = user;
 		newUser.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepo.save(newUser);
 	}
 
 	@Override
-	public Role saveRole(Role role) {
+	public Role saveRole(Role role){
 		return this.roleRepo.save(role);
 	}
 
@@ -71,7 +75,7 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 		User user = userOptional.orElseThrow(() -> new UserNotFoundException("User to add role to not found"));
 	}
 	
-	public void createNewUser(User user) throws RoleNotFoundException {
+	public void createNewUser(User user) throws RoleNotFoundException{
 		//Checking whether the user with the same name already exists in the database
 		Optional<User> userOptional = userRepo.findByUsername(user.getUsername());
 		Optional<Role> roleOptional = roleRepo.findByName("ROLE_USER");
@@ -87,7 +91,6 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 		List<Role> roleList = new ArrayList<Role>();
 		roleList.add(newRole);
 		user.setRoles(roleList);
-		saveUser(user);
 	}
 
 	@Override
@@ -98,7 +101,7 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 				("User you are trying to get is not found"));
 		return user;
 	}
-
+	
 	@Override
 	public User getUser(long id) {
 		Optional<User> userOptional = userRepo.findById(id);
@@ -109,7 +112,7 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 	}
 
 	@Override
-	public List<User> getUsers() {
+	public List<User> getUsers(){
 		int LIMIT = 3;
 		Page<User> page = userRepo.findAll(PageRequest.of(0, LIMIT, Sort.by(Sort.Order.asc("id"))));
 		return page.getContent();
@@ -121,16 +124,54 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 		User user = userRepo.findByUsername(username)
 				.orElseThrow(() -> new UserNotFoundException(String.format("Error. User %s is not found",username)));
 		
-		
-		//Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		//user.getRoles().forEach(
-		//		role -> {
-		//			authorities.add(new SimpleGrantedAuthority(role.getName()));
-		//		});
-		
 		return user;
-		//CONTINUE
 	}
 	
-
+	@Override
+	public Set<StockDeal> getStockDeals(String username){
+		Optional<User> user = userRepo.findByUsername(username);
+		if(user.isEmpty()) throw new UserNotFoundException("User not found");
+		return user.get().getStockDeals();
+	}
+	
+	@Override
+	public Portfolio getUserPortfolio(String username) {
+		User user = getUser(username);
+		return user.getPortfolio();
+	}
+	
+	@Override
+	public void addStockToPortfolio(String username, String symbol, int quantity,double price) throws Exception {
+		User user = getUser(username);
+		user.getPortfolio().addNewStock(symbol,quantity,price);
+	}
+	
+	@Override
+	public void removeStockFromPortfolio(String username, String symbol, int quantity) throws Exception{
+		User user = getUser(username);
+		user.getPortfolio().removeStock(symbol, quantity);
+	}
+	
+	@Override
+	public void addStockDeal(Long userId, String symbol, int quantity,double price, String operationType){
+		User user = getUser(userId);
+		if(StockDeal.operationTypeValueIsCorrect(operationType)){
+			user.addStockDeal(new StockDeal(symbol,"PENDING" , quantity,price,operationType,user));
+		}
+		else {
+			throw new BadRequestException("Operation Type is of unrecognized value");
+		}
+	}
+	
+	@Override
+	public StockDeal cancelStockDeal(long id){
+		Optional<StockDeal> theStockDeal = stockDealRepo.findById(id);
+		if(theStockDeal.isPresent()){
+			StockDeal stockDeal = theStockDeal.get();
+			stockDeal.setDealStatus("CANCELLED");
+			return stockDeal;
+		}else{
+			throw new StockDealNotFoundException();
+		}
+	}
 }

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
@@ -76,14 +77,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	@Override
 	protected
 	void configure(HttpSecurity http)throws Exception{
-		http = http.cors().and().csrf().disable();
-		
-		http = http
+		http.csrf().disable().cors().configurationSource(corsConfigurationSource()).and()
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and();
-		
-		http = http
+				.and()
 				.exceptionHandling()
 				.authenticationEntryPoint(
 						(request,response,ex) -> {
@@ -93,40 +90,35 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 									);
 						}
 						)
-						.and();
-		http
-	      .authorizeRequests()
+						.and().authorizeRequests()
 	      .antMatchers("/admin/**").hasRole("ADMIN")
-	      .antMatchers("/users/all").authenticated()
-	      .antMatchers("/stocks/**").permitAll()
-	      .antMatchers("/stocks/**").anonymous()
+	      .antMatchers("/users/all").hasRole("ADMIN")
+	      .antMatchers("/users/addAStockDeal").authenticated()
 	      .antMatchers("/login").anonymous()
 	      .antMatchers("/login").permitAll()
 	      .anyRequest().permitAll()
 	      .and()
 	      .addFilter(new CustomAuthenticationFilter(authenticationManagerBean(),bCryptPasswordEncoder))
-		  .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+		  .addFilterBefore(new CustomAuthorizationFilter(), AnonymousAuthenticationFilter.class);
 	}
-	/*
-	@Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source =
-            new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
-	
-	*/
 	
 	@Bean 
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception{
 		return super.authenticationManagerBean();
+	}
+	
+	
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:8080*"));
+		configuration.setAllowedHeaders(Arrays.asList("*"));
+		configuration.setAllowedMethods(Arrays.asList("GET","POST","PATCH","DELETE","UPDATE"));
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		configuration.setAllowCredentials(true);
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
 	}
 }
 
