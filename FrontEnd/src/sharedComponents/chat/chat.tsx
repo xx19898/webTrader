@@ -31,7 +31,7 @@ export default  ({messages,name}:IMessageDropdown) => {
 
                                 {
                                     message.replyTo != undefined ? 
-                                    <div className="bg-secondary p-2 w-[80%] ml-[2rem] rounded-lg">
+                                    <div className="bg-secondary p-2 w-[80%] ml-[2rem] rounded-lg text-white">
                                         <span>{message.replyTo?.message}</span>
                                     </div> : null
                                 }

@@ -40,7 +40,7 @@ const data:UserInfoAdmin[] = [{
 }
 
 ]
-
+//TODO: fix the rest of the admin page visuals, test admin role authorization on backend, create admin user, try to start a chat between the created user and the admin
 export default () => {
     const searchIconRef = useRef<SVGSVGElement>(null)
     const [searchedUsername,setSearchedUsername] = useState("")

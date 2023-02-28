@@ -2,6 +2,7 @@ package webTraderBackEnd.security;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
@@ -26,6 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator.Builder;
 import com.auth0.jwt.algorithms.Algorithm;
 
 import webTraderBackEnd.user.domain.User;
@@ -67,11 +69,12 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		User user = (User) authentication.getPrincipal();
 		String userId = Long.toString(user.getId());
 		Algorithm algorithm = Algorithm.HMAC256(JWTUtil.privateKey.getBytes());
+		List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 		String accessToken = JWT.create()
 				.withSubject(userId)
 				.withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 1000))
-				.withIssuer(request.getRequestURL().toString())
-				.withClaim("roles",  user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+				.withIssuer(request. getRequestURL().toString())
+				.withClaim("roles",  roles)
 			    .sign(algorithm);
 		
 		System.out.println("ACCESS TOKEN EXPIRATION DATE: " + new Date(System.currentTimeMillis() + 1000 * 60 * 1000));
@@ -82,7 +85,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 				.withSubject(userId)
 				.withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenLifetime))
 				.withIssuer(request.getRequestURL().toString())
-				.withClaim("roles",  user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+				.withClaim("roles",  roles)
 			    .sign(algorithm);
 				
 		response.setHeader("Set-Cookie", "SameSite=none"); 
@@ -92,6 +95,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		try{
 			responseJSON.put("access_token", accessToken);
 			responseJSON.put("logged_in_user", user.getUsername());
+			responseJSON.put("AUTHORITIES",roles);
 		}catch (JSONException e){
 			throw new InternalError("Caught an exception while trying to create json response for user trying to log in");
 		}

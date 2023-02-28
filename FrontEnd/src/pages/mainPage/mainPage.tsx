@@ -36,15 +36,13 @@ export const MainPage  = () => {
 
     return(
         <>
-        
-         <AdminMainPage />
+        {
+        loggedInUser != undefined ?  <AuthenticatedMainPage  authenticatedUser={loggedInUser as string} /> :
+        <AnonymousMainPage />
+        }
         </>
     )
 }
-
-
-//userIsAuthenticated ?  <AuthenticatedMainPage  authenticatedUser={loggedInUser}/> :
-//<AnonymousMainPage />
 
 
 

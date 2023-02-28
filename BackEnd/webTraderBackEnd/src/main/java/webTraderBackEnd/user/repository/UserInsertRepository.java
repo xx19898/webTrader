@@ -4,8 +4,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.springframework.stereotype.Repository;
+
 import webTraderBackEnd.user.domain.User;
 
+@Repository
 public class UserInsertRepository {
 	
 	@PersistenceContext 

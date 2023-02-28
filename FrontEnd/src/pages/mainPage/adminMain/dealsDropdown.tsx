@@ -40,7 +40,7 @@ export default ({name,deals}:IDealsDropdown) => {
                 {deals.map(deal => {
                     return(
                         <li className="w-full px-8 py-2 flex flex-col justify-center items-center ">
-                            <header className="my-2 font-bold"><h2>{deal.symbol}</h2></header>
+                            <h2 className="text-white my-2 font-bold">{deal.symbol}</h2>
                             <section className="w-full grid grid-cols-2 text-white">
                                 <p className="text-center font-semibold text-white">quantity:</p>
                                 <p className="text-center font-semibold text-white">{deal.quantity}</p>
@@ -61,7 +61,6 @@ export default ({name,deals}:IDealsDropdown) => {
                             </button>
                             </section>
                             </section>
-                            //TODO: implement approving the deal and answering the messages, build the backend accordingly
                         </li>
                     )
                 })}

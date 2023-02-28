@@ -25,6 +25,7 @@ import webTraderBackEnd.user.domain.User;
 import webTraderBackEnd.user.exceptions.UserAlreadyExistsException;
 import webTraderBackEnd.user.exceptions.UserNotFoundException;
 import webTraderBackEnd.user.repository.RoleRepo;
+import webTraderBackEnd.user.repository.UserInsertRepository;
 import webTraderBackEnd.user.repository.UserRepo;
 
 
@@ -33,6 +34,8 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 	
 	@Autowired
 	private final UserRepo userRepo;
+	@Autowired
+	private final UserInsertRepository userInsertRepo;
 	@Autowired
 	private final RoleRepo roleRepo;
 	@Autowired
@@ -43,6 +46,7 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 	
 	UserServiceImpl(
 			UserRepo userRepo,
+			UserInsertRepository userInsertRepo,
 			RoleRepo roleRepo,
 			PasswordEncoder passwordEncoder,
 			StockDealRepository stockDealRepo
@@ -51,7 +55,8 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 		this.stockDealRepo = stockDealRepo;
 		this.userRepo = userRepo;
 		this.roleRepo = roleRepo;
-		this.passwordEncoder = passwordEncoder;	
+		this.passwordEncoder = passwordEncoder;
+		this.userInsertRepo = userInsertRepo;
 	}
 
 	@Override
@@ -76,7 +81,7 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 	}
 	
 	public void createNewUser(User user) throws RoleNotFoundException{
-		//Checking whether the user with the same name already exists in the database
+		User newUser = user;
 		Optional<User> userOptional = userRepo.findByUsername(user.getUsername());
 		Optional<Role> roleOptional = roleRepo.findByName("ROLE_USER");
 		
@@ -90,7 +95,8 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 		Role newRole = roleOptional.get();
 		List<Role> roleList = new ArrayList<Role>();
 		roleList.add(newRole);
-		user.setRoles(roleList);
+		newUser.setRoles(roleList);
+		saveUser(newUser);
 	}
 
 	@Override

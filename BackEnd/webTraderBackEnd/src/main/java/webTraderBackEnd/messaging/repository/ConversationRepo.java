@@ -10,5 +10,4 @@ import webTraderBackEnd.messaging.domain.Conversation;
 @Repository
 public interface ConversationRepo extends CrudRepository<Conversation,Long>{
 	Optional<Conversation> findById(Long id);
-
 }

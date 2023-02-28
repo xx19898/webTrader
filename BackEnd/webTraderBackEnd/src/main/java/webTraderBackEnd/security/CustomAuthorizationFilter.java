@@ -46,7 +46,9 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		
+		System.out.println(request.getRequestURI());
 		if(request.getServletPath().equals("/login") || request.getServletPath().equals("/register")){
+			System.out.println("request is either login or register");
 			filterChain.doFilter(request, response);
 		}else{
 			System.out.println(request.getServletPath());

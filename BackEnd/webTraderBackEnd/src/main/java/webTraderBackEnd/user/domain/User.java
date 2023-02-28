@@ -1,6 +1,7 @@
 package webTraderBackEnd.user.domain;
 import static java.util.Arrays.stream;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +14,7 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,11 +25,14 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.transaction.Transactional;
 
 import org.apache.tomcat.util.http.fileupload.util.Streams;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,7 +45,9 @@ import webTraderBackEnd.portfolioStocks.domain.Portfolio;
 import webTraderBackEnd.portfolioStocks.domain.StockDeal;
 
 @Getter
-@Entity // This tells Hibernate to make a table out of this class
+@Entity
+@Table
+@EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails{
 	
 
@@ -55,13 +62,14 @@ public class User implements UserDetails{
  public User() {}
   	
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
   @Column
   private Long id;
 
-  @Column
+  @Column(name = "created_date")
   @CreatedDate
-  private LocalDateTime createdAt; 
+  private long createdDate;
+   
   
   @Column
   @LastModifiedDate
@@ -167,7 +175,7 @@ public boolean isAccountNonExpired() {
 }
 
 @Override
-public boolean isAccountNonLocked() {
+public boolean isAccountNonLocked(){
 	// TODO Auto-generated method stub
 	return true;
 }

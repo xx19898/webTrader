@@ -21,12 +21,14 @@ import webTraderBackEnd.user.repository.UserRepo;
 @Service
 public class MessagingServiceImpl implements MessagingService{
 	
+	public MessagingServiceImpl(ConversationRepo conversationRepo,MessageRepo messageRepo,UserRepo userRepo){
+		this.conversationRepo = conversationRepo;
+		this.messageRepo = messageRepo;
+		this.userRepo = userRepo;
+	}
 	
 	@Autowired
 	ConversationRepo conversationRepo;
-	
-	@Autowired 
-	ConversationInsertRepo conversationInsertRepo;
 	
 	@Autowired 
 	MessageRepo messageRepo;
@@ -34,25 +36,18 @@ public class MessagingServiceImpl implements MessagingService{
 	@Autowired
 	UserRepo userRepo;
 	
-	public MessagingServiceImpl(ConversationRepo conversationRepo,MessageRepo messageRepo,ConversationInsertRepo conversationInsertRepo,UserRepo userRepo){
-		this.conversationInsertRepo = conversationInsertRepo;
-		this.messageRepo = messageRepo;
-		this.userRepo = userRepo;
-		this.conversationRepo = conversationRepo;
-	}
-	
 	@Override
 	public Conversation startConversation(long firstUserId, long secondUserId){
 		Optional<User> firstUser = userRepo.findById(firstUserId);
 		Optional<User> secondUser = userRepo.findById(secondUserId);
 		if(!(firstUser.isPresent() && secondUser.isPresent())) throw new UserNotFoundException("Sorry, one or more users are not found when trying to create a new convo :/");
 		Conversation newConversation = new Conversation(firstUser.get(),secondUser.get());
-		conversationInsertRepo.insertWithQuery(newConversation);
-		return newConversation;
+		Conversation savedConversation = conversationRepo.save(newConversation);
+		return savedConversation;
 	}
 	
 	@Override
-	public Conversation getConversation(long conversationId) {
+	public Conversation getConversation(long conversationId){
 		Optional<Conversation> conversation = conversationRepo.findById(conversationId);
 		if (conversation.isEmpty()) {
 			throw new ConversationNotFoundException("Sought conversation is not found");

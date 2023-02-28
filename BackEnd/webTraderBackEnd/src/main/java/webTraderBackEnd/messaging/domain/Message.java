@@ -44,7 +44,7 @@ public class Message{
 	
 	private Date date;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	private Message replyTo;
 	
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)

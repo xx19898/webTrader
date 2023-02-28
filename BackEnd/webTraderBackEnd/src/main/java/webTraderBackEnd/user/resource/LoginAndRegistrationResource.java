@@ -44,6 +44,7 @@ public class LoginAndRegistrationResource {
 	
 	@PostMapping(path="/register")
 	public @ResponseBody ResponseEntity<String> register(@RequestBody User newUser) throws RoleNotFoundException{
+		System.out.println("CREATING NEW USER");
 		userService.createNewUser(newUser);
 		return new ResponseEntity<String>(String.format("User %s has successfully been created",newUser.getUsername()),HttpStatus.OK);
 	}

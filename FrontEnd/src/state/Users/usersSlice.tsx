@@ -18,6 +18,9 @@ const initialState: IUserState = {
 
 type StockDeals = StockDeal[]
 
+//TODO: Implement the "authorities" part in userSlice so that the authorities received as response to logging in are being saved in state
+//TODO: and different main pages are being shown depending on which authorities user has
+
 export const userSlice = createSlice({
     name: 'users',
     initialState,
