@@ -35,8 +35,6 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 	@Autowired
 	private final UserRepo userRepo;
 	@Autowired
-	private final UserInsertRepository userInsertRepo;
-	@Autowired
 	private final RoleRepo roleRepo;
 	@Autowired
 	private final PasswordEncoder passwordEncoder;
@@ -46,7 +44,6 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 	
 	UserServiceImpl(
 			UserRepo userRepo,
-			UserInsertRepository userInsertRepo,
 			RoleRepo roleRepo,
 			PasswordEncoder passwordEncoder,
 			StockDealRepository stockDealRepo
@@ -56,7 +53,6 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 		this.userRepo = userRepo;
 		this.roleRepo = roleRepo;
 		this.passwordEncoder = passwordEncoder;
-		this.userInsertRepo = userInsertRepo;
 	}
 
 	@Override

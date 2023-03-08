@@ -43,7 +43,7 @@ public class AdminResource{
 	}
 	
 	@GetMapping("/allUserData")
-	public @ResponseBody ResponseEntity<List<User>> getAllPortfolios(){
+	public @ResponseBody ResponseEntity<List<User>> getAllUsersData(){
 		List<User> users = userService.getUsers();
 		return new ResponseEntity<List<User>>(users,HttpStatus.OK);
 	}
@@ -53,8 +53,6 @@ public class AdminResource{
 		Portfolio portfolio = userService.getUserPortfolio(username);
 		return new ResponseEntity<Portfolio>(portfolio,HttpStatus.OK);
 	}
-	
-	//TODO: make endpoints for adding and removing portfolio stocks from portfolios, same for pending stock deals
 	
 	@PostMapping("addStock")
 	public @ResponseBody ResponseEntity addStockToPortfolio(@RequestBody PortfolioStock[] newPortfolioStocks,@RequestParam String username){

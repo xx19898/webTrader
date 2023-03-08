@@ -30,6 +30,7 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.powermock:powermock-mockito-release-full:1.5.4'
 	implementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.awaitility:awaitility:4.2.0'
 	//JUnit 5

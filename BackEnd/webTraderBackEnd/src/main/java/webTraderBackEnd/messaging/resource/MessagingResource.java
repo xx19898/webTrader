@@ -1,12 +1,18 @@
 package webTraderBackEnd.messaging.resource;
 
+import java.security.Principal;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,19 +22,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import webTraderBackEnd.messaging.domain.Conversation;
 import webTraderBackEnd.messaging.domain.Message;
+import webTraderBackEnd.messaging.dtos.GetConversationDTO;
 import webTraderBackEnd.messaging.dtos.SendMessageDTO;
 import webTraderBackEnd.messaging.service.MessagingService;
+import webTraderBackEnd.user.domain.User;
+import webTraderBackEnd.user.service.UserService;
 
 @RestController
 @RequestMapping(path="/messaging")
-@RolesAllowed("ROLE_USER")
-public class MessagingResource{
-	
+@RolesAllowed({"ROLE_USER","ROLE_ADMIN"})
+public class MessagingResource{	
 	
 	@Autowired
 	MessagingService messagingService;
-	
-	
+
 	@PostMapping(path="/startConversation")
 	public ResponseEntity<Void> startConversation(Map<String,Integer> valueMap){
 		int firstUserId = valueMap.get("firstUserId");
@@ -43,9 +50,11 @@ public class MessagingResource{
 		return new ResponseEntity<Message>(dto.getMessage(),HttpStatus.ACCEPTED);
 	}
 	
-	@GetMapping(path="/")
-	public ResponseEntity<Conversation> getConversation(@RequestBody int conversationId){
-		return new ResponseEntity<Conversation>(messagingService.getConversation(conversationId),HttpStatus.ACCEPTED);
+	@GetMapping(path="/getConversations")
+	public ResponseEntity<Set<GetConversationDTO>> getConversation(Principal principal){
+		System.out.println("PRINCIPAL ID " + principal.getName());
+		return new ResponseEntity<Set<GetConversationDTO>>(messagingService.getConversationsByUserId(Long.parseLong(principal.getName())),HttpStatus.ACCEPTED);
 	}
-
+	
+	
 }

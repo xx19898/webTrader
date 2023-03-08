@@ -34,10 +34,6 @@ public class RolesSetup implements ApplicationListener<ContextRefreshedEvent>{
 		createRoleIfNotFound("ROLE_USER");
 		
 		alreadySetup = true;
-		
-		
-		
-		
 	}
 	
 	@Transactional

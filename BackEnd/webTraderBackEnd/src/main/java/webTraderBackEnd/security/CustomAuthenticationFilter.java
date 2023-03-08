@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.transform.ToListResultTransformer;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -89,13 +91,12 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 			    .sign(algorithm);
 				
 		response.setHeader("Set-Cookie", "SameSite=none"); 
-		
 		JSONObject responseJSON = new JSONObject();
 		
 		try{
 			responseJSON.put("access_token", accessToken);
 			responseJSON.put("logged_in_user", user.getUsername());
-			responseJSON.put("AUTHORITIES",roles);
+			responseJSON.put("authorities", new JSONArray(roles));
 		}catch (JSONException e){
 			throw new InternalError("Caught an exception while trying to create json response for user trying to log in");
 		}

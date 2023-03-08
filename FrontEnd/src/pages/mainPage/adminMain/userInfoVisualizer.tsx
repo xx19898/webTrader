@@ -1,6 +1,6 @@
 import {useState} from 'react'
-import { Message } from '../../../sharedComponents/chat/chat'
 import { StockDeals } from '../../../sharedComponents/portfolioManager/stockDealVisualizer'
+import { Conversation, Message } from '../../../state/messaging/messagingZodSchemas'
 import DealsDropdown from './dealsDropdown'
 import MessageDropdown from './messageDropdown'
 
@@ -11,11 +11,10 @@ export type UserInfoAdmin = {
     creationDate: Date,
     balance: number,
     stockDeals: StockDeals,
-    messages: Message[]
+    conversation: Conversation
 }
 
-export default (userInfo:UserInfoAdmin) => {
-    const {balance,creationDate,messages,stockDeals,username} = userInfo
+export default ({balance,creationDate,conversation,stockDeals,username}:UserInfoAdmin) => {
     const openDropdown = useState<boolean>(false) 
 
     //TODO: Implement to the end and test
@@ -30,7 +29,7 @@ export default (userInfo:UserInfoAdmin) => {
                  <h2 className="font-poppins font-semibold text-lg text-white ">Balance</h2><span className="text-white font-poppins ">{balance + " $"}</span>
                  </section>
                  <section className="w-full">
-                 <MessageDropdown messages={messages} name={username}/>
+                 <MessageDropdown messages={conversation.messages as Message[]} otherUser={username} conversationId={conversation.conversationId}/>
                  <DealsDropdown deals={stockDeals} name={username}/>
                  </section>
                  </>

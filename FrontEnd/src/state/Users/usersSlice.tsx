@@ -1,17 +1,24 @@
 import {createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { StockDeal } from '../../sharedComponents/portfolioManager/stockDealVisualizer';
+import User from './UserClass';
+import { Authorities } from './userZodSchemas';
+
+
+export const UserAuthority = ['ROLE_USER' , 'ROLE_ADMIN'] as const
 
 interface IUserState{
     loggedUser?: string,
-    userRole?: 'USER' | 'ADMIN',
+    userAuthorities?: Authorities,
     accessToken?: string,
+    userId?: number,
     stockDeals?:StockDeals,
 }
 
 const initialState: IUserState = {
     loggedUser: undefined,
-    userRole: undefined,
+    userAuthorities: undefined,
+    userId: undefined,
     accessToken: undefined,
     stockDeals: undefined,
 }
@@ -26,14 +33,15 @@ export const userSlice = createSlice({
     initialState,
     reducers:{
         SET_NEW_LOGGED_USER: (state,action: PayloadAction<string>) => {
-            console.log("SETTING NEW USER")
             state.loggedUser = action.payload
+        },
+        SET_NEW_AUTHORITIES: (state,action: PayloadAction<Authorities>) => {
+            state.userAuthorities = action.payload
         },
         SET_NEW_ACCESS_TOKEN:(state, action:PayloadAction<string>) => {
             state.accessToken = action.payload
         },
         SET_STOCK_DEALS:(state, action:PayloadAction<StockDeals>) => {
-            //TODO: implement sorting the stockdeals array on basis of created_date
             const stockDealsTemp = action.payload
             stockDealsTemp.sort(function(a,b){
                 if(a.createdDate > b.createdDate){
@@ -43,8 +51,7 @@ export const userSlice = createSlice({
             })
             state.stockDeals = stockDealsTemp
         },
-        
     }
 })
 
-export const {SET_NEW_ACCESS_TOKEN,SET_NEW_LOGGED_USER,SET_STOCK_DEALS} = userSlice.actions
+export const {SET_NEW_ACCESS_TOKEN,SET_NEW_LOGGED_USER,SET_STOCK_DEALS,SET_NEW_AUTHORITIES} = userSlice.actions

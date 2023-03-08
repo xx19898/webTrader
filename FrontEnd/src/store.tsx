@@ -3,7 +3,7 @@ import createSagaMiddleware from '@redux-saga/core';
 import { userSlice } from './state/Users/usersSlice';
 import {rootWatcherSaga} from './rootSaga';
 import { stockSlice } from './state/Stocks/stocksSlice';
-//import { socketsSlice } from './state/Sockets/socketsSlice';
+import { messagingSlice } from './state/messaging/messagingSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -11,10 +11,9 @@ export const store = configureStore({
     reducer: {
         users: userSlice.reducer, 
         stocks : stockSlice.reducer,
-  //      sockets : socketsSlice.reducer
+        messaging: messagingSlice.reducer
     },
     middleware: [sagaMiddleware]
-
 })
 sagaMiddleware.run(rootWatcherSaga)
 

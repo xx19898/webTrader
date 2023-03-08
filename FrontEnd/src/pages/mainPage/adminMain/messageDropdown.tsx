@@ -7,7 +7,7 @@ import { DropDownArrowIcon } from "../../../icons/dropdownArrowIcon"
 
 
 //TODO: implement sending and responding to messages + test the sendIcon functionality, implement functional replying functionality
-export default ({name,messages}:IMessageDropdown) => {
+export default ({otherUser,messages,conversationId}:IMessageDropdown) => {
     
     const dropdownArrowRef = useRef<SVGSVGElement>(null)
     const dropdownRef = useRef<HTMLElement>(null)
@@ -23,14 +23,14 @@ export default ({name,messages}:IMessageDropdown) => {
                 "flex justify-center items-center flex-col w-[40%] h-auto py-1 bg-primary  mt-3 border-solid border-darker-secondary-2 cursor-pointer" 
                 :
                 "w-[40%] border border-solid border-darker-secondary-2  py-1 first:mt-6  mt-3 h-auto cursor-pointer flex justify-center items-center flex-col"}  onClick={() => handleClick()}>
-                <h2 className="text-white font-bold text-lg mb-1">{name}</h2>
+                <h2 className="text-white font-bold text-lg mb-1">{otherUser}</h2>
                 <DropDownArrowIcon height={10} ref={dropdownArrowRef} />
             </div>
             {
                 open 
                 ?
                 <section ref={dropdownRef}>
-                    <Chat messages={messages} name={name}/>
+                    <Chat messages={messages} otherUser={otherUser} conversationId={conversationId}/>
                 </section> 
                 :
                 null

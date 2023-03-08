@@ -97,6 +97,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	      .antMatchers("/users/addAStockDeal").authenticated()
 	      .antMatchers("/login").anonymous()
 	      .antMatchers("/login").permitAll()
+	      .antMatchers("/stocks/symbols").anonymous()
+	      .antMatchers("/stocks/symbols").permitAll()
 	      .anyRequest().permitAll()
 	      .and()
 	      .addFilter(new CustomAuthenticationFilter(authenticationManagerBean(),bCryptPasswordEncoder))

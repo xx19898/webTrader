@@ -37,6 +37,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -54,12 +55,20 @@ public class User implements UserDetails{
  public User(
 		 @JsonProperty("username") String username,
 		 @JsonProperty("password") String password
-		 ) {
+		 ){
 	 this.username = username;
 	 this.password = password;
  }
  
+ public User(String username,Long id) {
+	 this.username = username;
+	 this.id = id;
+	 this.conversations = new HashSet<Conversation>();
+ }
+ 
  public User() {}
+ 
+ 
   	
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -78,12 +87,13 @@ public class User implements UserDetails{
   @Column
   private String username;
   
-  @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+  @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
   private Set<Conversation> conversations; 
   
   @Column
   private String email;
   
+  @JsonIgnore
   @Column
   private String password;
   
@@ -103,7 +113,7 @@ public class User implements UserDetails{
 				  name = "role_id", referencedColumnName = "id"))
   private Collection<Role> roles;
   
-  @OneToMany(targetEntity = StockDeal.class, mappedBy="user",cascade = CascadeType.ALL)
+  @OneToMany(targetEntity = StockDeal.class, mappedBy="user",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
   private Set<StockDeal> stockDeals;
   
   public void addStockDeal(StockDeal stockDeal){
@@ -111,7 +121,7 @@ public class User implements UserDetails{
   }
   
   public void addConversation(Conversation conversation) {
-	  this.conversations.add(conversation);
+  	  this.conversations.add(conversation);
   }
   
   public Long getId() { 
@@ -122,18 +132,15 @@ public class User implements UserDetails{
     this.username = newUsername;
   }
   
-  
-
   public String getEmail() {
     return email;
   }
-  
 
   public void setEmail(String email){
     this.email = email;
   }
   
-  public void setPassword(String password) {
+  public void setPassword(String password){
 	  this.password = password;
   }
 

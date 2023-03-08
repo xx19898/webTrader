@@ -3,7 +3,7 @@ import { useState, useReducer } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router"
 import { constructAxiosBodyForLoginRequest } from "../../state/Users/usersActions"
-import { SET_NEW_ACCESS_TOKEN, SET_NEW_LOGGED_USER } from "../../state/Users/usersSlice"
+import { SET_NEW_ACCESS_TOKEN, SET_NEW_AUTHORITIES, SET_NEW_LOGGED_USER } from "../../state/Users/usersSlice"
 
 import { loginResponseSchema } from "../../state/Users/userZodSchemas"
 
@@ -41,6 +41,7 @@ const useLoginPage = () => {
 
             reduxDispatch(SET_NEW_LOGGED_USER(parsedResponse.logged_in_user))
             reduxDispatch(SET_NEW_ACCESS_TOKEN(parsedResponse.access_token))
+            reduxDispatch(SET_NEW_AUTHORITIES(parsedResponse.authorities))
             navigate("/main")
         }).catch(
             (e) => {
