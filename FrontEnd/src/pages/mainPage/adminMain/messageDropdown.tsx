@@ -24,7 +24,7 @@ export default ({otherUser,messages,conversationId}:IMessageDropdown) => {
                 :
                 "w-[40%] border border-solid border-darker-secondary-2  py-1 first:mt-6  mt-3 h-auto cursor-pointer flex justify-center items-center flex-col"}  onClick={() => handleClick()}>
                 <h2 className="text-white font-bold text-lg mb-1">{otherUser}</h2>
-                <DropDownArrowIcon height={10} ref={dropdownArrowRef} />
+                <DropDownArrowIcon onClickCallback={handleClick} height={10} ref={dropdownArrowRef} />
             </div>
             {
                 open 

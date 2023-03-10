@@ -32,7 +32,7 @@ export default ({name,deals}:IDealsDropdown) => {
         :
         "flex flex-col justify-center items-center h-auto mt-3 w-[40%] border border-solid border-darker-secondary-2 cursor-pointer py-1 text-center"  } onClick={() => handleClick()}>
             <span className="text-white font-semibold mb-1">{name}</span>
-            <DropDownArrowIcon height={10} ref={dropdownArrowRef} />
+            <DropDownArrowIcon onClickCallback={handleClick} height={10} ref={dropdownArrowRef} />
         </div>
         {
             open ? 

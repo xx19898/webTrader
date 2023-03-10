@@ -66,7 +66,7 @@ const BaseDropDown =
                 <input className="w-full text-right mr-8 bg-white rounded-sm focus:outline-none"
                  type="search" value={valueHighlightedInList ? valueHighlightedInList : value} onChange={(e) => valueChanged(e.target.value)} ref={inputRef}/>
                 <div className="flex flex-row items-center justify-center absolute right-2 min-h-full bg-white">
-                    <button className="cursor-pointer" onClick={() => clickDropDownArrowButton()}><DropDownArrowIcon height={height}/></button>
+                    <DropDownArrowIcon onClickCallback={clickDropDownArrowButton} height={height}/>
                 </div>
             </div>
         )
