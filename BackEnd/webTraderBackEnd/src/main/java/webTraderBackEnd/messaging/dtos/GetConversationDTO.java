@@ -9,16 +9,14 @@ import webTraderBackEnd.messaging.domain.Conversation;
 public class GetConversationDTO{
 	private int adminId;
 	private String adminUsername;
-	private Conversation conversation;
+	private ConversationDTO conversation;
 	
 	public GetConversationDTO(int adminId,String adminUsername){
 		this.adminId = adminId;
 		this.adminUsername = adminUsername;
 	}
 	
-	public void setConversation(Conversation convo){
+	public void setConversation(ConversationDTO convo){
 		this.conversation = convo;
 	}
-	
-	
 }

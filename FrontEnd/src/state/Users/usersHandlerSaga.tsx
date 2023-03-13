@@ -4,6 +4,7 @@ import {getLatestStockDeals, IUser,logIn, register} from './usersActions'
 import {SET_STOCK_DEALS} from './usersSlice'
 import { StockDeals, stockDealSchema, stockDealsSchema } from '../../sharedComponents/portfolioManager/stockDealVisualizer';
 import { RootState } from '../../store';
+import { SET_NEW_LOGGED_USER } from './usersActionTypes';
 
 //Deriving the return type for call(logIn) function
 type LoginServiceResponse = SagaReturnType<typeof logIn>
@@ -20,7 +21,7 @@ export function* loginHandlerSaga(params:IUserHandlerSaga)
                       LoginServiceResponse,
                       LoginServiceResponse>
 {
-    const response  = yield call(logIn,params.payload);
+    const response  = yield call(logIn,params.payload)
     return response;
 }
 

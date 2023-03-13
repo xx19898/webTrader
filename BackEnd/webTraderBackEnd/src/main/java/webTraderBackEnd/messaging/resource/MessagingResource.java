@@ -9,15 +9,10 @@ import javax.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import webTraderBackEnd.messaging.domain.Conversation;
@@ -37,7 +32,7 @@ public class MessagingResource{
 	MessagingService messagingService;
 
 	@PostMapping(path="/startConversation")
-	public ResponseEntity<Void> startConversation(Map<String,Integer> valueMap){
+	public ResponseEntity<Void> startConversation(@RequestBody Map<String,Integer> valueMap){
 		int firstUserId = valueMap.get("firstUserId");
 		int secondUserId = valueMap.get("secondUserId");
 		messagingService.startConversation(firstUserId, secondUserId);

@@ -26,7 +26,7 @@ export default  ({messages,otherUser,conversationId}:IMessageDropdown) => {
 
     return(
             <>
-            <ul className="relative bg-secondary-2 w-full h-auto mb-0 pb-4 grid grid-cols-2 border-solid border border-darker-secondary-2" >
+            <ul className="relative bg-secondary-2 w-full min-h-[100px] h-auto mb-0 pb-4 grid grid-cols-2 border-solid border border-darker-secondary-2" >
                     {messages.map(message => {
                         return(
                                  <li className={loggedInUser === message.senderUsername ? "col-start-1 col-end-1 h-auto relative bg-transparent p-4 text-center w-full ml-[2rem] mr-2 rounded-md my-2 flex flex-col justify-center items-center" : "col-start-2 col-end-2 h-auto relative bg-transparent p-4 text-center w-[60%] ml-[2rem] mr-2 rounded-md my-2 flex flex-col justify-center items-center"}>
@@ -37,9 +37,9 @@ export default  ({messages,otherUser,conversationId}:IMessageDropdown) => {
                                         <span>{message.replyTo?.message}</span>
                                     </div> : null
                                 }
-                                <article className={loggedInUser === message.senderUsername ? "relative bg-primary p-4 text-center rounded-md w-[80%] ml-[2rem] my-1 flex flex-col justify-center items-center"
+                                <article className={loggedInUser === message.senderUsername ? "relative bg-primary p-4 text-center rounded-md w-min-[80%] w-fit ml-[2rem] my-1 flex flex-col justify-center items-center"
                                                                                  :
-                                                                                "relative bg-darker-secondary-2 p-4 text-center rounded-md w-[80%] ml-[2rem] my-1 flex flex-col justify-center items-center"}>
+                                                                                "relative bg-darker-secondary-2 p-4 text-center rounded-md w-min-[80%] w-fit ml-[2rem] my-1 flex flex-col justify-center items-center"}>
                                 {
                                     message.replyTo != undefined ? 
                                     <div className="absolute right-1 top-1">
@@ -47,7 +47,7 @@ export default  ({messages,otherUser,conversationId}:IMessageDropdown) => {
                                     </div> : null
                                 }    
                                 <p className="font-normal text-white">{message.message}</p>
-                                <i className="relative left-7 text-sm font-light">
+                                <i className="relative left-3 text-sm font-light">
                                     {message.date.toLocaleString()}
                                 </i>
                                 </article>  

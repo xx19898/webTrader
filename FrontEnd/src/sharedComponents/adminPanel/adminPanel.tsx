@@ -9,37 +9,8 @@ import { Conversation, GetConversationApiResponse } from "../../state/messaging/
 import AdminCard from "./adminCard/adminCard"
 
 
-
-//TODO: getConversation comes through to redux state from backend, next is getting ui part of adminPanel to work and then implementing the messaging functionality
-export type AdminDataForAdminPanel = {
-    adminId: number,
-    adminName: string,
-    conversation: Conversation
-}
-
-export type AdminsDataForAdminPanel = AdminDataForAdminPanel[]
-
-export default () => {
-    //TODO: mock the state and test that ui functionality for opening, closing and accessing the chat works as it should
 /*
-    const dispatch = useDispatch()
-    const userId = useAppSelector(state => state.users.userId)
-    const userName = useAppSelector(state => state.users.loggedUser)
-    const conversations = useAppSelector(state => state.messaging.conversations)
-    const lastUpdated = useAppSelector(state => state.messaging.lastUpdated)
-
-    useEffect(() => {
-        if(lastUpdated === undefined) dispatch({type:'UPDATE_CONVERSATIONS'})
-        else{
-            const currentDateAndTime = new Date()
-            const timeElapsedSinceLastUpdate = Math.abs(currentDateAndTime.getTime() - lastUpdated.getTime()) * 1000
-            if(timeElapsedSinceLastUpdate > 60){
-                dispatch({type:'UPDATE_CONVERSATIONS'})
-            }
-        }
-    },[])
-*/
-    const dispatch = useDispatch()
+const dispatch = useDispatch()
     const userId = 0
     const userName = 'user'
     const conversations:GetConversationApiResponse = [{
@@ -72,11 +43,41 @@ export default () => {
         },
     }] 
     const lastUpdated = new Date()
+*/
+
+
+//TODO: getConversation comes through to redux state from backend, next is getting ui part of adminPanel to work and then implementing the messaging functionality
+export type AdminDataForAdminPanel = {
+    adminId: number,
+    adminName: string,
+    conversation: Conversation
+}
+
+export type AdminsDataForAdminPanel = AdminDataForAdminPanel[]
+
+export default () => {
+    //TODO: mock the state and test that ui functionality for opening, closing and accessing the chat works as it should
+
+    const dispatch = useDispatch()
+    const userId = useAppSelector(state => state.users.userId)
+    const userName = useAppSelector(state => state.users.loggedUser)
+    const conversations = useAppSelector(state => state.messaging.conversations)
+    const lastUpdated = useAppSelector(state => state.messaging.lastUpdated)
+
+    useEffect(() => {
+        if(lastUpdated === undefined) dispatch({type:'UPDATE_CONVERSATIONS'})
+        else{
+            const currentDateAndTime = new Date()
+            const timeElapsedSinceLastUpdate = Math.abs(currentDateAndTime.getTime() - lastUpdated.getTime()) * 1000
+            if(timeElapsedSinceLastUpdate > 60){
+                dispatch({type:'UPDATE_CONVERSATIONS'})
+            }
+        }
+    },[])
 
     const dropdownArrowRef = useRef<SVGSVGElement>(null)
     const dropdownRef = useRef<HTMLUListElement>(null)
     const {open,handleClick} = useAnimatedDropdown({dropdownRef,dropdownArrowRef})
-
 
     return(
         <>
@@ -91,7 +92,10 @@ export default () => {
                 {
                     conversations.map(conversationInfo => {
                         return(
-                            <AdminCard adminId={conversationInfo.adminId} adminUsername={conversationInfo.adminUsername} conversation={conversationInfo.conversations} />
+                            <AdminCard
+                            adminId={conversationInfo.adminId}
+                            adminUsername={conversationInfo.adminUsername}
+                            conversation={conversationInfo.conversation}/>
                         )
                     })
                 }

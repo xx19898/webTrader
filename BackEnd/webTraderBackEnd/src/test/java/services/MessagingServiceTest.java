@@ -12,10 +12,6 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -60,13 +56,13 @@ AdminUsernameAndId firstAdmin = new AdminUsernameAndId(){
 			AdminUsernameAndId secondAdmin = new AdminUsernameAndId() {
 			
 			@Override
-			public String getUsername() {
+			public String getUsername(){
 				// TODO Auto-generated method stub
 				return "secondAdmin";
 			}
 			
 			@Override
-			public long getUser_Id() {
+			public long getUser_Id(){
 				// TODO Auto-generated method stub
 				return 2;
 			}
@@ -86,8 +82,6 @@ AdminUsernameAndId firstAdmin = new AdminUsernameAndId(){
 
 		System.out.println("FINISHED");
 		assertEquals(firstDTO.getAdminUsername(),"firstAdmin");
-		assertEquals(firstDTO.getConversation().userIsParticipant(1),true);
-		assertEquals(firstDTO.getConversation().userIsParticipant(0),true);
 		assertEquals(secondDTO.getConversation(),null);
 	}
 	

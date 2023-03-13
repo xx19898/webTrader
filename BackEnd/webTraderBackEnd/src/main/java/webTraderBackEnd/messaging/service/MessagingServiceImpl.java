@@ -53,12 +53,15 @@ public class MessagingServiceImpl implements MessagingService{
 	@Autowired
 	UserService userService;
 	
+	@Transactional
 	@Override
 	public Conversation startConversation(long firstUserId, long secondUserId){
 		Optional<User> firstUser = userRepo.findById(firstUserId);
 		Optional<User> secondUser = userRepo.findById(secondUserId);
 		if(!(firstUser.isPresent() && secondUser.isPresent())) throw new UserNotFoundException("Sorry, one or more users are not found when trying to create a new convo :/");
 		Conversation newConversation = new Conversation(firstUser.get(),secondUser.get());
+		firstUser.get().addConversation(newConversation);
+		secondUser.get().addConversation(newConversation);
 		Conversation savedConversation = conversationRepo.save(newConversation);
 		return savedConversation;
 	}
@@ -87,8 +90,10 @@ public class MessagingServiceImpl implements MessagingService{
 		Set <AdminUsernameAndId> adminsWithUsernamesAndIds = userRepo.findUsersWithAdminRole();
 		System.out.println("ADMIN USERNAME " + adminsWithUsernamesAndIds.iterator().next().getUser_Id());
 		Set<Conversation> conversations = userRepo.findById(userId).get().getConversations();
+		conversations.stream().forEach( conv -> conv.getParticipants());
 		Set<GetConversationDTO> adminsAndConversations = adminsWithUsernamesAndIds.stream().
-				map( adminObjectWithoutConversation -> getConversationDTOConversationSetter.setConversationOnGetConversationDTO(adminObjectWithoutConversation, conversations)).collect(Collectors.toSet());
+				map( adminObjectWithoutConversation -> getConversationDTOConversationSetter.setConversationOnGetConversationDTO(adminObjectWithoutConversation, conversations)).
+				collect(Collectors.toSet());
 		return adminsAndConversations;
 	}
 }

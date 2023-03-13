@@ -3,8 +3,9 @@ package webTraderBackEnd.messaging.domain;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,21 +14,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import webTraderBackEnd.messaging.exceptions.MessageNotBelongingToAnyAllowedSenderException;
 import webTraderBackEnd.user.domain.User;
 
+
+
+
 @Getter	
 @Entity
+@NoArgsConstructor
 public class Conversation{
 	
 	public Conversation(User firstParticipant,User secondParticipant){
@@ -45,8 +47,12 @@ public class Conversation{
 	@CreatedDate
 	private Instant createdDate;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-	List<User> participants;
+	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	private List<User> participants;
+	
+	public List<String> getParticipantsUsernames() {
+		return this.participants.stream().map(participant -> participant.getUsername()).collect(Collectors.toList());
+	}
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "id")
 	private List<Message> messages;

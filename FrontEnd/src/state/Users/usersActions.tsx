@@ -2,6 +2,7 @@ import {RootState} from "../../store";
 import axios from 'axios';
 import { BASE_URL, LOGIN_URL } from "../../constants/urls";
 import { stockDealSchema, stockDealsSchema } from "../../sharedComponents/portfolioManager/stockDealVisualizer";
+import { loginResponseSchema } from "./userZodSchemas";
 
 export interface IUser{
     password: string,
@@ -25,13 +26,16 @@ export const constructAxiosBodyForLoginRequest = (user:IUser) => {
 export const logIn = (user: IUser) => {
     const axiosRequestBody = constructAxiosBodyForLoginRequest(user)
 
-    const AxiosRequest = axios(axiosRequestBody).then(
+    const axiosRequest = axios(axiosRequestBody).then(
         (response) => {
-            return response
+            const data = loginResponseSchema.parse(response)
+            return data
         })
         .catch( err => {
             console.log(err)
         })
+
+    return axiosRequest
     }
 
 export const register = (user:IUser) => {

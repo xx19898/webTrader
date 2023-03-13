@@ -14,16 +14,11 @@ export const MainPage  = () => {
     const loggedInUser = useSelector((state:RootState) => state.users.loggedUser)
     const userAuthorities = useSelector((state:RootState) => state.users.userAuthorities)
 
-    /*
     if(loggedInUser != undefined){
         if(userAuthorities?.includes("ROLE_ADMIN")) return <><AdminMainPage /></>
         return <><AuthenticatedMainPage authenticatedUser={loggedInUser} /></>
     }
     return <AnonymousMainPage />
-    */
-
-    return <>< AuthenticatedMainPage authenticatedUser={"xx"} /></>
-
 }
 
 

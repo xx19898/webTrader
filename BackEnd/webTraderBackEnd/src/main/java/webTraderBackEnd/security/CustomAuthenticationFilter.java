@@ -96,6 +96,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		try{
 			responseJSON.put("access_token", accessToken);
 			responseJSON.put("logged_in_user", user.getUsername());
+			responseJSON.put("logged_in_user_id", userId);
 			responseJSON.put("authorities", new JSONArray(roles));
 		}catch (JSONException e){
 			throw new InternalError("Caught an exception while trying to create json response for user trying to log in");

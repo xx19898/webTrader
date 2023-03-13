@@ -35,6 +35,9 @@ export const userSlice = createSlice({
         SET_NEW_LOGGED_USER: (state,action: PayloadAction<string>) => {
             state.loggedUser = action.payload
         },
+        SET_NEW_LOGGED_USER_ID: (state,action: PayloadAction<number>) => {
+            state.userId = action.payload
+        },
         SET_NEW_AUTHORITIES: (state,action: PayloadAction<Authorities>) => {
             state.userAuthorities = action.payload
         },
@@ -54,4 +57,4 @@ export const userSlice = createSlice({
     }
 })
 
-export const {SET_NEW_ACCESS_TOKEN,SET_NEW_LOGGED_USER,SET_STOCK_DEALS,SET_NEW_AUTHORITIES} = userSlice.actions
+export const {SET_NEW_ACCESS_TOKEN,SET_NEW_LOGGED_USER,SET_NEW_LOGGED_USER_ID,SET_STOCK_DEALS,SET_NEW_AUTHORITIES} = userSlice.actions

@@ -63,7 +63,6 @@ public class User implements UserDetails{
  public User(String username,Long id) {
 	 this.username = username;
 	 this.id = id;
-	 this.conversations = new HashSet<Conversation>();
  }
  
  public User() {}
@@ -154,7 +153,7 @@ public Collection<? extends GrantedAuthority> getAuthorities() {
 }
 
 @Override
-public String getPassword() {
+public String getPassword(){
 	return password;
 }
 

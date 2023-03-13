@@ -32,7 +32,7 @@ export const getConversationApiResponse = z.array(
     z.object({
         adminId: z.number(),
         adminUsername: z.string(),
-        conversations: z.optional(conversationSchema)
+        conversation: conversationSchema
     })
 )
 
