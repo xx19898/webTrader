@@ -1,5 +1,8 @@
 package webTraderBackEnd.messaging.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -16,6 +19,7 @@ import lombok.NoArgsConstructor;
 import webTraderBackEnd.messaging.domain.Conversation;
 import webTraderBackEnd.messaging.domain.Message;
 import webTraderBackEnd.messaging.dtos.GetConversationDTO;
+import webTraderBackEnd.messaging.dtos.SendMessageDTO;
 import webTraderBackEnd.messaging.exceptions.ConversationNotFoundException;
 import webTraderBackEnd.messaging.repository.ConversationRepo;
 import webTraderBackEnd.messaging.repository.MessageRepo;
@@ -77,11 +81,20 @@ public class MessagingServiceImpl implements MessagingService{
 	
 	@Transactional
 	@Override
-	public Conversation sendMessage(long conversationId, Message message){
-		Optional<Conversation> conversationWrapper = conversationRepo.findById(conversationId);
-		if(conversationWrapper.isEmpty()) throw new ConversationNotFoundException("Conversation with id:" + conversationId + " is not found");
+	public Conversation sendMessage(SendMessageDTO dto){
+		Optional<Conversation> conversationWrapper = conversationRepo.findById(dto.getConversationId());
+		if(conversationWrapper.isEmpty()) throw new ConversationNotFoundException("Conversation with id:" + dto.getConversationId() + " is not found");
 		Conversation conversation = conversationWrapper.get();
-		conversation.addNewMessage(message);
+		Date currentDate = new Date();
+		Optional<User> sender = userRepo.findById(Long.parseLong(dto.getSenderId()));
+		if(sender.isEmpty()) throw new UserNotFoundException("User not found when seeking sender of the new message");
+		Message newMessage = new Message(dto.getMessage(),currentDate, conversation, sender.get());
+		if(dto.getReplyTo() != null){
+			Optional<Message> repliedMessageWrapper = messageRepo.findById(dto.getReplyTo());
+			if(repliedMessageWrapper.isEmpty()) throw new UserNotFoundException("Replied user not found");
+			newMessage.setReplyTo(repliedMessageWrapper.get());
+		}
+		conversation.addNewMessage(newMessage);
 		return conversation;
 	}
 	
@@ -89,7 +102,9 @@ public class MessagingServiceImpl implements MessagingService{
 	public Set<GetConversationDTO> getConversationsByUserId(long userId){
 		Set <AdminUsernameAndId> adminsWithUsernamesAndIds = userRepo.findUsersWithAdminRole();
 		System.out.println("ADMIN USERNAME " + adminsWithUsernamesAndIds.iterator().next().getUser_Id());
+		
 		Set<Conversation> conversations = userRepo.findById(userId).get().getConversations();
+		System.out.println("AMOUNT OF MESSAGES IS " + conversations.iterator().next().getMessages().size());
 		conversations.stream().forEach( conv -> conv.getParticipants());
 		Set<GetConversationDTO> adminsAndConversations = adminsWithUsernamesAndIds.stream().
 				map( adminObjectWithoutConversation -> getConversationDTOConversationSetter.setConversationOnGetConversationDTO(adminObjectWithoutConversation, conversations)).

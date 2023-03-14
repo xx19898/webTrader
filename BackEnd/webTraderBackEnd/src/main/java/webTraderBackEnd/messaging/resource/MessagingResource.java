@@ -40,9 +40,9 @@ public class MessagingResource{
 	}
 	
 	@PostMapping(path="/sendMessage")
-	public ResponseEntity<Message> startConversation(@RequestBody SendMessageDTO dto){
-		messagingService.sendMessage(dto.getConversationId(),dto.getMessage());
-		return new ResponseEntity<Message>(dto.getMessage(),HttpStatus.ACCEPTED);
+	public ResponseEntity<Void> sendMessage(@RequestBody SendMessageDTO dto){
+		messagingService.sendMessage(dto);
+		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping(path="/getConversations")

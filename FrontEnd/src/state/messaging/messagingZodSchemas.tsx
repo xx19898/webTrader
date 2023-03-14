@@ -4,9 +4,9 @@ import { z } from "zod"
 export const messageSchema:z.ZodType<Message> = z.object({
     message: z.string(),
     senderUsername: z.string(),
-    date: z.date(),
+    date: z.coerce.date(),
     id: z.number(),
-    replyTo: z.lazy(() => messageSchema)
+    replyTo: z.nullable(z.lazy(() => messageSchema))
 })
 
 export type Message = {
@@ -14,7 +14,7 @@ export type Message = {
     senderUsername: string,
     date: Date,
     id: number,
-    replyTo: Message | undefined
+    replyTo: Message | null
 }
 
 const conversationSchema = 
@@ -32,7 +32,7 @@ export const getConversationApiResponse = z.array(
     z.object({
         adminId: z.number(),
         adminUsername: z.string(),
-        conversation: conversationSchema
+        conversation: z.nullable(conversationSchema)
     })
 )
 

@@ -12,7 +12,7 @@ import { AnyAction, Dispatch } from "redux"
 
 
 interface IAdminCard{
-    conversation?: Conversation,
+    conversation: Conversation | null,
     adminId: number,
     adminUsername: string,
 }
@@ -23,7 +23,8 @@ export default ({adminId,adminUsername,conversation}:IAdminCard) => {
     const dispatch = useAppDispatch()
     const userId = useAppSelector(state => state.users.userId)
     const accessToken = useAppSelector(state => state.users.accessToken)
-    if(conversation === undefined){
+    console.log({conversation: conversation})
+    if(conversation === undefined || conversation === null){
         return(
             <li className="flex flex-col justify-center items-center bg-darker-secondary-2 rounded-lg py-3 px-2">
                 <h2 className="text-white text-lg font-semibold mb-2">{adminUsername}</h2>
@@ -35,7 +36,7 @@ export default ({adminId,adminUsername,conversation}:IAdminCard) => {
     else{
         return(
         <li className="flex flex-col justify-center items-center">
-                <h2 className="text-center text-white font-semibold text-lg">{conversation.conversationId}</h2>
+                <h2 className="text-center text-white font-semibold text-lg">{adminUsername}</h2>
                 <section>
                 <Chat messages={conversation.messages as Message[]} otherUser={conversation.participants[0]} conversationId={conversation.conversationId} />
                 </section>

@@ -54,7 +54,7 @@ public class Conversation{
 		return this.participants.stream().map(participant -> participant.getUsername()).collect(Collectors.toList());
 	}
 	
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "id")
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "conversation")
 	private List<Message> messages;
 	
 	
@@ -66,7 +66,8 @@ public class Conversation{
 	
 	
 	public void addNewMessage(Message newMessage){
-		if(!(newMessage.getSender().getId() == participants.get(0).getId() || newMessage.getSender().getId() == participants.get(0).getId())) throw new MessageNotBelongingToAnyAllowedSenderException("Message does not belong in this conversation as it's sender id does correlate to either of participants");
+		String errorMessage = "Message does not belong in this conversation as it's sender id does correlate to either of participants. Participants of the convo are: " + participants.get(0).getId() + " and " + participants.get(1).getId() + ". And message senders Id is: " + newMessage.getSender().getId();
+		if(!(newMessage.getSender().getId() == participants.get(0).getId() || newMessage.getSender().getId() == participants.get(1).getId())) throw new MessageNotBelongingToAnyAllowedSenderException(errorMessage);
 		this.messages.add(newMessage);
 	}	
 }

@@ -1,7 +1,7 @@
 import { forwardRef, useState,useEffect } from "react"
 import SendIcon from "../../icons/sendIcon"
 import ReplyArrowIcon from "../../icons/replyArrowIcon"
-import { useAppSelector } from "../../reduxHooks"
+import { useAppDispatch, useAppSelector } from "../../reduxHooks"
 import axios from "axios"
 import { BASE_URL } from "../../constants/urls"
 import { Message } from "../../state/messaging/messagingZodSchemas"
@@ -20,8 +20,14 @@ export default  ({messages,otherUser,conversationId}:IMessageDropdown) => {
     },[true])
 
     const loggedInUser = useAppSelector(state => state.users.loggedUser)
+    const accessToken = useAppSelector(state => state.users.accessToken)
+    const userId = useAppSelector(state => state.users.userId)
+
+    const reduxDispatch = useAppDispatch()
+
     const [inputHeight,setInputHeight] = useState(34)
     const [typedMessage,setTypedMessage] = useState<string>("")
+    const [replyTo,setReplyTo] = useState<number>() 
 
 
     return(
@@ -56,19 +62,44 @@ export default  ({messages,otherUser,conversationId}:IMessageDropdown) => {
                     })}
             </ul>
             <li className="block mx-auto relative w-[60%]">
-                    <textarea placeholder="Type your message..." className="flex justify-center items-center rounded-lg w-full py-2 indent-4 pr-8 resize-none focus:outline-none leading-5" style={{height: `${inputHeight}px`}} onChange={(e) => handleInput(e.target.value)}></textarea>
+                    <textarea placeholder="Type your message..." className="flex justify-center items-center rounded-lg w-full py-2 indent-4 pr-8 resize-none focus:outline-none leading-5" style={{height: `${inputHeight}px`}} onChange={(e) => handleInput(e.target.value)} value={typedMessage}></textarea>
                     <div className="absolute right-2 bottom-[2px]">
-                    <SendIcon callback={() => sendMessage(typedMessage)} height={30} />
+                    <SendIcon callback={() => sendMessage({
+                        accessToken: accessToken as string,
+                        conversationId: conversationId,
+                        message: typedMessage,
+                        senderId: userId as number,
+                        replyTo: replyTo,
+                        setTypedMessageCallback: setTypedMessage
+                    })} height={30} />
                     </div>
             </li>
             </>
     )
 
-    async function sendMessage(message:string){
-        const apiResponse = await axios.post(`${BASE_URL}messaging/sendMessage`,{
-            conversationId,
-            message
-        })
+    interface ISendMessage{
+        message:string,
+        senderId:number,
+        conversationId: number,
+        replyTo?:number
+        accessToken: string,
+        setTypedMessageCallback: (newVal:string) => void
+    }
+
+    async function sendMessage({conversationId,message,replyTo,senderId,accessToken,setTypedMessageCallback}:ISendMessage){
+        const apiResponse = await axios({url:`${BASE_URL}messaging/sendMessage`,data:{
+            conversationId:conversationId,
+            message:message,
+            replyTo:replyTo,
+            senderId:senderId,
+        },
+        headers:{
+            'access_token': accessToken
+        },
+        withCredentials:true,
+        method:'post'})
+        setTypedMessageCallback("")
+        reduxDispatch({type:'UPDATE_CONVERSATIONS'})
         console.log(apiResponse.status)
     }
 
@@ -76,7 +107,7 @@ export default  ({messages,otherUser,conversationId}:IMessageDropdown) => {
         
     }
 
-    function calcHeight(value:string) {
+    function calcHeight(value:string){
         let numberOfLineBreaks = (value.match(/\n/g) || []).length;
         // min-height + lines x line-height + padding + border
         let numberOfLines = Math.trunc(value.length / 39)

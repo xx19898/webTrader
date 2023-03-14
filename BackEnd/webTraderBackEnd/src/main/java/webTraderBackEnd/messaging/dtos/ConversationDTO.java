@@ -9,7 +9,7 @@ import webTraderBackEnd.messaging.domain.Message;
 @AllArgsConstructor
 @Getter
 public class ConversationDTO{
-	private List<Message> messages;
+	private List<MessageDTO> messages;
 	private int conversationId;
 	private List<String> participants;
 }

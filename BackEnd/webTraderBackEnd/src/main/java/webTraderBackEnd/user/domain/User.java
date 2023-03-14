@@ -66,9 +66,7 @@ public class User implements UserDetails{
  }
  
  public User() {}
- 
- 
-  	
+   	
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
   @Column

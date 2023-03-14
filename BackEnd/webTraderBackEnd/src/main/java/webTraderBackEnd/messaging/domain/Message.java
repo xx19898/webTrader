@@ -15,27 +15,35 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import webTraderBackEnd.user.domain.User;
 
 @Getter	
 @Entity
+@Setter
+@NoArgsConstructor
 public class Message{
 	public Message(
+			String message,
 			Date date, 
 			Conversation conversation,
 			User sender)
 	{
+		this.message = message;
 		this.conversation = conversation;
 		this.date = date;
 		this.sender = sender;
 	}
 	
 	public Message(
+			String message,
 			Date date, 
 			Conversation conversation,
 			User sender,
 			Message replyTo)
 	{
+		this.message = message;
 		this.conversation = conversation;
 		this.date = date;
 		this.sender = sender;
@@ -46,6 +54,8 @@ public class Message{
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Message replyTo;
+	
+	private String message;
 	
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@Id()
