@@ -21,6 +21,7 @@ import webTraderBackEnd.portfolioStocks.exceptions.MultiplePortfolioStocksWithSa
 import webTraderBackEnd.portfolioStocks.exceptions.PortfolioStockNotFound;
 import webTraderBackEnd.user.domain.User;
 
+@Getter
 @Entity
 @Table(name="portfolios")
 public class Portfolio{

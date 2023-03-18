@@ -18,9 +18,7 @@ const AuthenticatedMainPage = ({authenticatedUser}:{authenticatedUser:string}) =
         In this app you will be able to trade stocks, contact your personal mentor and
     manage your portfolio.
         </p>
-        <div className="mx-auto mt-10">
-            <AdminPanel />
-        </div>
+        <AdminPanel />
         <div className = "pb-[1px] mt-[2rem] h-auto w-full rounded-sm flex flex-col justify-streth items-center  text-lg bg-transparent">
             <h1 className="font-bold mt-[20px] text-white">Stock Viewer</h1> 
             <StocksViewer/>

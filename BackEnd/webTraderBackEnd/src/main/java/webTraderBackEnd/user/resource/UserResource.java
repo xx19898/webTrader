@@ -32,15 +32,15 @@ import webTraderBackEnd.user.repository.UserRepo;
 import webTraderBackEnd.user.service.UserService;
 import webTraderBackEnd.user.service.UserServiceImpl;
 
-@RestController // This means that this class is a Controller
+@RestController 
 @RequestMapping(path="/users")
 public class UserResource {
   @Autowired 
   private UserServiceImpl userService;
   
   
-  //For adding users via for example admin tab, not registering them 
-  @PostMapping(path="/add") // Map ONLY POST Requests
+  
+  @PostMapping(path="/add")
   public @ResponseBody ResponseEntity<String> addNewUser (@RequestBody User newUser) throws RoleNotFoundException {
     userService.createNewUser(newUser);
     return new ResponseEntity<String>(String.format("User with name %s",newUser.getUsername()),HttpStatus.OK);
@@ -49,11 +49,6 @@ public class UserResource {
   @PostMapping(path="/addAStockDeal")
   public @ResponseBody ResponseEntity<Void> addNewStockDealToAUser(@RequestBody StockDeal stockDeal){
 	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	  System.out.println(stockDeal.getId());
-	  System.out.println(stockDeal.getSymbol());
-	  System.out.println(stockDeal.getQuantity());
-	  System.out.println(stockDeal.getStockPriceAtTheAcquirement());
-	  System.out.println(stockDeal.getOperationType());
 	  Long userIdentity = Long.parseLong((String) authentication.getPrincipal());
 	  userService.addStockDeal(userIdentity,stockDeal.getSymbol(), stockDeal.getQuantity(), stockDeal.getStockPriceAtTheAcquirement(),stockDeal.getOperationType());
 	  return new ResponseEntity<Void>(HttpStatus.OK);
@@ -73,6 +68,5 @@ public class UserResource {
 	  if(userId == null) return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 	  StockDeal changedStockDeal = userService.cancelStockDeal(userId);
 	  return new ResponseEntity<StockDeal>(HttpStatus.ACCEPTED);
-  }
-  
+  } 
 }

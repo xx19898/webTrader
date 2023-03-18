@@ -38,7 +38,7 @@ import webTraderBackEnd.user.domain.User;
 @Entity
 @Table
 @NoArgsConstructor
-public class StockDeal {
+public class StockDeal{
 	
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
 	public StockDeal(@JsonProperty("symbol") String symbol,

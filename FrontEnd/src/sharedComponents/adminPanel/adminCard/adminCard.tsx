@@ -36,7 +36,7 @@ export default ({adminId,adminUsername,conversation}:IAdminCard) => {
     else{
         return(
         <li className="flex flex-col justify-center items-center">
-                <h2 className="text-center text-white font-semibold text-lg">{adminUsername}</h2>
+                <h2 className="text-center text-white font-semibold text-lg mb-2">{adminUsername}</h2>
                 <section>
                 <Chat messages={conversation.messages as Message[]} otherUser={conversation.participants[0]} conversationId={conversation.conversationId} />
                 </section>

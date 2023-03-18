@@ -48,6 +48,7 @@ export const getStockData = (queryParams: IStockQueryParams) => {
 
     const axiosConfig = {
         method: 'get',
+        withCredentials: true,
         url: (typeof (queryParams as IStockQueryParamsIntraday).interval !== 'undefined') ? 
         `${BASE_URL}stocks/getStockData?function=${(queryParams.function)}&symbols=${symbolsAsOneString},&interval=${((queryParams as IStockQueryParamsIntraday).interval)}`
         :

@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.AllArgsConstructor;
 import webTraderBackEnd.exceptionHandling.BadRequestException;
 import webTraderBackEnd.portfolioStocks.domain.Portfolio;
 import webTraderBackEnd.portfolioStocks.domain.StockDeal;
@@ -22,13 +23,15 @@ import webTraderBackEnd.portfolioStocks.exceptions.StockDealNotFoundException;
 import webTraderBackEnd.portfolioStocks.repository.StockDealRepository;
 import webTraderBackEnd.user.domain.Role;
 import webTraderBackEnd.user.domain.User;
+import webTraderBackEnd.user.dto.UserDTO;
+import webTraderBackEnd.user.dtoConverters.UserDTOConverter;
 import webTraderBackEnd.user.exceptions.UserAlreadyExistsException;
 import webTraderBackEnd.user.exceptions.UserNotFoundException;
 import webTraderBackEnd.user.repository.RoleRepo;
 import webTraderBackEnd.user.repository.UserInsertRepository;
 import webTraderBackEnd.user.repository.UserRepo;
 
-
+@AllArgsConstructor	
 @Service @Transactional
 public class UserServiceImpl implements UserService,UserDetailsService{
 	
@@ -40,20 +43,8 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 	private final PasswordEncoder passwordEncoder;
 	@Autowired
 	private final StockDealRepository stockDealRepo;
-	
-	
-	UserServiceImpl(
-			UserRepo userRepo,
-			RoleRepo roleRepo,
-			PasswordEncoder passwordEncoder,
-			StockDealRepository stockDealRepo
-			)
-	{
-		this.stockDealRepo = stockDealRepo;
-		this.userRepo = userRepo;
-		this.roleRepo = roleRepo;
-		this.passwordEncoder = passwordEncoder;
-	}
+	@Autowired
+	private final UserDTOConverter userDTOConverter;
 
 	@Override
 	public User saveUser(User user){
@@ -175,5 +166,15 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 		}else{
 			throw new StockDealNotFoundException();
 		}
+	}
+
+	@Override
+	public List<UserDTO> getUsersData() {
+		Iterable<User> users = userRepo.findAll();
+		List<UserDTO> usersDto = new ArrayList<UserDTO>();
+		for(User user : users){
+			usersDto.add(userDTOConverter.convert(user));
+		}
+		return usersDto;
 	}
 }

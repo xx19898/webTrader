@@ -12,12 +12,13 @@ export default ({otherUser,messages,conversationId}:IMessageDropdown) => {
     const dropdownArrowRef = useRef<SVGSVGElement>(null)
     const dropdownRef = useRef<HTMLElement>(null)
     const {open,handleClick} = useAnimatedDropdown({dropdownRef,dropdownArrowRef})
-        
+    
+    
 
 
     return(
         <div className="flex flex-col justify-center items-center w-full h-auto">
-            <div 
+            <div
             className = {
                 open ? 
                 "flex justify-center items-center flex-col w-[40%] h-auto py-1 bg-primary  mt-3 border-solid border-darker-secondary-2 cursor-pointer" 

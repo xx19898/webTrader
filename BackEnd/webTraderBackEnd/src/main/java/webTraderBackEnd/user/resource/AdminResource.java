@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import webTraderBackEnd.portfolioStocks.domain.Portfolio;
 import webTraderBackEnd.portfolioStocks.domain.PortfolioStock;
 import webTraderBackEnd.user.domain.User;
+import webTraderBackEnd.user.dto.UserDTO;
 import webTraderBackEnd.user.service.AdminService;
 import webTraderBackEnd.user.service.AdminServiceImpl;
 import webTraderBackEnd.user.service.UserService;
@@ -43,9 +44,9 @@ public class AdminResource{
 	}
 	
 	@GetMapping("/allUserData")
-	public @ResponseBody ResponseEntity<List<User>> getAllUsersData(){
-		List<User> users = userService.getUsers();
-		return new ResponseEntity<List<User>>(users,HttpStatus.OK);
+	public @ResponseBody ResponseEntity<List<UserDTO>> getAllUsersData(){
+		List<UserDTO> users = userService.getUsersData();
+		return new ResponseEntity<List<UserDTO>>(users,HttpStatus.OK);
 	}
 	
 	@GetMapping("/portfolio")
@@ -59,7 +60,7 @@ public class AdminResource{
 		Stream.of(newPortfolioStocks).forEach(newStock -> {
 			try {
 				userService.addStockToPortfolio(username, newStock.getSymbol(), newStock.getQuantity(), newStock.getPriceAtAcquirement());
-			}catch (Exception e) {
+			}catch (Exception e){
 				e.printStackTrace();
 			}
 		});

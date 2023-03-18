@@ -41,7 +41,7 @@ export default () => {
                 <section className="h-auto mt-5 w-full min-h-[40px] border border-solid border-darker-secondary-2 rounded-md">
                     <ul className="flex flex-col justify-center items-center">
                     {
-
+                        
                     }
                     </ul>
                 </section>

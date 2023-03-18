@@ -81,14 +81,12 @@ export default () => {
 
     return(
         <>
-        {
-            ! open ? 
-            <div className="w-fit p-2 px-4 flex flex-col justify-center items-center border border-white border-solid">
+         
+            <div className="min-w-full p-2 px-4 flex flex-col justify-center items-center border border-white border-solid">
                 <h2 className="text-white text-lg font-semibold mb-1">Admins</h2>
-                <DropDownArrowIcon onClickCallback={handleClick} height={10} ref={dropdownArrowRef} />
-            </div>
-            :
-            <ul ref={dropdownRef}>
+                {
+                open ?  
+                <ul ref={dropdownRef} className="mb-10">
                 {
                     conversations.map(conversationInfo => {
                         return(
@@ -99,8 +97,12 @@ export default () => {
                         )
                     })
                 }
-            </ul>   
-        }
+                </ul> : null
+
+                }
+                <DropDownArrowIcon onClickCallback={handleClick} height={10} ref={dropdownArrowRef} />
+            </div>
+               
         </>
     )
 

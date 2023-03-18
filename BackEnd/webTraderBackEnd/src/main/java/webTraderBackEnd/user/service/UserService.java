@@ -7,6 +7,7 @@ import webTraderBackEnd.portfolioStocks.domain.Portfolio;
 import webTraderBackEnd.portfolioStocks.domain.StockDeal;
 import webTraderBackEnd.user.domain.Role;
 import webTraderBackEnd.user.domain.User;
+import webTraderBackEnd.user.dto.UserDTO;
 
 public interface UserService {
 	
@@ -18,6 +19,8 @@ public interface UserService {
 	User getUser(String username);
 	User getUser(long id);
 	List<User> getUsers();
+	
+	List<UserDTO> getUsersData();
 	
 	Set<StockDeal> getStockDeals(String username);
 	Portfolio getUserPortfolio(String username);
