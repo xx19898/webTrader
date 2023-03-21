@@ -58,7 +58,7 @@ public class AdminResource{
 	@PostMapping("addStock")
 	public @ResponseBody ResponseEntity addStockToPortfolio(@RequestBody PortfolioStock[] newPortfolioStocks,@RequestParam String username){
 		Stream.of(newPortfolioStocks).forEach(newStock -> {
-			try {
+			try{
 				userService.addStockToPortfolio(username, newStock.getSymbol(), newStock.getQuantity(), newStock.getPriceAtAcquirement());
 			}catch (Exception e){
 				e.printStackTrace();

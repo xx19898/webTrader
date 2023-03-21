@@ -70,8 +70,7 @@ export default  ({messages,otherUser,conversationId}:IMessageDropdown) => {
                         message: typedMessage,
                         senderId: userId as number,
                         replyTo: replyTo,
-                        setTypedMessageCallback: setTypedMessage
-                    })} height={30} />
+                        setTypedMessageCallback: setTypedMessage})} height={30} />
                     </div>
             </li>
             </>

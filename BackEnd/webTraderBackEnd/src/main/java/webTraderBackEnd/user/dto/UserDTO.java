@@ -19,6 +19,4 @@ public class UserDTO{
 	private String username;
 	private PortfolioDTO portfolio;
 	private List<StockDealDTO> stockDeals;
-	
-	
 }

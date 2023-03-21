@@ -9,8 +9,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import webTraderBackEnd.portfolioStocks.domain.Portfolio;
 import webTraderBackEnd.portfolioStocks.dtoConverters.PortfolioDTOConverter;
 import webTraderBackEnd.portfolioStocks.dtoConverters.StockDealDTOConverter;
+import webTraderBackEnd.portfolioStocks.dtos.PortfolioDTO;
 import webTraderBackEnd.user.domain.User;
 import webTraderBackEnd.user.dto.UserDTO;
 
@@ -27,10 +29,15 @@ public class UserDTOConverter{
 	private StockDealDTOConverter stockDealDTOConverter;
 	
 	public UserDTO convert(User user){
+		PortfolioDTO portfolio;
+		if(user.getPortfolio() == null) portfolio = null;
+		else {
+			portfolio = portfolioDTOConverter.convert(user.getPortfolio());
+		}
 		return new UserDTO(
 				user.getId(),
 				user.getUsername(),
-				portfolioDTOConverter.convert(user.getPortfolio()),
+				portfolio,
 				user.getStockDeals()
 				.stream()
 				.map(stockDeal -> stockDealDTOConverter.convert(stockDeal))

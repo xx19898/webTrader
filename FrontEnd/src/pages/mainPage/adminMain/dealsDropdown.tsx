@@ -4,12 +4,13 @@ import { DropDownArrowIcon } from "../../../icons/dropdownArrowIcon"
 import { DealStatus } from "../../../sharedComponents/portfolioManager/portfolioDataSchemas"
 import { StockDeals } from "../../../sharedComponents/portfolioManager/stockDealVisualizer"
 import GsapPreloader from "../../../sharedComponents/preloaders/gsapPreloader"
+import { StockDeal } from "./adminMainPageSchema"
 import useAnimatedDropdown from "./useAnimatedDropdown"
 import useDealsDropdown from "./useDealsDropdown"
 
 interface IDealsDropdown{
     name:string,
-    deals:StockDeals
+    deals:StockDeal[]
 }
 
 export default ({name,deals}:IDealsDropdown) => {
@@ -28,38 +29,34 @@ export default ({name,deals}:IDealsDropdown) => {
         <div className={
         open 
         ?
-        "flex flex-col justify-center items-center h-auto w-[40%] mt-3 border border-solid border-darker-secondary-2 cursor-pointer p-2 text-center bg-primary"
+        "flex flex-col justify-center items-center h-auto w-[40%] mt-3 border border-solid border-darker-secondary-2 cursor-pointer p-2 text-center bg-primary rounded-[17px]"
         :
-        "flex flex-col justify-center items-center h-auto mt-3 w-[40%] border border-solid border-darker-secondary-2 cursor-pointer py-1 text-center"  } onClick={() => handleClick()}>
+        "flex flex-col justify-center items-center h-auto mt-3 w-[40%] border border-solid border-darker-secondary-2 cursor-pointer py-1 text-center rounded-[17px]"  } onClick={() => handleClick()}>
             <span className="text-white font-semibold mb-1">{name}</span>
             <DropDownArrowIcon onClickCallback={handleClick} height={10} ref={dropdownArrowRef} />
         </div>
         {
             open ? 
-            <ul className="w-[80%] flex flex-col justify-center items-center " ref={dropdownRef}>
+            <ul className="w-full flex flex-col justify-center items-center " ref={dropdownRef}>
                 {deals.map(deal => {
                     return(
-                        <li className="w-full px-8 py-2 flex flex-col justify-center items-center ">
-                            <h2 className="text-white my-2 font-bold">{deal.symbol}</h2>
-                            <section className="w-full grid grid-cols-2 text-white">
-                                <p className="text-center font-semibold text-white">quantity:</p>
-                                <p className="text-center font-semibold text-white">{deal.quantity}</p>
-                                <p className="text-center font-semibold text-white">Price</p>
-                                <p className="text-center font-semibold text-white">{deal.stockPriceAtTheAcquirement}</p> 
-                                <p className="text-center font-semibold text-white">Total Price</p>
-                                <p className="text-center font-semibold text-white">{deal.stockPriceAtTheAcquirement * deal.quantity}</p>
-                                <p className="text-center font-semibold text-white">STATUS</p>
-                                <p className="text-center font-bold">{deal.dealStatus}</p>
-                            </section>
-                            <section>
-                            <section className="flex flex-row justify-center items-center">
-                            <button className="my-6 p-2 mr-10 px-8 rounded-sm bg-primary" onClick={() => trackPromise(handleChangeDealStatus({id:deal.id,newStatus:"APPROVED"}))}>
-                                APPROVE
-                            </button>
-                            <button className="my-6 p-2 px-6 rounded-sm bg-primary" onClick={() => trackPromise(handleChangeDealStatus({id:deal.id,newStatus:"DISAPPROVED"}))}>
-                                DISAPPROVE
-                            </button>
-                            </section>
+                        <li className="w-[80%] first:my-[40px] last:mb-[40px] flex flex-col justify-center items-center bg-gradient-to-tr from-secondary to-secondary-2 rounded-[17px] drop-shadow-md">
+                            <h2 className="text-white my-[40px] font-medium text-[36px]">{deal.symbol}</h2>
+                            <section className="w-full grid grid-cols-2 gap-y-[20px] text-white py-0 my-0">
+                                <p className="text-center font-normal text-[18px] text-white">Quantity:</p>
+                                <p className="text-center font-medium  text-white">{deal.quantity}</p>
+                                <p className="text-center font-normal text-[18px] text-white">Price</p>
+                                <p className="text-center font-medium  text-white">{deal.stockPriceAtTheAcquirement}</p> 
+                                <p className="text-center font-normal text-[18px] text-white">Total Price</p>
+                                <p className="text-center font-medium  text-white">{deal.stockPriceAtTheAcquirement * deal.quantity}</p>
+                                <p className="text-center font-normal text-[18px] text-white">STATUS</p>
+                                <p className="text-center font-medium ">{deal.dealStatus}</p>
+                                <button className="col-start-1 p-2  px-8 mb-[40px] rounded-[17px] font-normal bg-primary text-white" onClick={() => trackPromise(handleChangeDealStatus({id:deal.id,newStatus:"APPROVED"}))}>
+                                    APPROVE
+                                </button>
+                                <button className="col-start-2 p-2 px-6 mb-[40px]  rounded-[17px] font-normal bg-primary text-white" onClick={() => trackPromise(handleChangeDealStatus({id:deal.id,newStatus:"DISAPPROVED"}))}>
+                                    DISAPPROVE
+                                </button>
                             </section>
                         </li>
                     )

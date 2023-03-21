@@ -50,6 +50,4 @@ public class MessagingResource{
 		System.out.println("PRINCIPAL ID " + principal.getName());
 		return new ResponseEntity<Set<GetConversationDTO>>(messagingService.getConversationsByUserId(Long.parseLong(principal.getName())),HttpStatus.ACCEPTED);
 	}
-	
-	
 }

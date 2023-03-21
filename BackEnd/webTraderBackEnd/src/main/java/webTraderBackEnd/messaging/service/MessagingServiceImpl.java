@@ -100,12 +100,15 @@ public class MessagingServiceImpl implements MessagingService{
 	
 	@Override
 	public Set<GetConversationDTO> getConversationsByUserId(long userId){
+		Optional<User> user = userRepo.findById(userId);
+		if(user.isEmpty()) throw new UserNotFoundException("user not found");
 		Set <AdminUsernameAndId> adminsWithUsernamesAndIds = userRepo.findUsersWithAdminRole();
 		System.out.println("ADMIN USERNAME " + adminsWithUsernamesAndIds.iterator().next().getUser_Id());
 		
 		Set<Conversation> conversations = userRepo.findById(userId).get().getConversations();
 		System.out.println("AMOUNT OF MESSAGES IS " + conversations.iterator().next().getMessages().size());
 		conversations.stream().forEach( conv -> conv.getParticipants());
+		//TODO: this returns all messages twice when getting messages for an admin, write new method for attaining messages specifically for the admin
 		Set<GetConversationDTO> adminsAndConversations = adminsWithUsernamesAndIds.stream().
 				map( adminObjectWithoutConversation -> getConversationDTOConversationSetter.setConversationOnGetConversationDTO(adminObjectWithoutConversation, conversations)).
 				collect(Collectors.toSet());

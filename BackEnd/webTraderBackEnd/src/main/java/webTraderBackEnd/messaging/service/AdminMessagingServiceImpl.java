@@ -22,9 +22,7 @@ public class AdminMessagingServiceImpl implements AdminMessagingService{
 	
 	@Override
 	public List<ConversationDTO> getConversationsWithCertainAdmin(Long id){
-//		Optional<Conversation> conversations = convRepo.;
-		List<ConversationDTO> mockList = new ArrayList<ConversationDTO>();
-		return mockList;
+//		
 	}
 
 }

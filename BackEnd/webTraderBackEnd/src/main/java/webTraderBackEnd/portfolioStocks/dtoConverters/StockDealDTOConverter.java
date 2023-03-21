@@ -18,7 +18,8 @@ public class StockDealDTOConverter{
 				stockDeal.getCreatedDate(),
 				stockDeal.getId(),
 				stockDeal.getUser().getUsername(),
-				stockDeal.getUser().getId());			
+				stockDeal.getUser().getId(),
+				stockDeal.getSymbol());
 	}
 
 }

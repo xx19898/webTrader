@@ -7,7 +7,7 @@ import { RootState } from "../../store";
 import { useNavigate } from "react-router";
 import PortfolioManager from "../../sharedComponents/portfolioManager/portfolioManager";
 import { AuthenticatedMainPage } from "./authenticatedMainPage";
-import AdminMainPage from "./adminMain/adminMainPage";
+import AdminMainPage from "./adminMain/adminMainPageContainer";
 import AnonymousMainPage from "./anonymousMainPage";
 
 export const MainPage  = () => {

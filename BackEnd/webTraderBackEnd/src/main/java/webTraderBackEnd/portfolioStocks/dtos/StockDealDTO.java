@@ -19,5 +19,6 @@ public class StockDealDTO{
 	private Instant createdDate;
 	private long id;
 	private String ownerName;
-	private long userId;	
+	private long userId;
+	private String symbol;
 }

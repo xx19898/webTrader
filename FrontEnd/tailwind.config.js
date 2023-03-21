@@ -5,6 +5,9 @@ module.exports = {
     ],
     theme: {
       extend:{
+        dropShadow:{
+          'md': '5px 5px 4px rgba(0, 0, 0, 0.6)'
+        },
       backgroundImage: {
         'main-background':"url('../assets/main-background.svg')"
       },

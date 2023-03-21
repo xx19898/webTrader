@@ -165,7 +165,7 @@ public void setRoles(List<Role> newRoles){
 }
 
 @Override
-public String getUsername() {
+public String getUsername(){
 	return username;
 }
 

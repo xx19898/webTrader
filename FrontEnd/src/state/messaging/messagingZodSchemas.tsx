@@ -36,5 +36,15 @@ export const getConversationApiResponse = z.array(
     })
 )
 
+export const getConversationApiResponseAdmin = z.array(
+    z.object({
+        userId: z.number(),
+        username: z.string(),
+        conversation: z.nullable(conversationSchema),
+    })
+)
+
+
+
 export type GetConversationApiResponse = z.infer<typeof getConversationApiResponse>
 
