@@ -5,7 +5,7 @@ import { BASE_URL } from "../../constants/urls"
 import { DropDownArrowIcon } from "../../icons/dropdownArrowIcon"
 import useAnimatedDropdown from "../../pages/mainPage/adminMain/useAnimatedDropdown"
 import { useAppSelector } from "../../reduxHooks"
-import { Conversation, GetConversationApiResponse } from "../../state/messaging/messagingZodSchemas"
+import { Conversation } from "../../state/messaging/messagingZodSchemas"
 import AdminCard from "./adminCard/adminCard"
 
 
@@ -91,9 +91,9 @@ export default () => {
                     conversations.map(conversationInfo => {
                         return(
                             <AdminCard
-                            adminId={conversationInfo.adminId}
-                            adminUsername={conversationInfo.adminUsername}
-                            conversation={conversationInfo.conversation}/>
+                            adminId={conversationInfo.participants.find(participant => participant.participantId != userId)?.participantId as number}
+                            adminUsername={conversationInfo.participants.find(participant => participant.participantId != userId)?.participantName as string}
+                            conversation={conversationInfo}/>
                         )
                     })
                 }

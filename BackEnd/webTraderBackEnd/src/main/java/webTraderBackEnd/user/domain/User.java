@@ -159,6 +159,10 @@ public Collection<Role> getRoles(){
 	return this.roles;
 }
 
+public boolean isAdmin(){
+	return this.roles.stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+}
+
 @Transactional
 public void setRoles(List<Role> newRoles){
 	this.roles = newRoles;

@@ -19,32 +19,15 @@ export type Message = {
 
 const conversationSchema = 
         z.object({
-        messages:z.optional(z.array(messageSchema)),
-        conversationId: z.number(),
-        participants: z.array(z.string())
+            messages:z.optional(z.array(messageSchema)),
+            conversationId: z.number(),
+            participants: z.array(z.object({
+                participantId:z.number(),
+                participantName:z.string(),
+            }))
     })
+
+export const conversationsSchema = z.array(conversationSchema)
 
 
 export type Conversation = z.infer<typeof conversationSchema>
-
-
-export const getConversationApiResponse = z.array(
-    z.object({
-        adminId: z.number(),
-        adminUsername: z.string(),
-        conversation: z.nullable(conversationSchema)
-    })
-)
-
-export const getConversationApiResponseAdmin = z.array(
-    z.object({
-        userId: z.number(),
-        username: z.string(),
-        conversation: z.nullable(conversationSchema),
-    })
-)
-
-
-
-export type GetConversationApiResponse = z.infer<typeof getConversationApiResponse>
-

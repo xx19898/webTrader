@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit"
-import {GetConversationApiResponse} from './messagingZodSchemas'
+import { Conversation } from "./messagingZodSchemas"
 
 
 
 
 
 export type Messaging = {
-    conversations: GetConversationApiResponse,
+    conversations: Conversation[],
     lastUpdated: Date | undefined,
 }
 
@@ -19,7 +19,7 @@ export const messagingSlice = createSlice({
     name: 'messaging',
     initialState: initialState,
     reducers: {
-        SET_NEW_CONVERSATIONS(state, action:{type:string,payload: GetConversationApiResponse}){
+        SET_NEW_CONVERSATIONS(state, action:{type:string,payload: Conversation[]}){
             state.conversations = action.payload
             state.lastUpdated = new Date()
         },

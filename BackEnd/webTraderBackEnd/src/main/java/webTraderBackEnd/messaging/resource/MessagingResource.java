@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import webTraderBackEnd.messaging.domain.Conversation;
 import webTraderBackEnd.messaging.domain.Message;
-import webTraderBackEnd.messaging.dtos.GetConversationDTO;
+import webTraderBackEnd.messaging.dtos.ConversationDTO;
 import webTraderBackEnd.messaging.dtos.SendMessageDTO;
 import webTraderBackEnd.messaging.service.MessagingService;
 import webTraderBackEnd.user.domain.User;
@@ -46,8 +46,8 @@ public class MessagingResource{
 	}
 	
 	@GetMapping(path="/getConversations")
-	public ResponseEntity<Set<GetConversationDTO>> getConversation(Principal principal){
+	public ResponseEntity<Set<ConversationDTO>> getConversation(Principal principal){
 		System.out.println("PRINCIPAL ID " + principal.getName());
-		return new ResponseEntity<Set<GetConversationDTO>>(messagingService.getConversationsByUserId(Long.parseLong(principal.getName())),HttpStatus.ACCEPTED);
+		return new ResponseEntity<Set<ConversationDTO>>(messagingService.getConversationsByUserId(Long.parseLong(principal.getName())),HttpStatus.ACCEPTED);
 	}
 }

@@ -27,13 +27,23 @@ export default  ({messages,otherUser,conversationId}:IMessageDropdown) => {
 
     const [inputHeight,setInputHeight] = useState(34)
     const [typedMessage,setTypedMessage] = useState<string>("")
-    const [replyTo,setReplyTo] = useState<number>() 
+    const [replyTo,setReplyTo] = useState<number>()
+
+    const messagesCopy = [...messages]
+    messagesCopy.sort(
+        function(a:Message,b:Message){
+            if(a.date > b.date) return 1
+            else if(a.date < b.date) return -1
+            else{
+            return 0
+        }
+    })
 
 
     return(
             <>
-            <ul className="relative bg-secondary-2 w-full min-h-[100px] h-auto mb-0 pb-4 grid grid-cols-2 border-solid border border-darker-secondary-2" >
-                    {messages.map(message => {
+            <ul className="relative bg-secondary-2 w-full min-h-[100px] h-auto mb-0 pb-4 grid grid-cols-2 border-solid border border-darker-secondary-2 rounded-[17px]" >
+                    {messagesCopy.map(message => {
                         return(
                                  <li className={loggedInUser === message.senderUsername ? "col-start-1 col-end-1 h-auto relative bg-transparent p-4 text-center w-full ml-[2rem] mr-2 rounded-md my-2 flex flex-col justify-center items-center" : "col-start-2 col-end-2 h-auto relative bg-transparent p-4 text-center w-[60%] ml-[2rem] mr-2 rounded-md my-2 flex flex-col justify-center items-center"}>
 
@@ -61,7 +71,7 @@ export default  ({messages,otherUser,conversationId}:IMessageDropdown) => {
                         )
                     })}
             </ul>
-            <li className="block mx-auto relative w-[60%]">
+            <li className="block mx-auto relative w-[100%]">
                     <textarea placeholder="Type your message..." className="flex justify-center items-center rounded-lg w-full py-2 indent-4 pr-8 resize-none focus:outline-none leading-5" style={{height: `${inputHeight}px`}} onChange={(e) => handleInput(e.target.value)} value={typedMessage}></textarea>
                     <div className="absolute right-2 bottom-[2px]">
                     <SendIcon callback={() => sendMessage({

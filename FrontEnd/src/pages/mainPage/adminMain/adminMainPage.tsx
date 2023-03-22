@@ -2,13 +2,13 @@ import { SearchIcon } from "../../../icons/searchIcon"
 import UserInfoVisualizer from "./userInfoVisualizer"
 import{forwardRef} from 'react'
 import { GetUserInfoApiResponse } from "./adminMainPageSchema"
-import { Conversation, GetConversationApiResponse } from "../../../state/messaging/messagingZodSchemas"
+import { Conversation } from "../../../state/messaging/messagingZodSchemas"
 
 export type IAdminMainPage = {
     setSearchedUsernameCallback: (update: string | ((prevState: string) => string)) => void,
     searchedUsername: string
     usersData: GetUserInfoApiResponse,
-    conversations?: GetConversationApiResponse
+    conversations: Conversation[]
 }
 
 export const AdminMainPage = forwardRef(function AdminMainPage(props:IAdminMainPage,ref:React.ForwardedRef<SVGSVGElement>){
@@ -48,14 +48,14 @@ export const AdminMainPage = forwardRef(function AdminMainPage(props:IAdminMainP
         </div>
     )
 
-    function findConversation(username:string,conversations: GetConversationApiResponse){
-        const result = conversations.find(conversationObject => {
-            if(conversationObject.conversation == null || conversationObject.conversation == undefined) return false
-            console.log({conversationObject})
+    function findConversation(username:string,conversations: Conversation[]){
+        const result = conversations.find(conversation => {
+  if(conversation == null || conversation == undefined) return false
+            console.log({conversation})
             console.log({username})
-            console.log({includes:conversationObject.conversation.participants.includes(username)})
-            return conversationObject.conversation.participants.includes(username)
-        })?.conversation
+            console.log({includes:conversation.participants.map(participant => participant.participantName).includes(username)})
+            return conversation.participants.map(participant => participant.participantName).includes(username)
+        })
 
         console.log({result})
         if(result == null) return undefined

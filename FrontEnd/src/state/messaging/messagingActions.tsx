@@ -1,6 +1,6 @@
 import axios from "axios"
 import { BASE_URL } from "../../constants/urls"
-import { getConversationApiResponse } from "./messagingZodSchemas"
+import { conversationsSchema } from "./messagingZodSchemas"
 
 
 export async function updateConversations(accessToken:string,userId:number){
@@ -11,5 +11,5 @@ export async function updateConversations(accessToken:string,userId:number){
         withCredentials:true,
     })
 
-    return getConversationApiResponse.parse(apiResponse.data)
+    return conversationsSchema.parse(apiResponse.data)
 } 

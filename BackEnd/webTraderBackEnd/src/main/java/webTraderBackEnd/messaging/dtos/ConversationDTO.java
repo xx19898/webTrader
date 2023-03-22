@@ -10,6 +10,6 @@ import webTraderBackEnd.messaging.domain.Message;
 @Getter
 public class ConversationDTO{
 	private List<MessageDTO> messages;
-	private int conversationId;
-	private List<String> participants;
+	private long conversationId;
+	private List<ParticipantDTO> participants;
 }

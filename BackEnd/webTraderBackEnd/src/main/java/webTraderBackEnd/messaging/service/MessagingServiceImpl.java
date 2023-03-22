@@ -15,35 +15,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import webTraderBackEnd.messaging.DtoConverters.ConversationToConversationDTOConverter;
 import webTraderBackEnd.messaging.domain.Conversation;
 import webTraderBackEnd.messaging.domain.Message;
-import webTraderBackEnd.messaging.dtos.GetConversationDTO;
+import webTraderBackEnd.messaging.dtos.ConversationDTO;
 import webTraderBackEnd.messaging.dtos.SendMessageDTO;
 import webTraderBackEnd.messaging.exceptions.ConversationNotFoundException;
 import webTraderBackEnd.messaging.repository.ConversationRepo;
 import webTraderBackEnd.messaging.repository.MessageRepo;
-import webTraderBackEnd.messaging.utility.GetConversationDTOConversationSetter;
 import webTraderBackEnd.user.domain.User;
 import webTraderBackEnd.user.exceptions.UserNotFoundException;
 import webTraderBackEnd.user.repository.UserRepo;
 import webTraderBackEnd.user.repository.projections.AdminUsernameAndId;
 import webTraderBackEnd.user.service.UserService;
 
-
+@AllArgsConstructor
 @Service
 public class MessagingServiceImpl implements MessagingService{
 	
-	public MessagingServiceImpl(GetConversationDTOConversationSetter getConversationDTOConversationSetter,UserService userService,ConversationRepo conversationRepo,MessageRepo messageRepo,UserRepo userRepo){
-		this.conversationRepo = conversationRepo;
-		this.getConversationDTOConversationSetter = getConversationDTOConversationSetter;
-		this.messageRepo = messageRepo;
-		this.userRepo = userRepo;
-		this.userService = userService;
-	}
-	
 	@Autowired
-	GetConversationDTOConversationSetter getConversationDTOConversationSetter;
+	ConversationToConversationDTOConverter conversationToConversationDTOConverter;
 	
 	@Autowired
 	ConversationRepo conversationRepo;
@@ -99,20 +92,12 @@ public class MessagingServiceImpl implements MessagingService{
 	}
 	
 	@Override
-	public Set<GetConversationDTO> getConversationsByUserId(long userId){
-		Optional<User> user = userRepo.findById(userId);
-		if(user.isEmpty()) throw new UserNotFoundException("user not found");
-		Set <AdminUsernameAndId> adminsWithUsernamesAndIds = userRepo.findUsersWithAdminRole();
-		System.out.println("ADMIN USERNAME " + adminsWithUsernamesAndIds.iterator().next().getUser_Id());
-		
-		Set<Conversation> conversations = userRepo.findById(userId).get().getConversations();
-		System.out.println("AMOUNT OF MESSAGES IS " + conversations.iterator().next().getMessages().size());
-		conversations.stream().forEach( conv -> conv.getParticipants());
+	public Set<ConversationDTO> getConversationsByUserId(long userId){
+		Set<Conversation> conversationsFromDB = userRepo.findById(userId).get().getConversations();
+		System.out.println("Number of conversations: " + conversationsFromDB.size());
 		//TODO: this returns all messages twice when getting messages for an admin, write new method for attaining messages specifically for the admin
-		Set<GetConversationDTO> adminsAndConversations = adminsWithUsernamesAndIds.stream().
-				map( adminObjectWithoutConversation -> getConversationDTOConversationSetter.setConversationOnGetConversationDTO(adminObjectWithoutConversation, conversations)).
-				collect(Collectors.toSet());
-		return adminsAndConversations;
+		Set<ConversationDTO>  conversations = conversationToConversationDTOConverter.convertConversationToConversationDTO(conversationsFromDB);
+		return conversations;
 	}
 }
 

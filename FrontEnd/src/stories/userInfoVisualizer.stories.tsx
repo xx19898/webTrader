@@ -42,7 +42,7 @@ const args:UserInfoAdmin = {
 
 const conversation:Conversation = {
     conversationId: 2,
-    participants: ['user2','admin'],
+    participants: [{participantId:1,participantName:'user2'},{participantName:'admin',participantId:2}],
     messages: [{
         date: new Date(1999,11,22),
         id: 1,

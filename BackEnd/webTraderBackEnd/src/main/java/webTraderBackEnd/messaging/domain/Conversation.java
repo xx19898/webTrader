@@ -3,7 +3,9 @@ package webTraderBackEnd.messaging.domain;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -34,7 +36,7 @@ public class Conversation{
 	
 	public Conversation(User firstParticipant,User secondParticipant){
 		this.participants = new ArrayList<User>(Arrays.asList(firstParticipant,secondParticipant));
-		this.messages = new ArrayList<Message>();
+		this.messages = new HashSet<Message>();
 	}
 	
 	
@@ -55,7 +57,7 @@ public class Conversation{
 	}
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "conversation")
-	private List<Message> messages;
+	private Set<Message> messages;
 	
 	
 	

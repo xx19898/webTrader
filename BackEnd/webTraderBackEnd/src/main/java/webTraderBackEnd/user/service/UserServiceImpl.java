@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.management.relation.RoleNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,10 +170,13 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 	}
 
 	@Override
-	public List<UserDTO> getUsersData() {
+	public List<UserDTO> getUsersData(){
 		Iterable<User> users = userRepo.findAll();
+		List<User> usersList = new ArrayList<User>();
+		users.forEach(usersList::add);
+		List<User> listWithoutTheAdmins = usersList.stream().filter(user -> !user.isAdmin()).collect(Collectors.toList()); 
 		List<UserDTO> usersDto = new ArrayList<UserDTO>();
-		for(User user : users){
+		for(User user : listWithoutTheAdmins){
 			usersDto.add(userDTOConverter.convert(user));
 		}
 		return usersDto;

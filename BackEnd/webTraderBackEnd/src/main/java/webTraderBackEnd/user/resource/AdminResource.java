@@ -20,15 +20,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.AllArgsConstructor;
+import webTraderBackEnd.messaging.service.MessagingService;
 import webTraderBackEnd.portfolioStocks.domain.Portfolio;
 import webTraderBackEnd.portfolioStocks.domain.PortfolioStock;
-import webTraderBackEnd.user.domain.User;
 import webTraderBackEnd.user.dto.UserDTO;
 import webTraderBackEnd.user.service.AdminService;
-import webTraderBackEnd.user.service.AdminServiceImpl;
 import webTraderBackEnd.user.service.UserService;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping(path="/admin")
 @RolesAllowed("ROLE_ADMIN")
 public class AdminResource{
@@ -38,14 +39,14 @@ public class AdminResource{
 	@Autowired
 	private AdminService adminService;
 	
-	public AdminResource(AdminService adminService, UserService userService){
-		this.adminService = adminService;
-		this.userService = userService;
-	}
+	@Autowired 
+	private MessagingService messagingService;
+
 	
 	@GetMapping("/allUserData")
 	public @ResponseBody ResponseEntity<List<UserDTO>> getAllUsersData(){
 		List<UserDTO> users = userService.getUsersData();
+		
 		return new ResponseEntity<List<UserDTO>>(users,HttpStatus.OK);
 	}
 	
