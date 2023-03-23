@@ -47,7 +47,7 @@ const PortfolioStockCard = (props:IPortfolioStockCard) => {
     
     
     return (
-        <li key={uuidv()} className="grid gap-2 grid-cols-2 grid-rows-2 p-6 bg-darker-secondary-2 m-2 rounded-lg drop-shadow-md drop-shadow- shadow-lg text-secondary-2">
+        <li key={uuidv()} className="grid gap-2 grid-cols-2 grid-rows-2 p-6 bg-darker-secondary-2 m-2 rounded-[17px] drop-shadow-md shadow-lg text-secondary-2">
             <div className="relative left-[20%] font-semibold text-white">Name: </div><div className="font-normal text-lg text-center  text-white">{name}</div>
             <div className="relative left-[20%] font-semibold text-white">Date of acquisition</div><div className="font-normal text-center text-white">{dateOfAcquisition.toLocaleString().split(',')[0]}</div>
             <div className="relative left-[20%] font-semibold text-white">Original Price</div><div className="font-normal text-center text-white">{priceOfAcquisition}</div>

@@ -46,7 +46,7 @@ export default () => {
                 {
                     stockDeals.map(stockDeal => {
                         return(
-                        <li className="h-auto w-full my-6 py-2 bg-darker-secondary-2">
+                        <li className="h-auto w-full my-6 py-2 bg-darker-secondary-2 rounded-[17px] drop-shadow-md">
                             {
                             stockDeal.dealStatus != 'CANCELLED' ? 
                             <div className="h-[30px] flex justify-end items-center">

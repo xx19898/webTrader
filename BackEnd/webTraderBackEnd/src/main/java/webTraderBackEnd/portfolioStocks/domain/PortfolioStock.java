@@ -22,18 +22,11 @@ import lombok.Setter;
 public class PortfolioStock{
 	
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	public PortfolioStock( String symbol,int quantity, double price, Portfolio portfolio){
+	public PortfolioStock( @JsonProperty("symbol") String symbol,@JsonProperty("quantity") int quantity,@JsonProperty("price") double price,@JsonProperty("portfolio") Portfolio portfolio){
 		this.symbol = symbol;
 		this.quantity = quantity;
 		this.priceAtAcquirement = price;
 		this.portfolio = portfolio;
-	}
-	
-	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	public PortfolioStock(@JsonProperty("symbol") String symbol,@JsonProperty("quantity") int quantity,@JsonProperty("price") double price){
-		this.symbol = symbol;
-		this.quantity = quantity;
-		this.priceAtAcquirement = price;
 	}
 	
 	@Id

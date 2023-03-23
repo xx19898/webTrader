@@ -56,7 +56,7 @@ export default ({stocks}:IStockDealForm) => {
     return(
         <>
         <h2 className="text-lg font-semibold text-center mb-10 text-white">Make a new deal request</h2>
-        <form className="flex justify-center items-center flex-col bg-darker-secondary-2 pb-5 pt-8"
+        <form className="flex justify-center items-center flex-col bg-darker-secondary-2 pb-5 pt-8 drop-shadow-md rounded-[17px]"
               onSubmit={(e) => {
                 e.preventDefault()
                 submitStockDeal(formState)
@@ -83,13 +83,13 @@ export default ({stocks}:IStockDealForm) => {
             <label className="flex justify-center items-center text-center text-white">Price</label>
             <input type="text"
             onChange={(e) => formDispatchInterceptor({type:"PRICE",payload:e.target.value})}
-            className={(formState.PRICE === undefined || formState.PRICE.toString().trim().length === 0) ? "focus:outline-none pl-4 h-[44px] border-solid border-2 border-red-500 " : "h-[44px] pl-4 focus:outline-none"}
+            className={(formState.PRICE === undefined || formState.PRICE.toString().trim().length === 0) ? "focus:outline-none pl-4 h-[44px] border-solid border-2 border-red-500 drop-shadow-md rounded-[17px]" : "h-[44px] pl-4 focus:outline-none drop-shadow-md rounded-[17px]"}
             />
-            <button className={formState.OPERATION_TYPE === 'BUY' ? "text-white bg-primary py-2 shadow-[0px_0px_10px_3px_rgba(74,2,99,0.7)]" : "text-white font-sans bg-secondary py-2 shadow-[0px_0px_10px_3px_rgba(74,2,99,0.7)]"} onClick={(e) => {
+            <button className={formState.OPERATION_TYPE === 'BUY' ? "text-white bg-primary py-2 shadow-[0px_0px_10px_3px_rgba(74,2,99,0.7)] drop-shadow-md rounded-[17px]" : "text-white font-sans bg-secondary py-2 shadow-[0px_0px_10px_3px_rgba(74,2,99,0.7)] drop-shadow-md rounded-[17px]"} onClick={(e) => {
                 e.preventDefault()
                 formDispatch({type:'OPERATION_TYPE',payload:'BUY'})
             }}>BUY</button>
-            <button className={formState.OPERATION_TYPE === 'SELL' ? "text-white bg-primary py-2 shadow-[0px_0px_10px_3px_rgba(74,2,99,0.7)]" : "text-white bg-secondary py-2 shadow-[0px_0px_10px_3px_rgba(74,2,99,0.7)]"} onClick={(e) => {
+            <button className={formState.OPERATION_TYPE === 'SELL' ? "text-white bg-primary py-2 shadow-[0px_0px_10px_3px_rgba(74,2,99,0.7)] drop-shadow-md rounded-[17px]" : "text-white bg-secondary py-2 shadow-[0px_0px_10px_3px_rgba(74,2,99,0.7)] drop-shadow-md rounded-[17px]"} onClick={(e) => {
                 e.preventDefault()
                 formDispatch({type:'OPERATION_TYPE',payload:'SELL'})
             }}>SELL</button>

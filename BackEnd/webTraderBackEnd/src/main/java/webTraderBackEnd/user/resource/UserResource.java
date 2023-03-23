@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 import webTraderBackEnd.portfolioStocks.domain.PortfolioStock;
 import webTraderBackEnd.portfolioStocks.domain.StockDeal;
 import webTraderBackEnd.user.domain.User;
+import webTraderBackEnd.user.dto.AdminDTO;
 import webTraderBackEnd.user.repository.UserRepo;
+import webTraderBackEnd.user.repository.projections.AdminUsernameAndId;
 import webTraderBackEnd.user.service.UserService;
 import webTraderBackEnd.user.service.UserServiceImpl;
 
@@ -59,6 +61,11 @@ public class UserResource {
 	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	  User user = userService.getUser(Long.parseLong(authentication.getName()));
 	  return new ResponseEntity<Set<StockDeal>>(user.getStockDeals(),HttpStatus.OK);
+  }
+  
+  @GetMapping(path="/getAdmins")
+  public @ResponseBody ResponseEntity<Set<AdminUsernameAndId>> getAdmins(){
+	  return new ResponseEntity<Set<AdminUsernameAndId>>(userService.getAdmins(),HttpStatus.OK);
   }
   
   @PatchMapping(path="/cancelStockDeal")

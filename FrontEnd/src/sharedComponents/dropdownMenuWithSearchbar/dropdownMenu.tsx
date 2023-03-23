@@ -68,7 +68,7 @@ export const DropDownTextMenu = ({dataToVisualise,chosenValue,setChosenValue,isC
             if(dropDownStatus){
                 //Data is fetched and the list is open
                 return(
-                    <div className="flex flex-col items-stretch focus-within:outline-2 focus-within:outline focus-within:outline-primary" tabIndex={123} ref={dropdownRef}>
+                    <div className="flex flex-col items-stretch focus-within:outline-1 focus-within:outline focus-within:outline-primary rounded-[17px]" tabIndex={123} ref={dropdownRef}>
                         <BaseDropDown
                         height={20} 
                         value={chosenElement}

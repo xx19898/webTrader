@@ -24,6 +24,7 @@ import webTraderBackEnd.portfolioStocks.exceptions.StockDealNotFoundException;
 import webTraderBackEnd.portfolioStocks.repository.StockDealRepository;
 import webTraderBackEnd.user.domain.Role;
 import webTraderBackEnd.user.domain.User;
+import webTraderBackEnd.user.dto.AdminDTO;
 import webTraderBackEnd.user.dto.UserDTO;
 import webTraderBackEnd.user.dtoConverters.UserDTOConverter;
 import webTraderBackEnd.user.exceptions.UserAlreadyExistsException;
@@ -31,6 +32,7 @@ import webTraderBackEnd.user.exceptions.UserNotFoundException;
 import webTraderBackEnd.user.repository.RoleRepo;
 import webTraderBackEnd.user.repository.UserInsertRepository;
 import webTraderBackEnd.user.repository.UserRepo;
+import webTraderBackEnd.user.repository.projections.AdminUsernameAndId;
 
 @AllArgsConstructor	
 @Service @Transactional
@@ -110,6 +112,12 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 		int LIMIT = 3;
 		Page<User> page = userRepo.findAll(PageRequest.of(0, LIMIT, Sort.by(Sort.Order.asc("id"))));
 		return page.getContent();
+	}
+	
+	@Override
+	public Set<AdminUsernameAndId> getAdmins(){
+		Set<AdminUsernameAndId> adminList = userRepo.findUsersWithAdminRole();
+		return adminList;
 	}
 
 	@Override

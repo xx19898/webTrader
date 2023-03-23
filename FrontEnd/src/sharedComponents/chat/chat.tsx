@@ -42,10 +42,10 @@ export default  ({messages,otherUser,conversationId}:IMessageDropdown) => {
 
     return(
             <>
-            <ul className="relative bg-secondary-2 w-full min-h-[100px] h-auto mb-0 pb-4 grid grid-cols-2 border-solid border border-darker-secondary-2 rounded-[17px]" >
-                    {messagesCopy.map(message => {
+            <ul className="relative bg-secondary-2 w-full min-h-[200px] h-[400px] overflow-scroll mb-0 pb-4 grid grid-cols-2 border-solid border border-darker-secondary-2 rounded-[17px] min-w-ful grid-flow-row" >
+                    {messagesCopy.map((message,index ) => {
                         return(
-                                 <li className={loggedInUser === message.senderUsername ? "col-start-1 col-end-1 h-auto relative bg-transparent p-4 text-center w-full ml-[2rem] mr-2 rounded-md my-2 flex flex-col justify-center items-center" : "col-start-2 col-end-2 h-auto relative bg-transparent p-4 text-center w-[60%] ml-[2rem] mr-2 rounded-md my-2 flex flex-col justify-center items-center"}>
+                                 <li style={{gridRow:index + 1}} className={loggedInUser === message.senderUsername ? "col-start-1 col-end-1 h-auto relative bg-transparent p-4 text-center w-full ml-[2rem] mr-2 rounded-md my-2 flex flex-col justify-center items-center" : "col-start-2 col-end-2 h-auto relative bg-transparent p-4 text-center w-[60%] ml-[2rem] mr-2 rounded-md my-2 flex flex-col justify-center items-center"}>
 
                                 {
                                     message.replyTo != undefined ? 

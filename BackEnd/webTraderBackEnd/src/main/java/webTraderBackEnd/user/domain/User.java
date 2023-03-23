@@ -41,12 +41,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
+import lombok.Setter;
 import webTraderBackEnd.messaging.domain.Conversation;
 import webTraderBackEnd.portfolioStocks.domain.Portfolio;
 import webTraderBackEnd.portfolioStocks.domain.StockDeal;
 
 @Getter
 @Entity
+@Setter
 @Table
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails{

@@ -1,7 +1,6 @@
 import useAnimatedDropdown from "../../../pages/mainPage/adminMain/useAnimatedDropdown"
 import {useRef} from 'react'
 import { RootState } from "../../../store"
-import { AdminDataForAdminPanel } from "../adminPanel"
 import StartConvoIcon from "../../../icons/startConvoIcon"
 import Chat from "../../chat/chat"
 import { Conversation, Message } from "../../../state/messaging/messagingZodSchemas"
@@ -12,7 +11,7 @@ import { AnyAction, Dispatch } from "redux"
 
 
 interface IAdminCard{
-    conversation: Conversation | null,
+    conversation: Conversation,
     adminId: number,
     adminUsername: string,
 }
@@ -23,20 +22,10 @@ export default ({adminId,adminUsername,conversation}:IAdminCard) => {
     const dispatch = useAppDispatch()
     const userId = useAppSelector(state => state.users.userId)
     const accessToken = useAppSelector(state => state.users.accessToken)
-    console.log({conversation: conversation})
-    if(conversation === undefined || conversation === null){
-        return(
-            <li className="flex flex-col justify-center items-center bg-darker-secondary-2 rounded-lg py-3 px-2">
-                <h2 className="text-white text-lg font-semibold mb-2">{adminUsername}</h2>
-                <button onClick={() => startConversation(accessToken as string,adminId,userId as number,dispatch,)} className="text-white p-1 px-2 border-solid border border-white">
-                    Start Conversation
-                </button>
-            </li>
-        )} 
-    else{
-        return(
-        <li className="flex flex-col justify-center items-center">
-                <h2 className="text-center text-white font-semibold text-lg mb-2">{adminUsername}</h2>
+    
+    return(
+        <li className="flex flex-col justify-center items-center my-[40px]">
+                <h2 className="text-center text-white text-[40px] font-semibold mb-2">{adminUsername}</h2>
                 <section>
                 <Chat messages={conversation.messages as Message[]} otherUser={adminUsername} conversationId={conversation.conversationId} />
                 </section>
@@ -59,4 +48,3 @@ export default ({adminId,adminUsername,conversation}:IAdminCard) => {
         dispatch({type:'UPDATE_CONVERSATIONS'})
     }
 
-}

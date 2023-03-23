@@ -98,7 +98,7 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
    }
    return(
       <>
-      <p className="text-white indent-2 p-4 mt-5 mb-3 border-white rounded-none border-2 text-center">Nothing to show here yet</p>
+      <p className="text-white indent-2 p-4 mt-5 mb-3 border-white border-2 text-center rounded-[17px]">Nothing to show here yet</p>
       </>
    )
 }
@@ -156,9 +156,9 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
         :
         null
         }
-        <button className={`self-end mt-4 font-bold text-white
+        <button className={`self-end mt-4 font-bold text-white rounded-[17px]
          text-center align-middle bg-gradient-to-tr from-primary to-secondary
-         ${fetchButtonStatus ? 'outline outline-2 outline-secondary' : 'outline outline-2 outline-red-800'} w-20 h-8 rounded-sm`}
+         ${fetchButtonStatus ? 'outline outline-2 outline-secondary' : 'outline outline-2 outline-darker-secondary-2'} w-20 h-8`}
          disabled={!fetchButtonStatus}
          >Fetch</button>
          {

@@ -21,16 +21,16 @@ const DropDownMenu = ({items,chosenValue,setChosenValue}:IDropDownMenu) => {
         setOpen(false);
     }
     return(
-    <div ref={wrapperRef} className="relative bg-white w-full h-[44px]  focus-within:outline-1 focus-within:outline-primary focus:outline-1 focus:outline-primary">
-    <div className="relative bg-white w-full h-[44px]  focus-within:outline-1 focus-within:outline-primary flex flex-row align-stretch justify-center items-center">
-        <input readOnly  className="w-full hover:outline-none text-center focus:outline-none cursor-default mr-[20px]" type="text" value={chosenValue ? chosenValue : items[0]}/>
+    <div ref={wrapperRef} className="relative bg-white w-full h-[44px]  focus-within:outline-1 focus-within:outline-primary focus:outline-1 focus:outline-primary rounded-[17px]">
+    <div className="relative bg-white w-full h-[44px]  focus-within:outline-1 focus-within:outline-primary flex flex-row align-stretch justify-center items-center drop-shadow-md rounded-[17px]">
+        <input readOnly  className="w-full hover:outline-none text-center focus:outline-none cursor-default mr-[20px] rounded-[17px]" type="text" value={chosenValue ? chosenValue : items[0]}/>
         <button className="absolute right-2" onClick={(e) => clickDropDownArrowButton(e)}>
         <DropDownArrowIcon height={20}/>    
         </button>
     </div>
     {
     open && 
-    <ul className="min-w-0 basis-1/2 overflow-auto relative z-10">
+    <ul className="min-w-0 basis-1/2 overflow-auto relative z-10 rounded-[17px]">
             {items.map((item,index) => {
                 return index === items.length - 1 
                 ?
