@@ -9,7 +9,6 @@ import webTraderBackEnd.portfolioStocks.domain.StockDeal;
 
 @Repository
 public interface StockDealRepository extends CrudRepository<StockDeal, Long>{
-	
 	Optional<StockDeal> findById(Long id);
 	void deleteById(Long id);
 }

@@ -28,9 +28,4 @@ public interface UserService {
 	Set<StockDeal> getStockDeals(String username);
 	Portfolio getUserPortfolio(String username);
 	
-	void removeStockFromPortfolio(String username,String symbol,int quantity) throws Exception;
-	void addStockToPortfolio(String username,String symbol,int quantity,double price) throws Exception;
-	
-	StockDeal cancelStockDeal(long id);
-	void addStockDeal(Long id, String symbol, int quantity,double price,String operationType);
 }

@@ -48,21 +48,6 @@ public class UserResource {
     return new ResponseEntity<String>(String.format("User with name %s",newUser.getUsername()),HttpStatus.OK);
   }
   
-  @PostMapping(path="/addAStockDeal")
-  public @ResponseBody ResponseEntity<Void> addNewStockDealToAUser(@RequestBody StockDeal stockDeal){
-	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	  Long userIdentity = Long.parseLong((String) authentication.getPrincipal());
-	  userService.addStockDeal(userIdentity,stockDeal.getSymbol(), stockDeal.getQuantity(), stockDeal.getStockPriceAtTheAcquirement(),stockDeal.getOperationType());
-	  return new ResponseEntity<Void>(HttpStatus.OK);
-  }
-  
-  @GetMapping(path="/getStockDeals")
-  public @ResponseBody ResponseEntity<Set<StockDeal>> getStockDealsBelongingToUser(){
-	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	  User user = userService.getUser(Long.parseLong(authentication.getName()));
-	  return new ResponseEntity<Set<StockDeal>>(user.getStockDeals(),HttpStatus.OK);
-  }
-  
   @GetMapping(path="/getAdmins")
   public @ResponseBody ResponseEntity<Set<AdminUsernameAndId>> getAdmins(){
 	  return new ResponseEntity<Set<AdminUsernameAndId>>(userService.getAdmins(),HttpStatus.OK);

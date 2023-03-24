@@ -17,10 +17,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
+import lombok.Setter;
 import webTraderBackEnd.portfolioStocks.exceptions.MultiplePortfolioStocksWithSameNameException;
 import webTraderBackEnd.portfolioStocks.exceptions.PortfolioStockNotFound;
 import webTraderBackEnd.user.domain.User;
 
+@Setter
 @Getter
 @Entity
 @Table(name="portfolios")

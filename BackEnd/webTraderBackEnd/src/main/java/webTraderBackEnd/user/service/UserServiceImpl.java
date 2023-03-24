@@ -141,41 +141,6 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 		User user = getUser(username);
 		return user.getPortfolio();
 	}
-	
-	@Override
-	public void addStockToPortfolio(String username, String symbol, int quantity,double price) throws Exception {
-		User user = getUser(username);
-		user.getPortfolio().addNewStock(symbol,quantity,price);
-	}
-	
-	@Override
-	public void removeStockFromPortfolio(String username, String symbol, int quantity) throws Exception{
-		User user = getUser(username);
-		user.getPortfolio().removeStock(symbol, quantity);
-	}
-	
-	@Override
-	public void addStockDeal(Long userId, String symbol, int quantity,double price, String operationType){
-		User user = getUser(userId);
-		if(StockDeal.operationTypeValueIsCorrect(operationType)){
-			user.addStockDeal(new StockDeal(symbol,"PENDING" , quantity,price,operationType,user));
-		}
-		else {
-			throw new BadRequestException("Operation Type is of unrecognized value");
-		}
-	}
-	
-	@Override
-	public StockDeal cancelStockDeal(long id){
-		Optional<StockDeal> theStockDeal = stockDealRepo.findById(id);
-		if(theStockDeal.isPresent()){
-			StockDeal stockDeal = theStockDeal.get();
-			stockDeal.setDealStatus("CANCELLED");
-			return stockDeal;
-		}else{
-			throw new StockDealNotFoundException();
-		}
-	}
 
 	@Override
 	public List<UserDTO> getUsersData(){
