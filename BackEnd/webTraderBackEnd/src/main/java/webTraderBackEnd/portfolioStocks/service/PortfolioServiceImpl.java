@@ -21,9 +21,11 @@ import webTraderBackEnd.portfolioStocks.dtos.PortfolioDTO;
 import webTraderBackEnd.portfolioStocks.dtos.StockDealDTO;
 import webTraderBackEnd.portfolioStocks.repository.PortfolioRepository;
 import webTraderBackEnd.portfolioStocks.service.stockDealHandlingStrategy.BuyStockDealApprovementStrategy;
+import webTraderBackEnd.portfolioStocks.service.stockDealHandlingStrategy.SellStockDealApprovementStrategy;
 import webTraderBackEnd.user.domain.User;
 import webTraderBackEnd.user.exceptions.UserNotFoundException;
 import webTraderBackEnd.user.repository.UserRepo;
+import webTraderBackEnd.user.service.UserService;
 
 @Transactional
 @Service
@@ -32,6 +34,9 @@ public class PortfolioServiceImpl implements PortfolioService{
 	
 	@Autowired
 	private UserRepo userRepo;
+	
+	@Autowired
+	private UserService userService;
 	
 	@Autowired
 	private PortfolioRepository portfolioRepo;
@@ -71,12 +76,7 @@ public class PortfolioServiceImpl implements PortfolioService{
 	}
 	
 	@Override
-	public PortfolioAndStockDealsDTO dealWithStockDeal(StockDeal finalizedStockDeal){
-		
-	}
-	
-	@Override
-	public PortfolioDTO getPortfolioByPortfolioId(long id){
+	public PortfolioDTO getPortfolioDTOByPortfolioId(long id){
 		Optional<Portfolio> portfolioOptional = portfolioRepo.findById(id);
 		if(portfolioOptional.isPresent()) return portfolioDTOConverter.convert(portfolioOptional.get());
 		else{
@@ -85,9 +85,16 @@ public class PortfolioServiceImpl implements PortfolioService{
 	}
 	
 	@Override
-	public Set<StockDealDTO> getStockDeals(long id) {
+	public Set<StockDealDTO> getStockDeals(long id){
 		Optional<User> userOptional = userRepo.findById(id);
 		if(userOptional.isEmpty()) throw new UserNotFoundException("User not found");
 		return userOptional.get().getStockDeals().stream().map(stockDeal -> stockDealDTOConverter.convert(stockDeal)).collect(Collectors.toSet());
+	}
+
+	@Override
+	public PortfolioDTO getPortfolioDTOByUserId(long userId) {
+		Portfolio portfolio = userService.getUser(userId).getPortfolio();
+		PortfolioDTO portfolioDTO = portfolioDTOConverter.convert(portfolio);
+		return portfolioDTO;
 	}	
 }

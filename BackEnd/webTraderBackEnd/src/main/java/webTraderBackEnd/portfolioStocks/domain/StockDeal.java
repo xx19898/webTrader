@@ -56,7 +56,8 @@ public class StockDeal{
 			String status,
 			int quantity,
 			double price,
-			String operationType,User user)
+			String operationType,
+			User user)
 	{
 		this.symbol = symbol;
 		this.dealStatus = status;

@@ -28,7 +28,7 @@ public class AdminServiceImpl  implements AdminService{
 		this.stockDealRepo = stockDealRepo;
 	}
 	
-	private void stockDealRootMethod(boolean approvalValue,long id) throws Exception {
+	private void stockDealRootMethod(boolean approvalValue,long id) throws Exception{
 		Optional<StockDeal> stockDealToApproveOptionalWrapper = stockDealRepo.findById(id);
 		if(stockDealToApproveOptionalWrapper.isEmpty()) {
 			throw new UsernameNotFoundException("user not found");
@@ -37,12 +37,12 @@ public class AdminServiceImpl  implements AdminService{
 		if(approvalValue){
 			stockDealToApprove.setDealStatus("APPROVED");
 		}else{
-			stockDealToApprove.setDealStatus("APPROVED");
+			stockDealToApprove.setDealStatus("DISAPPROVED");
 		}
 		long stockDealUserId = stockDealToApprove.getUser().getId();
 		User user = userService.getUser(stockDealUserId);
 		String username = user.getUsername();
-		userService.addStockToPortfolio(username, stockDealToApprove.getSymbol(), stockDealToApprove.getQuantity(), stockDealToApprove.getStockPriceAtTheAcquirement());
+		fulfillStockDeal(id);
 	}
 	
 	@Override
@@ -63,9 +63,9 @@ public class AdminServiceImpl  implements AdminService{
 			User user = theStockDeal.getUser();
 			Portfolio thePortfolio = user.getPortfolio();
 			if(theStockDeal.getOperationType() == "BUY") {
-				thePortfolio.addNewStock(theStockDeal.getSymbol(), theStockDeal.getQuantity(), theStockDeal.getStockPriceAtTheAcquirement());
+				thePortfolio.addNewStock(theStockDeal.getSymbol(),theStockDeal.getQuantity(),theStockDeal.getStockPriceAtTheAcquirement());
 			}
-			else if(theStockDeal.getOperationType() == "BUY") {
+			else if(theStockDeal.getOperationType() == "SELL"){
 				thePortfolio.removeStock(theStockDeal.getSymbol(), theStockDeal.getQuantity());
 			}
 		}else{

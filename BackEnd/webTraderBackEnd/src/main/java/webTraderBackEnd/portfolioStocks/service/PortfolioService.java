@@ -12,9 +12,7 @@ interface PortfolioService{
 	public Set<StockDealDTO> getStockDeals(long id);
 	public Set<StockDealDTO> addStockDeal(StockDealDTO newDeal, long userId);
 	
-	public PortfolioAndStockDealsDTO dealWithStockDeal(StockDeal finalizedStockDeal);
-	
-	public PortfolioDTO getPortfolioByUserId(long userId);
-	public PortfolioDTO getPortfolioByPortfolioId(long portfolioId);
+	public PortfolioDTO getPortfolioDTOByUserId(long userId);
+	public PortfolioDTO getPortfolioDTOByPortfolioId(long portfolioId);
 	
 }
