@@ -39,10 +39,6 @@ public class AdminResource{
 	@Autowired
 	private AdminService adminService;
 	
-	@Autowired 
-	private MessagingService messagingService;
-
-	
 	@GetMapping("/allUserData")
 	public @ResponseBody ResponseEntity<List<UserDTO>> getAllUsersData(){
 		List<UserDTO> users = userService.getUsersData();
@@ -56,24 +52,6 @@ public class AdminResource{
 		return new ResponseEntity<Portfolio>(portfolio,HttpStatus.OK);
 	}
 	
-	@PostMapping("addStock")
-	public @ResponseBody ResponseEntity addStockToPortfolio(@RequestBody PortfolioStock[] newPortfolioStocks,@RequestParam String username){
-		Stream.of(newPortfolioStocks).forEach(newStock -> {
-			try{
-				userService.addStockToPortfolio(username, newStock.getSymbol(), newStock.getQuantity(), newStock.getPriceAtAcquirement());
-			}catch (Exception e){
-				e.printStackTrace();
-			}
-		});
-		return new ResponseEntity(HttpStatus.OK);
-	}
-	
-	@DeleteMapping("removeStock")
-	public @ResponseBody ResponseEntity removeStock(@RequestBody MultiValueMap<String,String> values) throws NumberFormatException, Exception{
-		userService.removeStockFromPortfolio(values.getFirst("username"),values.getFirst("symbol"), Integer.parseInt(values.getFirst("quantity")));
-		return new ResponseEntity(HttpStatus.OK);
-	}
-	
 	@PatchMapping("changeDealStatus")
 	public @ResponseBody ResponseEntity approveDeal(@RequestBody Map<String, String> values) throws Exception{
 		int id = Integer.parseInt(values.get("id"));
@@ -81,7 +59,7 @@ public class AdminResource{
 		if(newStatus == "APPROVED"){
 			adminService.fulfillStockDeal(id);
 			adminService.approveStockDeal(id);
-		}else{ 
+		}else{
 			adminService.disapproveStockDeal(id);
 		}
 		return new ResponseEntity(HttpStatus.OK);

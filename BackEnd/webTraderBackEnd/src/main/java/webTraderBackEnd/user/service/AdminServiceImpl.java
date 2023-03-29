@@ -2,6 +2,8 @@ package webTraderBackEnd.user.service;
 
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -14,7 +16,8 @@ import webTraderBackEnd.portfolioStocks.repository.StockDealRepository;
 import webTraderBackEnd.user.domain.User;
 
 
-@Service @Transactional
+@Service 
+@Transactional
 public class AdminServiceImpl  implements AdminService{
 	
 	@Autowired
@@ -39,9 +42,6 @@ public class AdminServiceImpl  implements AdminService{
 		}else{
 			stockDealToApprove.setDealStatus("DISAPPROVED");
 		}
-		long stockDealUserId = stockDealToApprove.getUser().getId();
-		User user = userService.getUser(stockDealUserId);
-		String username = user.getUsername();
 		fulfillStockDeal(id);
 	}
 	
@@ -58,21 +58,15 @@ public class AdminServiceImpl  implements AdminService{
 	@Override
 	public void fulfillStockDeal(long id) throws StockDealNotFoundException{
 		Optional<StockDeal> stockDealWrapper = stockDealRepo.findById(id);
-		if(stockDealWrapper.isPresent()){
-			StockDeal theStockDeal = stockDealWrapper.get();
-			User user = theStockDeal.getUser();
-			Portfolio thePortfolio = user.getPortfolio();
-			if(theStockDeal.getOperationType() == "BUY") {
-				thePortfolio.addNewStock(theStockDeal.getSymbol(),theStockDeal.getQuantity(),theStockDeal.getStockPriceAtTheAcquirement());
-			}
-			else if(theStockDeal.getOperationType() == "SELL"){
-				thePortfolio.removeStock(theStockDeal.getSymbol(), theStockDeal.getQuantity());
-			}
-		}else{
-			throw new StockDealNotFoundException();
+		if(stockDealWrapper.isEmpty()) throw new StockDealNotFoundException();
+		StockDeal theStockDeal = stockDealWrapper.get();
+		User user = theStockDeal.getUser();
+		Portfolio thePortfolio = user.getPortfolio();
+		if(theStockDeal.getOperationType() == "BUY"){
+			thePortfolio.implementBuyingOperation(theStockDeal.getSymbol(), theStockDeal.getQuantity(), theStockDeal.getStockPriceAtTheAcquirement());
 		}
-		
-		
-	}
+		else{
+			thePortfolio.implementSellingOperation(theStockDeal.getSymbol(), theStockDeal.getQuantity(), theStockDeal.getStockPriceAtTheAcquirement());	
+		}}
 }
 

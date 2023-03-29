@@ -19,6 +19,8 @@ import webTraderBackEnd.portfolioStocks.dtoConverters.StockDealDTOConverter;
 import webTraderBackEnd.portfolioStocks.dtos.PortfolioAndStockDealsDTO;
 import webTraderBackEnd.portfolioStocks.dtos.PortfolioDTO;
 import webTraderBackEnd.portfolioStocks.dtos.StockDealDTO;
+import webTraderBackEnd.portfolioStocks.exceptions.NotEnoughFundsException;
+import webTraderBackEnd.portfolioStocks.exceptions.PortfolioStockNotFound;
 import webTraderBackEnd.portfolioStocks.repository.PortfolioRepository;
 import webTraderBackEnd.portfolioStocks.service.stockDealHandlingStrategy.BuyStockDealApprovementStrategy;
 import webTraderBackEnd.portfolioStocks.service.stockDealHandlingStrategy.SellStockDealApprovementStrategy;
@@ -31,9 +33,6 @@ import webTraderBackEnd.user.service.UserService;
 @Service
 @AllArgsConstructor
 public class PortfolioServiceImpl implements PortfolioService{
-	
-	@Autowired
-	private UserRepo userRepo;
 	
 	@Autowired
 	private UserService userService;
@@ -55,15 +54,30 @@ public class PortfolioServiceImpl implements PortfolioService{
 	@Autowired
 	private SellStockDealApprovementStrategy sellStockDealApprovementStrategy;
 	
+	@Override
+	public PortfolioDTO implementBuyingOperation(String symbol, int quantity, double price, long userId){
+		User user = userService.getUser(userId);
+		Portfolio portfolio = user.getPortfolio();
+		if(portfolio.getBalance() < quantity * price) throw new NotEnoughFundsException("Not enough funds to finish the transaction");
+		portfolio.implementBuyingOperation(symbol, quantity, price);
+		return portfolioDTOConverter.convert(portfolio);
+	}
 	
-	
+	@Override
+	public PortfolioDTO implementSellingOperation(String symbol, int quantity, double price, long userId){
+		User user = userService.getUser(userId);
+		Portfolio portfolio = user.getPortfolio();
+		
+		if(portfolio.getAmountOfStockInsidePortfolio(symbol) < quantity) throw new PortfolioStockNotFound();
+		
+		portfolio.implementBuyingOperation(symbol,quantity,price);
+		return portfolioDTOConverter.convert(portfolio);
+	}
 	
 	
 	@Override
 	public Set<StockDealDTO> addStockDeal(StockDealDTO newDeal,long userId){
-		Optional<User> userOptional = userRepo.findById(userId);
-		if(userOptional.isEmpty()) throw new UserNotFoundException("Sought user not found"); 
-		User user = userOptional.get();
+		User user = userService.getUser(userId);
 		user.addStockDeal(
 				new StockDeal(
 						newDeal.getSymbol(),
@@ -86,9 +100,8 @@ public class PortfolioServiceImpl implements PortfolioService{
 	
 	@Override
 	public Set<StockDealDTO> getStockDeals(long id){
-		Optional<User> userOptional = userRepo.findById(id);
-		if(userOptional.isEmpty()) throw new UserNotFoundException("User not found");
-		return userOptional.get().getStockDeals().stream().map(stockDeal -> stockDealDTOConverter.convert(stockDeal)).collect(Collectors.toSet());
+		User user = userService.getUser(id);
+		return user.getStockDeals().stream().map(stockDeal -> stockDealDTOConverter.convert(stockDeal)).collect(Collectors.toSet());
 	}
 
 	@Override
@@ -96,5 +109,7 @@ public class PortfolioServiceImpl implements PortfolioService{
 		Portfolio portfolio = userService.getUser(userId).getPortfolio();
 		PortfolioDTO portfolioDTO = portfolioDTOConverter.convert(portfolio);
 		return portfolioDTO;
-	}	
+	}
+	
+	
 }

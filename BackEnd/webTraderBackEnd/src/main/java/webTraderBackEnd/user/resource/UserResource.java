@@ -52,7 +52,7 @@ public class UserResource {
   public @ResponseBody ResponseEntity<Set<AdminUsernameAndId>> getAdmins(){
 	  return new ResponseEntity<Set<AdminUsernameAndId>>(userService.getAdmins(),HttpStatus.OK);
   }
-  
+  /*
   @PatchMapping(path="/cancelStockDeal")
   public @ResponseBody ResponseEntity<StockDeal> removeStockDeal(@RequestBody Map<String, Long> requestData){
 	  Long userId= requestData.get("stockDealId");
@@ -61,4 +61,5 @@ public class UserResource {
 	  StockDeal changedStockDeal = userService.cancelStockDeal(userId);
 	  return new ResponseEntity<StockDeal>(HttpStatus.ACCEPTED);
   } 
+  */
 }

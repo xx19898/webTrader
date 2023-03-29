@@ -32,7 +32,7 @@ public class SellStockDealApprovementStrategy implements StockDealApprovementStr
 	private UserRepo userRepo;
 	
 	@Override
-	public void implement(StockDealDTO stockDealDTO) {
+	public void implement(StockDealDTO stockDealDTO){
 		if(!stockDealDTO.getDealStatus().equals("APPROVED")){
 			Optional<StockDeal> stockDealOptional = stockDealRepo.findById(stockDealDTO.getId());
 			if(stockDealOptional.isEmpty()) throw new EntityNotFoundException();
@@ -40,7 +40,7 @@ public class SellStockDealApprovementStrategy implements StockDealApprovementStr
 			stockDeal.setDealStatus(stockDealDTO.getDealStatus());
 		}
 		User user = retrieveUser(stockDealDTO.getUserId());
-		user.getPortfolio().removeStock(stockDealDTO.getSymbol(), stockDealDTO.getQuantity()); 
+//		user.getPortfolio().removeStock(stockDealDTO.getSymbol(), stockDealDTO.getQuantity()); 
 	}
 	
 	private User retrieveUser(long id){

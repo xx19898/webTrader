@@ -15,4 +15,6 @@ interface PortfolioService{
 	public PortfolioDTO getPortfolioDTOByUserId(long userId);
 	public PortfolioDTO getPortfolioDTOByPortfolioId(long portfolioId);
 	
+	public PortfolioDTO implementSellingOperation(String symbol,int quantity,double price,long userId);
+	public PortfolioDTO implementBuyingOperation(String symbol,int quantity,double price,long userId);
 }

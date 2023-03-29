@@ -33,14 +33,17 @@ import webTraderBackEnd.user.service.UserService;
 public class PortfolioResource{
 	@Autowired
 	private UserService userService;
-	
+
+	/*
 	@Autowired
 	private  portfolioService;
+	
 	
 	@GetMapping(path="/getPortfolio")
 	public Portfolio getPortfolio(Principal user){
 		
 	}
+	*/
 	
 	@PatchMapping(path="/cancelStockDeal")
 	  public @ResponseBody ResponseEntity<StockDeal> removeStockDeal(@RequestBody Map<String, Long> requestData){
@@ -50,7 +53,7 @@ public class PortfolioResource{
 		  return new ResponseEntity<StockDeal>(HttpStatus.ACCEPTED);
    }
 	
-	
+	/*
 	@PostMapping(path="/addAStockDeal")
 	  public @ResponseBody ResponseEntity<Void> addNewStockDealToAUser(@RequestBody StockDeal stockDeal){
 		  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -58,6 +61,7 @@ public class PortfolioResource{
 		  userService.addStockDeal(userIdentity,stockDeal.getSymbol(), stockDeal.getQuantity(), stockDeal.getStockPriceAtTheAcquirement(),stockDeal.getOperationType());
 		  return new ResponseEntity<Void>(HttpStatus.OK);
 	  }
+	*/
 	  
 	  @GetMapping(path="/getStockDeals")
 	  public @ResponseBody ResponseEntity<Set<StockDeal>> getStockDealsBelongingToUser(){
