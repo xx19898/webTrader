@@ -18,20 +18,20 @@ import { router } from "../../routing/mainRouter"
             <div className="mt-[2rem] h-auto w-full rounded-sm flex content-center justify-center gap-[2rem]">
                 <button
                 onClick={(event) => router('/login')}
-                className="bg-primary text-white w-40 h-10 p-2 flex flex-row justify-center items-center content-between gap-2 rounded-sm " >
+                className="bg-primary text-white w-40 h-10 rounded-[17px] p-2 py-4 flex flex-row justify-center items-center content-between gap-2  " >
                     <LoginIcon height={25}/>
                     Login 
                 </button>
                 <button
                 onClick={(event) => router('/register')}
-                className="bg-primary text-white w-40 h-10 p-2 flex flex-row justify-center items-center text-center content-between gap-2 rounded-sm">
+                className="bg-primary text-white w-40 h-10 p-2 py-4 flex flex-row justify-center items-center text-center content-between gap-2 rounded-[17px]">
                     <RegisterIcon height={25} />
                     Register 
                 </button>
             </div>
             </div>
             <div className="mt-[2rem] mx-[10%] w-auto">
-                <p className="indent-3 text-center font-poppins bg-secondary/50 rounded-sm py-[1em] px-[0.5em] text-white text-lg">
+                <p className="indent-3 text-center font-poppins bg-secondary/50 rounded-[17px] py-[1em] px-[0.5em] text-white text-lg">
                 As an unauthenticated guest you can only view this page. To make operations such as view stocks, buy, sell and view your portfolio please log in or sign up.
                 </p>
             </div>

@@ -1,28 +1,34 @@
-import {useRef, useState} from 'react'
+import axios from 'axios'
+import {useRef, useState,useReducer} from 'react'
+import { BASE_URL } from '../../../constants/urls'
 import { DropDownArrowIcon } from '../../../icons/dropdownArrowIcon'
+import { useAppSelector } from '../../../reduxHooks'
 import Chat from '../../../sharedComponents/chat/chat'
-import { Conversation, Message } from '../../../state/messaging/messagingZodSchemas'
-import { Portfolio, StockDeal } from './adminMainPageSchema'
+import { Conversation } from '../../../state/messaging/messagingZodSchemas'
+import { GetUserInfoApiResponse, Portfolio, StockDeal } from './adminMainPageSchema'
 import DealsDropdown from './dealsDropdown'
-import MessageDropdown from './messageDropdown'
 import PortfolioVisualizer from './portfolioVisualizer'
 import useAnimatedDropdown from './useAnimatedDropdown'
-
-
 
 export type UserInfoAdmin = {
     username: string,
     userId: number,
     stockDeals: StockDeal[],
     conversation?: Conversation,
-    portfolio?:  Portfolio
+    portfolio?:  Portfolio | null,
+    setUsersData: (data:GetUserInfoApiResponse) => void,
+    attainPortfolioData: (accessToken:string) => Promise<GetUserInfoApiResponse>,
 }
 
-export default ({userId,conversation,stockDeals,username,portfolio}:UserInfoAdmin) => {
+export default ({userId,conversation,stockDeals,username,portfolio,attainPortfolioData,setUsersData}:UserInfoAdmin) => {
     const sectionRef = useRef<HTMLUListElement>(null)
     const dropdownArrowRef = useRef<SVGSVGElement>(null)
     const {handleClick,open} = useAnimatedDropdown({dropdownArrowRef:dropdownArrowRef,dropdownRef:sectionRef}) 
     console.log({conversation})
+    const accessToken = useAppSelector(state => state.users.accessToken) as string
+    const [balance,setBalance] = useState(0)
+    const [ignored,forceUpdateThisComponent] = useReducer(x => x + 1, 0)
+
     
     return(
         <div className="w-full h-auto flex flex-col justify-center bg-secondary-2 my-[40px]">
@@ -38,7 +44,18 @@ export default ({userId,conversation,stockDeals,username,portfolio}:UserInfoAdmi
                     </li>
                     <li className="w-full bg-blue py-2">
                         {
-                        portfolio === undefined ? <h3 className="text-center text-white my-[40px] font-medium text-[18px]">No stocks in this portfolio</h3> :
+                        (portfolio === undefined || portfolio === null) ? 
+                        <section>
+                            <h3 className="text-center text-white my-[40px] font-medium text-[18px]">No portfolio attached</h3>
+                            <form className="grid grid-cols-2" onSubmit={(e) => {
+                                e.preventDefault()
+                                createPortfolio({accessToken:accessToken,userId:userId,balance:balance})}}>
+                                <label className="text-white col-start-1 col-span-1 row-start-1 row-span-1">Balance</label>
+                                <input type="number" onChange={(e) => handleInputChange(e.target.value)} className="col-start-2 col-span-1 row-start-1 row-span-1 rounded-[17px] py-2 px-4 focus:outline-none"></input>
+                                <button className="my-[10px] col-start-1 col-span-2 row-start-2 row-span-1 bg-primary py-2 rounded-[17px] mx-4">Create Portfolio</button>
+                            </form>
+                        </section> 
+                        :
                        <PortfolioVisualizer 
                         portfolio={portfolio}
                         username={username} />
@@ -47,8 +64,38 @@ export default ({userId,conversation,stockDeals,username,portfolio}:UserInfoAdmi
                  </ul>
                  :
                  null
-            }
+            } 
             <DropDownArrowIcon height={30} onClickCallback={() => handleClick()} ref={dropdownArrowRef}/>
         </div> 
     )
+
+    function handleInputChange(newValue:string){
+        const regex = /^[0-9\b]+$/
+        if(regex.test(newValue)) setBalance(parseInt(newValue))
+    }
+
+    async function createPortfolio(
+        {accessToken,userId,balance}:
+        {
+            accessToken:string,
+            userId:number,
+            balance: number
+        }){
+
+        const createPortfolioResponse = await axios({
+            method:'post',
+            url:BASE_URL + 'admin/createPortfolio',
+            withCredentials:true,
+            headers:{
+                Authorization:accessToken,
+            },
+            data:{
+                userId: userId,
+                balance: balance,
+            }
+        })
+
+        const refreshedPortfolioData = await attainPortfolioData(accessToken)
+        setUsersData(refreshedPortfolioData)
+    }
 }

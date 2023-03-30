@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState,useReducer } from "react"
 import { gsap } from "gsap/src"
 import { Bounce } from "gsap"
 import axios from "axios"
@@ -12,6 +12,8 @@ export default ({searchIconRef}:{searchIconRef:React.RefObject<SVGSVGElement>}) 
     const [usersData,setUsersData] = useState<GetUserInfoApiResponse>([])
     const access_token = useAppSelector(state => state.users.accessToken as string)
     const reduxDispatch = useAppDispatch()
+    const [ignored,forceUpdate] = useReducer(x => x + 1, 0)
+
 
     useEffect(() => {
         reduxDispatch({type:'UPDATE_CONVERSATIONS'})
@@ -48,6 +50,9 @@ export default ({searchIconRef}:{searchIconRef:React.RefObject<SVGSVGElement>}) 
     return {
         searchedUsername,
         setSearchedUsername,
-        usersData}
+        usersData,
+        setUsersData,
+        attainUserPortfolioData
+    }
     
 }

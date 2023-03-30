@@ -59,7 +59,7 @@ export const getLatestStockDeals = (accessToken:string) => {
             Authorization: accessToken
         },
         withCredentials:true,
-        url: BASE_URL + 'users/getStockDeals'
+        url: BASE_URL + 'portfolio/getStockDeals'
     }).then(result => {
         if(Object.keys(result.data).length != 0){
             console.log(Object.keys(result.data).length)

@@ -7,6 +7,7 @@ export default{
     title:'AdminMainPage'
 }
 
+/*
 const Template = (args: IAdminMainPage) => <AdminMainPage {...args} />
 
 export const Default = Template.bind({})
@@ -43,6 +44,7 @@ const args: IAdminMainPage = {
             username: 'user2'
         }
     ],
+    forceUpdate: () => console.log("updated"),
     conversations: []
 }
 /*

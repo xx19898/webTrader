@@ -8,11 +8,12 @@ export type IAdminMainPage = {
     setSearchedUsernameCallback: (update: string | ((prevState: string) => string)) => void,
     searchedUsername: string
     usersData: GetUserInfoApiResponse,
-    conversations: Conversation[]
+    conversations: Conversation[],
+    attainPortfolioData: (accessToken:string) => Promise<GetUserInfoApiResponse>,
+    setUserData: (newData:GetUserInfoApiResponse) => void,
 }
 
 export const AdminMainPage = forwardRef(function AdminMainPage(props:IAdminMainPage,ref:React.ForwardedRef<SVGSVGElement>){
-
     
     return(
         <div className="overflow-auto w-auto h-auto min-h-full bg-secondary-2 flex-col flex justify-start items-center">
@@ -27,19 +28,27 @@ export const AdminMainPage = forwardRef(function AdminMainPage(props:IAdminMainP
                 <SearchIcon height={30} ref={ref} />
                 </div>
             <input
-            onChange={(e) => props.setSearchedUsernameCallback(e.target.value)}
+            onChange={(e) => {
+                props.setSearchedUsernameCallback(e.target.value)}}
             className="block bg-transparent indent-10 rounded-lg w-full mx-auto h-[3rem] px-2 border border-solid border-darker-secondary-2 focus:outline-none text-white" placeholder="Search for user">
             </input>
             </form>
                 <section className="h-auto mt-5 w-full min-h-[40px] rounded-md">
                     <ul className="flex flex-col justify-center items-center">
                     {
-                        props.usersData.map(userData => {
+                        props.usersData.filter(user => {
+                            if(props.searchedUsername.length === 0) return true
+                            return user.username.trim().slice(0,props.searchedUsername.length) === props.searchedUsername
+                        }).map(userData => {
                             return <UserInfoVisualizer 
                                     userId={userData.id}
                                     username={userData.username}
                                     conversation={props.conversations ? findConversation(userData.username,props.conversations) : undefined}
-                                    stockDeals={userData.stockDeals}/> 
+                                    stockDeals={userData.stockDeals}
+                                    portfolio={userData.portfolio}
+                                    attainPortfolioData={props.attainPortfolioData}
+                                    setUsersData={props.setUserData}
+                                    />
                         })
                     }
                     </ul>

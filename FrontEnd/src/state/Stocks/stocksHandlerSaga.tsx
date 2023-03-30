@@ -9,11 +9,6 @@ import { RootState } from '../../store';
 
 type StocksServiceResponse = SagaReturnType<typeof getStockData>
 
-
-type IGetSymbols = {
-    type: string,
-}
-
 interface IStockDataHandlerSaga{
     type: string,
     stockParams: IStockQueryParams

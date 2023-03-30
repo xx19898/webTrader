@@ -2,15 +2,10 @@ import { useAppDispatch, useAppSelector } from '../../reduxHooks'
 import { DropDownTextMenu } from '../dropdownMenuWithSearchbar/dropdownMenu';
 import { OperationType, StockInPortfolio } from "./portfolioDataSchemas";
 import {useEffect, useReducer, useState} from "react";
-import useDeepCompareEffect from 'use-deep-compare-effect';
-import { useDispatch } from 'react-redux';
 import { GET_SYMBOLS } from '../../state/Stocks/stocksActionTypes';
-import { ISymbolList } from '../../state/Stocks/stocksRequestTypes';
-import { IStockSymbolList } from '../../state/Stocks/stocksZodSchemas';
 import SubmitButton from '../buttons/submitButton';
 import axios from 'axios';
 import { BASE_URL } from '../../constants/urls';
-import { request } from 'http';
 import { UPDATE_STOCK_DEALS } from '../../state/Users/usersActionTypes';
 
 interface IStockDealForm{
@@ -43,6 +38,7 @@ const formReducer = (state: IStockDealFormState,action:{type: 'SYMBOL' | 'PRICE'
 export default ({stocks}:IStockDealForm) => {
     const symbols = useAppSelector((state) => state.stocks.symbols)
     const jwtToken = useAppSelector((state) => state.users.accessToken)
+    const userId = useAppSelector((state) => state.users.userId)
     const [formState, formDispatch] = useReducer(formReducer,initialStockDealFormState)
     const [symbolIsCorrect,setSymbolIsCorrect] = useState(false)
     const dispatch = useAppDispatch()
@@ -121,21 +117,22 @@ export default ({stocks}:IStockDealForm) => {
         }
     }
 
-    function submitStockDeal(stockDealForm:IStockDealFormState){
+    async function submitStockDeal(stockDealForm:IStockDealFormState){
         const requestConfig = {
             headers:{
                 Authorization: jwtToken as string
             },
             withCredentials:true,
         }
-
-        console.log(BASE_URL + 'users/addAStockDeal')
         
-        const request = axios.post(BASE_URL + 'users/addAStockDeal',{
+        const response = await axios.post(BASE_URL + 'portfolio/createStockDeal',{
             symbol:stockDealForm.SYMBOL,
-            price: stockDealForm.PRICE,
+            stockPriceAtTheAcquirement: stockDealForm.PRICE,
             quantity: stockDealForm.QUANTITY,
-            operation_type: stockDealForm.OPERATION_TYPE
+            operationType: stockDealForm.OPERATION_TYPE,
+            dealStatus: "PENDING",
+            userId: userId as number,
+
         },requestConfig)
 
         dispatch({type:UPDATE_STOCK_DEALS})

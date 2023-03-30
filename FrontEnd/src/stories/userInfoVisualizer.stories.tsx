@@ -7,13 +7,14 @@ export default{
     component: userInfoVisualizer,
     title: 'UserInfoVisualizer'
 }
-
+/*
 const Template = (args:UserInfoAdmin) => <UserInfoVisualizer {...args} /> 
 
 export const Default = Template.bind({})
 
 const args:UserInfoAdmin = {
     userId:2,
+    attainPortfolioData:atta,
     portfolio: {
         balance: 222,
         id: 23,

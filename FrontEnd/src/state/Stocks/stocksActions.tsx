@@ -22,12 +22,12 @@ export const getSymbols  = async (accessToken:string) => {
         url: BASE_URL + 'stocks/symbols'
     });
     const processedResponse = processListOfSymbols(response.data.toString());
+    
     const validatedSymbolList = symbolListSchema.parse(processedResponse);
+    console.log({validatedSymbolList})
     return validatedSymbolList;
-    //NO PROBLEMS HERE
 }
 
-//TODO: test
 export const renewApiRequestSlots = ({timeToWaitInSeconds}:{timeToWaitInSeconds:number[]}) => {
     const calculatedExpirationDates = timeToWaitInSeconds.map( timeToWaitInSeconds => {
         const finalTime = new Date()
