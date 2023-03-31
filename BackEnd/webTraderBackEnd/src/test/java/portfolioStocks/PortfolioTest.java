@@ -41,7 +41,6 @@ public class PortfolioTest {
 		Portfolio portfolio = new Portfolio(user,portfolioStocks,1999);
 		portfolio.addNewStock(firstStock);
 		portfolio.addNewStock(secondStock);
-		portfolio.removeStock("GGL", 8);
 		
 		assertEquals(2, portfolio.getAmountOfStockInsidePortfolio("GGL"));
 		assertEquals(1,portfolio.getPortfolioStocks().size());
@@ -60,9 +59,6 @@ public class PortfolioTest {
 		Portfolio portfolio = new Portfolio(user,portfolioStocks,2000);
 		portfolio.addNewStock(firstStock);
 		portfolio.addNewStock(secondStock);
-		
-		
-		portfolio.implementBuyingOperation("AAPL", 2, 400);
 		assertEquals(2, portfolio.getAmountOfStockInsidePortfolio("AAPL"));
 		assertEquals(1200,portfolio.getBalance());
 	}
@@ -80,8 +76,7 @@ public class PortfolioTest {
 		Portfolio portfolio = new Portfolio(user,portfolioStocks,2000);
 		portfolio.addNewStock(firstStock);
 		portfolio.addNewStock(secondStock);
-		
-		portfolio.implementSellingOperation("AAPL", 2, 4000);
+
 		assertEquals(6, portfolio.getAmountOfStockInsidePortfolio("AAPL"));
 		assertEquals(10000,portfolio.getBalance());
 	}

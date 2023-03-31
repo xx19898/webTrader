@@ -14,8 +14,6 @@ export default () => {
         searchedUsername,
         setSearchedUsername,
         usersData,
-        attainUserPortfolioData,
-        setUsersData,
     } = useAdminPage({searchIconRef})
 
     return(
@@ -25,8 +23,6 @@ export default () => {
         setSearchedUsernameCallback={setSearchedUsername} 
         usersData={usersData}
         ref={searchIconRef}
-        setUserData={setUsersData}
-        attainPortfolioData={attainUserPortfolioData} 
         />
     )
 }

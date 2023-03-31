@@ -9,7 +9,7 @@ import StocksViewer from "../../sharedComponents/stocksViewer/stocksViewer"
 const AuthenticatedMainPage = ({authenticatedUser}:{authenticatedUser:string}) => { 
 
     return(
-<div className="absolute w-full min-h-[100vh] h-auto bg-secondary-2 overflow-y-scroll">
+    <div className="w-full h-auto overflow-visible bg-secondary-2">
     <div className="bg-transparent mx-[10%] flex flex-col  items-stretch justify-center h-auto w-auto">
         <h1 className="mt-[1rem] text-white font-poppins text-[50px] text-center font-bold">Welcome to the</h1>
         <h2 className=" text-primary font-poppins text-[40px] text-center font-bold ">WebTrader</h2>

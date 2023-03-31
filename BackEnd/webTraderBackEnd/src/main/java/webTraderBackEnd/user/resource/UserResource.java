@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.management.relation.RoleNotFoundException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,7 +43,6 @@ public class UserResource {
   private UserServiceImpl userService;
   
   
-  
   @PostMapping(path="/add")
   public @ResponseBody ResponseEntity<String> addNewUser (@RequestBody User newUser) throws RoleNotFoundException {
     userService.createNewUser(newUser);
@@ -52,14 +53,15 @@ public class UserResource {
   public @ResponseBody ResponseEntity<Set<AdminUsernameAndId>> getAdmins(){
 	  return new ResponseEntity<Set<AdminUsernameAndId>>(userService.getAdmins(),HttpStatus.OK);
   }
-  /*
-  @PatchMapping(path="/cancelStockDeal")
-  public @ResponseBody ResponseEntity<StockDeal> removeStockDeal(@RequestBody Map<String, Long> requestData){
-	  Long userId= requestData.get("stockDealId");
-	  System.out.println("trying to cancel stock deal of user with id " + userId);
-	  if(userId == null) return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-	  StockDeal changedStockDeal = userService.cancelStockDeal(userId);
-	  return new ResponseEntity<StockDeal>(HttpStatus.ACCEPTED);
-  } 
-  */
+  
+  @GetMapping(path="/logout")
+  public @ResponseBody ResponseEntity<Void> logout(HttpServletResponse response){
+	Cookie cookie = new Cookie("refresh_cookie", null);
+	cookie.setMaxAge(0);
+	cookie.setSecure(true);
+	cookie.setHttpOnly(true);
+	cookie.setPath("/");
+	response.addCookie(cookie);
+	return new ResponseEntity(HttpStatus.OK);
+  }
 }

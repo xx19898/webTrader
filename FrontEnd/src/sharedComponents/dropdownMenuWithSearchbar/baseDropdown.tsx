@@ -90,7 +90,7 @@ const BaseDropDown =
         return(
             <div className={`${chosenValueIsCorrect ? 'outline-secondary outline-1 outline rounded-[17px]' : 'outline-darker-secondary-2 outline-1 outline rounded-[17px]'} relative flex h-[44px] flex-row items-center align-stretch
             bg-white focus-within:outline-1 focus-within:outline focus-within:outline-primary overflow-hidden rounded-[17px]`} tabIndex={0}>
-                <input className="w-full text-right mr-8 bg-white rounded-sm focus:outline-none"
+                <input className="w-full text-right mr-8 bg-white rounded-sm focus:outline-none pr-5"
                  type="search" value={valueForInputField()} onChange={(e) => valueChanged(e.target.value)} ref={inputRef}/>
                 <div className="flex flex-row items-center justify-center absolute right-2 min-h-full bg-white">
                     <button className="cursor-pointer" onClick={() => clickDropDownArrowButton()}><DropDownArrowIcon height={height}/></button>
@@ -101,7 +101,7 @@ const BaseDropDown =
     else{
         return(
         <div className="relative flex h-[44px] flex-row items-center align-stretch bg-white focus-within:outline-4 focus-within:outline focus-within:outline-secondary rounded-[17px]" tabIndex={0}>
-                <input className=" w-full bg-white text-right mr-8 focus:outline-none rounded-[17px]"
+                <input className=" w-full bg-white text-right mr-8 focus:outline-none rounded-[17px] pr-5"
                  type="search" value={value} onChange={(e) => valueChanged(e.target.value)}/>
                 <div className="absolute right-2 min-h-full bg-white flex flex-row items-center justify-center">
                     <DropDownArrowIcon height={height}/>

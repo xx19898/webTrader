@@ -52,6 +52,15 @@ public class AdminResource{
 		return new ResponseEntity<Portfolio>(portfolio,HttpStatus.OK);
 	}
 	
+	//create "/createPortfolio" endpoint and implement all the related functionality
+	@PostMapping("/createPortfolio")
+	public @ResponseBody ResponseEntity createPortfolio(@RequestBody Map<String,String> values){
+		int userId = Integer.parseInt(values.get("userId"));
+		double balance = Double.parseDouble(values.get("balance"));
+		userService.createUserPortfolio(userId, balance);
+		return new ResponseEntity(HttpStatus.OK);
+	}
+	
 	@PatchMapping("changeDealStatus")
 	public @ResponseBody ResponseEntity approveDeal(@RequestBody Map<String, String> values) throws Exception{
 		int id = Integer.parseInt(values.get("id"));

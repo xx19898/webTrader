@@ -1,6 +1,9 @@
+import axios from "axios"
 import { useState,useRef } from "react"
 import { trackPromise, usePromiseTracker } from "react-promise-tracker"
+import { BASE_URL } from "../../../constants/urls"
 import { DropDownArrowIcon } from "../../../icons/dropdownArrowIcon"
+import { useAppDispatch, useAppSelector } from "../../../reduxHooks"
 import { DealStatus } from "../../../sharedComponents/portfolioManager/portfolioDataSchemas"
 import { StockDeals } from "../../../sharedComponents/portfolioManager/stockDealVisualizer"
 import GsapPreloader from "../../../sharedComponents/preloaders/gsapPreloader"
@@ -14,12 +17,12 @@ interface IDealsDropdown{
 }
 
 export default ({name,deals}:IDealsDropdown) => {
-
+    const reduxDispatch = useAppDispatch()
     const dropdownRef = useRef<HTMLUListElement>(null)
     const dropdownArrowRef = useRef<SVGSVGElement>(null)
     const {open,handleClick} = useAnimatedDropdown({dropdownRef,dropdownArrowRef})
-    const {handleChangeDealStatus} = useDealsDropdown();
     const dealStatusChangeProgress = usePromiseTracker();
+    const accessToken = useAppSelector(state => state.users.accessToken) as string
     
     return (
         <GsapPreloader
@@ -41,7 +44,7 @@ export default ({name,deals}:IDealsDropdown) => {
                 {
                 deals.map(deal => {
                     return(
-                        <li className="w-[80%] first:my-[40px] last:mb-[40px] flex flex-col justify-center items-center bg-gradient-to-tr from-secondary to-secondary-2 rounded-[17px] drop-shadow-md">
+                        <li className="w-[80%] first:mt-[40px] last:mb-[40px] my-[10px] flex flex-col justify-center items-center bg-gradient-to-tr from-secondary to-secondary-2 rounded-[17px] drop-shadow-md">
                             <h2 className="text-white my-[40px] font-medium text-[36px]">{deal.symbol}</h2>
                             <section className="w-full grid grid-cols-2 gap-y-[20px] text-white py-0 my-0">
                                 <p className="text-center font-normal text-[18px] text-white">Operation type:</p>
@@ -53,13 +56,20 @@ export default ({name,deals}:IDealsDropdown) => {
                                 <p className="text-center font-normal text-[18px] text-white">Total Price</p>
                                 <p className="text-center font-medium  text-white">{deal.stockPriceAtTheAcquirement * deal.quantity}</p>
                                 <p className="text-center font-normal text-[18px] text-white">STATUS</p>
-                                <p className="text-center font-medium ">{deal.dealStatus}</p>
-                                <button className="col-start-1 p-2 mx-4  px-8 mb-[40px] rounded-[17px] font-normal bg-primary text-white" onClick={() => trackPromise(handleChangeDealStatus({id:deal.id,newStatus:"APPROVED"}))}>
-                                    APPROVE
-                                </button>
-                                <button className="col-start-2 p-2 mx-4 px-6 mb-[40px]  rounded-[17px] font-normal bg-primary text-white" onClick={() => trackPromise(handleChangeDealStatus({id:deal.id,newStatus:"DISAPPROVED"}))}>
-                                    DISAPPROVE
-                                </button>
+                                <p className={`text-center font-medium ${deal.dealStatus !== "PENDING" ? 'mb-[40px]': null}`}>{deal.dealStatus}</p>
+                                {
+                                    deal.dealStatus === "PENDING" ?
+                                    <>
+                                    <button className="col-start-1 p-2 mx-4  px-8 mb-[40px] rounded-[17px] font-normal bg-primary text-white" onClick={() => trackPromise(handleChangeStockDealStatus({accessToken:accessToken,stockDealId:deal.id,newStatus:true}))}>
+                                        APPROVE
+                                    </button>
+                                    <button className="col-start-2 p-2 mx-4 px-6 mb-[40px]  rounded-[17px] font-normal bg-primary text-white" onClick={() => trackPromise(handleChangeStockDealStatus({accessToken:accessToken,stockDealId:deal.id,newStatus:false}))}>
+                                        DISAPPROVE
+                                    </button>
+                                    </>
+                                    :
+                                    null
+                                }
                             </section>
                         </li>
                     )
@@ -71,4 +81,23 @@ export default ({name,deals}:IDealsDropdown) => {
         </div>
         }/>
     )
+
+    async function handleChangeStockDealStatus({accessToken,newStatus,stockDealId}:{accessToken:string,newStatus:boolean,stockDealId:number}){
+        const response = await axios({
+            method:'patch',
+            withCredentials:true,
+            url: BASE_URL + 'admin/changeDealStatus',
+            data:{
+                newStatus: newStatus ? 'APPROVED' : 'DISAPPROVED',
+                id: stockDealId
+            },
+            headers:{
+                Authorization: accessToken
+            }
+        })
+
+        console.log("GOT TO BEFORE DISPATCH")
+        reduxDispatch({type:'UPDATE_USER_DATA'})
+        console.log("GOT TO AFTER DISPATCH")
+    }
 }

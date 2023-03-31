@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import { LogoutIcon } from "../icons/logoutIcon";
 import LoginPage from "../pages/loginAndRegister/loginPage";
 import RegisterPage from "../pages/loginAndRegister/registerPage";
 import { MainPage } from "../pages/mainPage/mainPage";
@@ -15,7 +16,8 @@ export const router = createBrowserRouter
     path: "/"
   },
   {
-      element: <MainPage/>,
+      element: 
+      <MainPage/>,
       path:"main",
   },
   {

@@ -157,7 +157,7 @@ const StocksViewerDataVisualisation = ({datasets}:{datasets:Dataset[]}) => {
         null
         }
         <button className={`self-end mt-4 font-bold text-white rounded-[17px]
-         text-center align-middle bg-gradient-to-tr from-primary to-secondary
+         text-center align-middle bg-gradient-to-tr from-primary to-secondary w-[120px]
          ${fetchButtonStatus ? 'outline outline-2 outline-secondary' : 'outline outline-2 outline-darker-secondary-2'} w-20 h-8`}
          disabled={!fetchButtonStatus}
          >Fetch</button>

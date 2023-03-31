@@ -18,7 +18,7 @@ export const portfolioStock = z.object({
     userId: z.number(),
     symbol: z.string(),
     portfolioId: z.number(),
-    priceAtTheAcquirement: z.number(),
+    priceAtAcquirement: z.number(),
     quantity: z.number(),
 })
 

@@ -1,31 +1,22 @@
 package webTraderBackEnd.portfolioStocks.domain;
 
 import java.time.Instant;
-import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.assertj.core.util.Arrays;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Fetch;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -79,6 +70,10 @@ public class StockDeal{
 		String[] possibleValues = {"BUY","SELL"};
 		boolean valueIsCorrect = Arrays.asList(possibleValues).stream().anyMatch(member -> member.equals(value));
 		return valueIsCorrect;
+	}
+	
+	public void cancelDeal(){
+		this.operationType = "CANCELLED";
 	}
 	
 	private int quantity;

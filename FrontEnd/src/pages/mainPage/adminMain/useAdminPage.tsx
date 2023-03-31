@@ -9,50 +9,25 @@ import { GetUserInfoApiResponse, getUserInfoApiResponse } from "./adminMainPageS
 
 export default ({searchIconRef}:{searchIconRef:React.RefObject<SVGSVGElement>}) => {
     const [searchedUsername,setSearchedUsername] = useState<string>("")
-    const [usersData,setUsersData] = useState<GetUserInfoApiResponse>([])
     const access_token = useAppSelector(state => state.users.accessToken as string)
+    const usersData = useAppSelector(state => state.admin.userData)
     const reduxDispatch = useAppDispatch()
     const [ignored,forceUpdate] = useReducer(x => x + 1, 0)
 
 
     useEffect(() => {
         reduxDispatch({type:'UPDATE_CONVERSATIONS'})
-        let ignore = false
-        const response = attainUserPortfolioData(access_token).then(
-            result => {
-                if(!ignore){
-                    setUsersData(result)
-                    console.log({usersData})
-                }
-            }
-        )
-        return () => {
-            ignore = true
-        }
+        reduxDispatch({type:'UPDATE_USER_DATA'})
     },[])
 
     useEffect(() => {
         gsap.fromTo(searchIconRef.current,{scale:0},{scale:1,duration:0.5,ease: Bounce.easeOut})
-    },[])
+    },[true])
 
-    async function attainUserPortfolioData(accessToken: string){
-        const response = await axios({
-            method: 'get',
-            withCredentials:true,
-            url: BASE_URL + "admin/allUserData",
-            headers:{
-                Authorization: accessToken,
-            },
-        })
-        return getUserInfoApiResponse.parse(response.data)
-    }
 
     return {
         searchedUsername,
         setSearchedUsername,
         usersData,
-        setUsersData,
-        attainUserPortfolioData
     }
-    
 }

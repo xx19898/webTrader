@@ -26,6 +26,8 @@ public interface UserService {
 	List<UserDTO> getUsersData();
 	
 	Set<StockDeal> getStockDeals(String username);
+	
 	Portfolio getUserPortfolio(String username);
+	void createUserPortfolio(long id,double initialBalance);
 	
 }

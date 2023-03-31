@@ -1,5 +1,6 @@
 package webTraderBackEnd.portfolioStocks.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,11 +15,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Entity
 @Table(name="portfolio_stocks")
+@NoArgsConstructor
 public class PortfolioStock{
 	
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
@@ -39,7 +42,7 @@ public class PortfolioStock{
 	
 	@Setter
 	@Getter
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumn(referencedColumnName = "id")
 	private Portfolio portfolio;
 	

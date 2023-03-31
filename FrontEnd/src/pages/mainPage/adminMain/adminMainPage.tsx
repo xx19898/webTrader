@@ -9,8 +9,6 @@ export type IAdminMainPage = {
     searchedUsername: string
     usersData: GetUserInfoApiResponse,
     conversations: Conversation[],
-    attainPortfolioData: (accessToken:string) => Promise<GetUserInfoApiResponse>,
-    setUserData: (newData:GetUserInfoApiResponse) => void,
 }
 
 export const AdminMainPage = forwardRef(function AdminMainPage(props:IAdminMainPage,ref:React.ForwardedRef<SVGSVGElement>){
@@ -45,10 +43,7 @@ export const AdminMainPage = forwardRef(function AdminMainPage(props:IAdminMainP
                                     username={userData.username}
                                     conversation={props.conversations ? findConversation(userData.username,props.conversations) : undefined}
                                     stockDeals={userData.stockDeals}
-                                    portfolio={userData.portfolio}
-                                    attainPortfolioData={props.attainPortfolioData}
-                                    setUsersData={props.setUserData}
-                                    />
+                                    portfolio={userData.portfolio}/>
                         })
                     }
                     </ul>

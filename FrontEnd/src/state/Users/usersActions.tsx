@@ -34,9 +34,8 @@ export const logIn = (user: IUser) => {
         .catch( err => {
             console.log(err)
         })
-
     return axiosRequest
-    }
+}
 
 export const register = (user:IUser) => {
     return axios({

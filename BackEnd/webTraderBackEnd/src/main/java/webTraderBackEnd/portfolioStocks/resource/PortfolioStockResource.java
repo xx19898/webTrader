@@ -1,4 +1,4 @@
-package webTraderBackEnd.portfolioStocks;
+package webTraderBackEnd.portfolioStocks.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 

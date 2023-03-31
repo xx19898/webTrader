@@ -6,6 +6,7 @@ import './css/styles.css';
 import React from 'react';
 import { RouterProvider } from 'react-router';
 import { router } from './routing/mainRouter'; 
+import { LogoutIcon } from './icons/logoutIcon';
 
 
 export const root = ReactDOM.createRoot(
@@ -15,6 +16,7 @@ export const root = ReactDOM.createRoot(
 
 root.render(
     <Provider store={store}>
+      <LogoutIcon height={50}/>
       <RouterProvider router={router}/>
     </Provider>
 );

@@ -2,7 +2,7 @@ import axios from 'axios'
 import {useRef, useState,useReducer} from 'react'
 import { BASE_URL } from '../../../constants/urls'
 import { DropDownArrowIcon } from '../../../icons/dropdownArrowIcon'
-import { useAppSelector } from '../../../reduxHooks'
+import { useAppDispatch, useAppSelector } from '../../../reduxHooks'
 import Chat from '../../../sharedComponents/chat/chat'
 import { Conversation } from '../../../state/messaging/messagingZodSchemas'
 import { GetUserInfoApiResponse, Portfolio, StockDeal } from './adminMainPageSchema'
@@ -16,11 +16,9 @@ export type UserInfoAdmin = {
     stockDeals: StockDeal[],
     conversation?: Conversation,
     portfolio?:  Portfolio | null,
-    setUsersData: (data:GetUserInfoApiResponse) => void,
-    attainPortfolioData: (accessToken:string) => Promise<GetUserInfoApiResponse>,
 }
 
-export default ({userId,conversation,stockDeals,username,portfolio,attainPortfolioData,setUsersData}:UserInfoAdmin) => {
+export default ({userId,conversation,stockDeals,username,portfolio}:UserInfoAdmin) => {
     const sectionRef = useRef<HTMLUListElement>(null)
     const dropdownArrowRef = useRef<SVGSVGElement>(null)
     const {handleClick,open} = useAnimatedDropdown({dropdownArrowRef:dropdownArrowRef,dropdownRef:sectionRef}) 
@@ -95,7 +93,7 @@ export default ({userId,conversation,stockDeals,username,portfolio,attainPortfol
             }
         })
 
-        const refreshedPortfolioData = await attainPortfolioData(accessToken)
-        setUsersData(refreshedPortfolioData)
+        const reduxDispatch = useAppDispatch()
+        reduxDispatch({type:'UPDATE_USER_DATA'})
     }
 }

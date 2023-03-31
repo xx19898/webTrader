@@ -141,6 +141,13 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 		User user = getUser(username);
 		return user.getPortfolio();
 	}
+	
+	@Override
+	public void createUserPortfolio(long id,double initialBalance){
+		User user = getUser(id);
+		Portfolio newPortfolio = new Portfolio(user, null, initialBalance);
+		user.setPortfolio(newPortfolio);
+	}
 
 	@Override
 	public List<UserDTO> getUsersData(){

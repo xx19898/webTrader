@@ -84,7 +84,7 @@ export default () => {
                     stockDealId: stockDealId,
                 },
                 withCredentials: true,
-                url: BASE_URL + 'users/cancelStockDeal'
+                url: BASE_URL + 'portfolio/cancelStockDeal'
             }).then( result => 
                 reduxDispatch({type:UPDATE_STOCK_DEALS})
             )

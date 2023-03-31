@@ -9,27 +9,26 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.AllArgsConstructor;
 import webTraderBackEnd.portfolioStocks.domain.Portfolio;
 import webTraderBackEnd.portfolioStocks.domain.StockDeal;
 import webTraderBackEnd.portfolioStocks.exceptions.StockDealNotFoundException;
 import webTraderBackEnd.portfolioStocks.repository.StockDealRepository;
+import webTraderBackEnd.portfolioStocks.service.PortfolioService;
 import webTraderBackEnd.user.domain.User;
 
 
 @Service 
 @Transactional
+@AllArgsConstructor
 public class AdminServiceImpl  implements AdminService{
 	
 	@Autowired
 	private final StockDealRepository stockDealRepo;
 	
 	@Autowired
-	private final UserService userService;
+	PortfolioService portfolioService;
 	
-	AdminServiceImpl(StockDealRepository stockDealRepo,UserService userService){
-		this.userService = userService;
-		this.stockDealRepo = stockDealRepo;
-	}
 	
 	private void stockDealRootMethod(boolean approvalValue,long id) throws Exception{
 		Optional<StockDeal> stockDealToApproveOptionalWrapper = stockDealRepo.findById(id);
@@ -62,11 +61,15 @@ public class AdminServiceImpl  implements AdminService{
 		StockDeal theStockDeal = stockDealWrapper.get();
 		User user = theStockDeal.getUser();
 		Portfolio thePortfolio = user.getPortfolio();
-		if(theStockDeal.getOperationType() == "BUY"){
-			thePortfolio.implementBuyingOperation(theStockDeal.getSymbol(), theStockDeal.getQuantity(), theStockDeal.getStockPriceAtTheAcquirement());
-		}
-		else{
-			thePortfolio.implementSellingOperation(theStockDeal.getSymbol(), theStockDeal.getQuantity(), theStockDeal.getStockPriceAtTheAcquirement());	
+		if(theStockDeal.getOperationType().equals("BUY")){
+			System.out.println(theStockDeal.getOperationType());
+			portfolioService.implementBuyingOperation(theStockDeal.getSymbol(), theStockDeal.getQuantity(), theStockDeal.getStockPriceAtTheAcquirement(),user);
+			theStockDeal.setDealStatus("APPROVED");
+		}else{
+			System.out.println(theStockDeal.getOperationType());
+			System.out.println("NOW SELLING!");
+			portfolioService.implementSellingOperation(theStockDeal.getSymbol(), theStockDeal.getQuantity(), theStockDeal.getStockPriceAtTheAcquirement(),user);
+			theStockDeal.setDealStatus("APPROVED");
 		}}
 }
 
