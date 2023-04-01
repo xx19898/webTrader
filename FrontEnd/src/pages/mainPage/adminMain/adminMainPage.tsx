@@ -15,6 +15,7 @@ export const AdminMainPage = forwardRef(function AdminMainPage(props:IAdminMainP
     
     return(
         <div className="overflow-auto w-auto h-auto min-h-full bg-secondary-2 flex-col flex justify-start items-center">
+            <div className="flex-col flex justify-start items-center bg-secondary-2 sm:w-full lg:w-[60%]">
             <header className="flex justify-center items-center">
                 <h1 className="mt-10 ml-5 font-poppins font-bold text-xl text-white text-center">
                     Welcome to the admin dashboard
@@ -49,6 +50,7 @@ export const AdminMainPage = forwardRef(function AdminMainPage(props:IAdminMainP
                     </ul>
                 </section>
             </section>
+            </div>
         </div>
     )
 

@@ -8,7 +8,8 @@ import { router } from "../../routing/mainRouter"
         const router = useNavigate() 
         return(
         <div className=" bg-secondary-2 w-auto h-full flex flex-col justify-start items-center content-center">
-            <div className="bg-secondary-2 w-auto h-auto flex flex-col justify-center items-center content-center mx-[2rem]">
+            <div className="sm:w-full md:w-[80%] lg:w-[60%]">
+            <div className="bg-secondary-2 w-auto h-auto flex flex-col justify-center items-center content-center sm:mx-[2rem] md:mx-[6rem]">
             <h1 className="mt-[2rem] text-white font-poppins text-xl text-center font-bold">Welcome to the</h1>
             <h2 className=" text-primary font-poppins text-xl text-center font-bold ">WebTrader</h2>
             <p className="indent-3 text-white mt-[2rem] font-poppins text-lg font-bold w-auto text-center">
@@ -34,6 +35,7 @@ import { router } from "../../routing/mainRouter"
                 <p className="indent-3 text-center font-poppins bg-secondary/50 rounded-[17px] py-[1em] px-[0.5em] text-white text-lg">
                 As an unauthenticated guest you can only view this page. To make operations such as view stocks, buy, sell and view your portfolio please log in or sign up.
                 </p>
+            </div>
             </div>
         </div>
         )

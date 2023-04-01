@@ -35,15 +35,7 @@ const PortfolioStockCard = (props:IPortfolioStockCard) => {
         finnhubSocket.removeEventListener('open',() => finnhubSocket.send(JSON.stringify({'type':'subscribe','symbol':props.data.name})))
       }
     }, [])
-    const x = {"data":
-    [{
-      "c":["1","24","12"],"p":133.55,"s":"AAPL","t":1673521938710,"v":10
-    },{
-      "c":["1","24","12"],"p":133.55,"s":"AAPL","t":1673521938710,"v":10
-    },{
-      "c":["1","8","24","12"],"p":133.55,"s":"AAPL","t":1673521938710,"v":33
-    }],
-    "type":"trade"}
+    
     
     
     return (

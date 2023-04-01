@@ -35,7 +35,7 @@ export default ({name,deals}:IDealsDropdown) => {
         "flex flex-col justify-center items-center h-auto w-[40%] mt-3 border border-solid border-darker-secondary-2 cursor-pointer p-2 text-center bg-primary rounded-[17px]"
         :
         "flex flex-col justify-center items-center h-auto mt-3 w-[40%] border border-solid border-darker-secondary-2 cursor-pointer py-1 text-center rounded-[17px]"  } onClick={() => handleClick()}>
-            <span className="text-white font-semibold mb-1">Stock Deals</span>
+            <span className="text-white font-semibold p-4 flex flex-col justify-center items-center">Stock Deals</span>
             <DropDownArrowIcon onClickCallback={handleClick} height={10} ref={dropdownArrowRef} />
         </div>
         {

@@ -68,7 +68,7 @@ export default ({stocks}:IStockDealForm) => {
             setIsCorrect={setSymbolIsCorrect} />
             <label className="flex justify-center items-center text-center text-white">Quantity</label>
             <input
-            className={(formState.QUANTITY === undefined || formState.QUANTITY?.toString().trim().length === 0) ? "pl-4 h-[44px] border-solid border-2 border-red-500 focus:outline-none" : "h-[44px] pl-4 focus:outline-none"} 
+            className={(formState.QUANTITY === undefined || formState.QUANTITY?.toString().trim().length === 0) ? "pl-4 h-[44px] border-solid border-2 border-red-500 focus:outline-none rounded-[17px]" : "h-[44px] pl-4 focus:outline-none rounded-[17px]"} 
             type="text"
             onChange={(e) => {
                 formDispatchInterceptor({type:"QUANTITY",payload:e.target.value})}

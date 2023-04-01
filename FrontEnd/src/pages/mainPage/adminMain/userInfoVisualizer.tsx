@@ -9,8 +9,9 @@ import { GetUserInfoApiResponse, Portfolio, StockDeal } from './adminMainPageSch
 import DealsDropdown from './dealsDropdown'
 import PortfolioVisualizer from './portfolioVisualizer'
 import useAnimatedDropdown from './useAnimatedDropdown'
+import { access } from 'fs'
 
-export type UserInfoAdmin = {
+export type UserInfo = {
     username: string,
     userId: number,
     stockDeals: StockDeal[],
@@ -18,24 +19,29 @@ export type UserInfoAdmin = {
     portfolio?:  Portfolio | null,
 }
 
-export default ({userId,conversation,stockDeals,username,portfolio}:UserInfoAdmin) => {
+export default ({userId,conversation,stockDeals,username,portfolio}:UserInfo) => {
     const sectionRef = useRef<HTMLUListElement>(null)
     const dropdownArrowRef = useRef<SVGSVGElement>(null)
-    const {handleClick,open} = useAnimatedDropdown({dropdownArrowRef:dropdownArrowRef,dropdownRef:sectionRef}) 
-    console.log({conversation})
+    const {handleClick,open} = useAnimatedDropdown({dropdownArrowRef:dropdownArrowRef,dropdownRef:sectionRef})
+    const reduxDispatch = useAppDispatch() 
     const accessToken = useAppSelector(state => state.users.accessToken) as string
+    const ownId = useAppSelector(state => state.users.userId) as number
     const [balance,setBalance] = useState(0)
-    const [ignored,forceUpdateThisComponent] = useReducer(x => x + 1, 0)
-
     
     return(
         <div className="w-full h-auto flex flex-col justify-center bg-secondary-2 my-[40px]">
-            <h3 className="text-white text-center text-[36px] font-medium">{username}</h3>
+            <h3 className="text-white text-center text-[36px] font-medium mb-5 bg-secondary p-3 rounded-[17px]">{username}</h3>
             {
                  open ?
                  <ul className="w-full" ref={sectionRef}>
-                    <li>
-                        {conversation === undefined ? <h2 className="text-center text-white my-[18px] font-medium text-[18px]">No conversation found</h2> : <Chat conversationId={conversation.conversationId} messages={conversation.messages === undefined ? [] : conversation.messages} otherUser={username}/>}
+                    <li className="flex flex-col justify-center items-center">
+                        {conversation === undefined ? 
+                        <button className="text-center text-white my-[18px] p-4 font-medium text-lg bg-primary rounded-[17px]"
+                        onClick={() => {
+                            startConversation(accessToken,ownId,userId)
+                        }}>Start Conversation</button>
+                        :
+                         <Chat conversationId={conversation.conversationId} messages={conversation.messages === undefined ? [] : conversation.messages} otherUser={username}/>}
                     </li>
                     <li className="w-full bg-yellow py-2">
                         <DealsDropdown deals={stockDeals} name={username}/>
@@ -92,8 +98,24 @@ export default ({userId,conversation,stockDeals,username,portfolio}:UserInfoAdmi
                 balance: balance,
             }
         })
-
         const reduxDispatch = useAppDispatch()
         reduxDispatch({type:'UPDATE_USER_DATA'})
+    }
+
+    async function startConversation(accessToken:string,ownId:number,otherPersonId:number){
+
+        const apiResponse = await axios({
+            method: 'post',
+            url: BASE_URL + 'messaging/startConversation',
+            headers:{
+                Authorization: accessToken
+            },
+            withCredentials:true,
+            data:{
+                firstUserId: ownId,
+                secondUserId: otherPersonId,
+            }
+        })
+        reduxDispatch({type:'UPDATE_CONVERSATIONS'})
     }
 }

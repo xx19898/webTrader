@@ -1,5 +1,5 @@
 import UserInfoVisualizer from "../pages/mainPage/adminMain/userInfoVisualizer";
-import userInfoVisualizer, { UserInfoAdmin } from "../pages/mainPage/adminMain/userInfoVisualizer";
+import userInfoVisualizer from "../pages/mainPage/adminMain/userInfoVisualizer";
 import { Conversation } from "../state/messaging/messagingZodSchemas";
 
 

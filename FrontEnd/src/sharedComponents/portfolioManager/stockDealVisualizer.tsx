@@ -48,7 +48,7 @@ export default () => {
                         return(
                         <li className="h-auto w-full my-6 py-2 bg-darker-secondary-2 rounded-[17px] drop-shadow-md">
                             {
-                            stockDeal.dealStatus != 'CANCELLED' ? 
+                            stockDeal.dealStatus == 'PENDING'  ? 
                             <div className="h-[30px] flex justify-end items-center">
                             <button className="m-6" onClick={() => cancelStockDeal(stockDeal.id,accessToken as string)}>
                                 <RedCrossIcon height={20} />
