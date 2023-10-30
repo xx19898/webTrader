@@ -2,7 +2,7 @@
 ## Description
 App which emulates a stock trading platform. It allows user to view different stocks, price fluctuation and history up to five years back. It also simulates user buying stocks and admin(broker) has to then accept or negate the deal. App also has inbuilt chat for communication between users and admins
 ## Technologies used
-
+<img src="https://cdn.worldvectorlogo.com/logos/arduino-1.svg" alt="arduino" width="40" height="40"/>
 ## How to start
 In order to see how it works you gotta:
 1. Download both front end back -end folders
