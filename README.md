@@ -1,5 +1,9 @@
 # webTrader
-App which emulates a stock trading platform.
+## Description
+App which emulates a stock trading platform. It allows user to view different stocks, price fluctuation and history up to five years back. It also simulates user buying stocks and admin(broker) has to then accept or negate the deal. App also has inbuilt chat for communication between users and admins
+## Technologies used
+
+## How to start
 In order to see how it works you gotta:
 1. Download both front end back -end folders
 2. Build projects on both frontend and backend by executing npm install on frontend and gradle build on the backend
