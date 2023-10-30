@@ -8,6 +8,7 @@ In order to see how it works you gotta:
 4. Manually create a user with admin role.
 5. Register as a normal user and use the app
 
-***CAUTION***
-alphavantageApi changed their api so that many of the free endpoints are now closed behind the paywall :/
+
+> [!WARNING]
+> alphavantageApi changed their api so that many of the free endpoints are now closed behind the paywall :/
 it kinda breaks some functionality as for example viewing certain data in the stock viewer component
