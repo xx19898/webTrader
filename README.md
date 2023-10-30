@@ -6,6 +6,7 @@ App which emulates a stock trading platform. It allows user to view different st
 <a href="https://cdnlogo.com/logo/spring_24513.html"><img height="40" src="https://www.cdnlogo.com/logos/s/91/spring.svg"></a>
 <a href="https://cdnlogo.com/logo/gsap-greensock_52936.html"><img height="40" src="https://www.cdnlogo.com/logos/g/31/gsap-greensock.svg"></a>
 <a href="https://cdnlogo.com/logo/tailwind-css_81652.html"><img height="40" src="https://www.cdnlogo.com/logos/t/58/tailwind-css.svg"></a>
+<a href="https://cdnlogo.com/logo/mysql_41927.html"><img height="40" src="https://www.cdnlogo.com/logos/m/36/mysql.svg"></a>
 ## How to start
 In order to see how it works you gotta:
 1. Download both front end back -end folders
